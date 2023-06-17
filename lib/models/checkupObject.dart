@@ -1,5 +1,5 @@
 import 'package:checkup_app/models/objectType.dart';
-import 'package:checkup_app/models/Report.dart';
+import 'package:checkup_app/models/report.dart';
 
 class CheckupObject {
   late int id;

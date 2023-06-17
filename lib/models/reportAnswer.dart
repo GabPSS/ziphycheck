@@ -1,5 +1,5 @@
-import '../data/DataMaster.dart';
-import 'TaskAnswer.dart';
+import '../data/dataMaster.dart';
+import 'taskAnswer.dart';
 
 class ReportAnswer {
   late int id;

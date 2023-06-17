@@ -1,7 +1,7 @@
 import 'package:checkup_app/models/task.dart';
 
 import '../models/objectType.dart';
-import '../models/Report.dart';
+import '../models/report.dart';
 import '../models/reportAnswer.dart';
 
 class DataMaster {
@@ -16,4 +16,11 @@ class DataMaster {
   int reportAnswerKey = 0;
 
   static const String unknownObject = "Unknown Object";
+
+  List<ReportAnswer> getAnswersForReport(Report report) {
+    return List.from(
+        reportAnswers.where((element) => element.baseReportId == report.id));
+  }
+
+  Report getReportById(int id) => reports.where((element) => element.id == id).first;
 }

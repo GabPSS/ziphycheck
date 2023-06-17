@@ -1,7 +1,11 @@
+import 'package:checkup_app/ui/addObjectTypePage.dart';
+import 'package:checkup_app/ui/mainObjectTypesPage.dart';
+import 'package:checkup_app/ui/mainReportsPage.dart';
+import 'package:checkup_app/ui/viewReportPage.dart';
 import 'package:flutter/material.dart';
 
-import '../data/DataMaster.dart';
-import '../models/Report.dart';
+import '../data/dataMaster.dart';
+import '../models/report.dart';
 import 'addReportPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,26 +18,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Widget? page;
+  Function()? fabFunction;
+  String title = "";
   DataMaster dm = DataMaster();
+
+  _HomePageState() {
+    setPage(0);
+  }
+
+  void setPage(int index) {
+    switch (index) {
+      case 0:
+        page = MainReportsPage(dm: dm);
+        fabFunction = mainReportsFabTapped;
+        title = "Reports";
+        break;
+      case 1:
+        page = Placeholder();
+        fabFunction = mainObjectTypesFabTapped;
+        title = "Object Types";
+        break;
+      case 2:
+        page = Placeholder();
+        fabFunction = null;
+        title = "Tasks";
+      default:
+        throw Error();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // editReportDialog(context, true);
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              Report report = Report(dm: dm);
-              dm.reports.add(report);
-              return AddReportPage(
-                report: report,
-                dm: dm,
-              );
-            }));
-          },
-          child: const Icon(Icons.add)),
+          onPressed: fabFunction, child: const Icon(Icons.add)),
       appBar: AppBar(
-        title: const Text('Checkup App'),
+        title: Text(title),
         actions: [
           IconButton(
               onPressed: () {
@@ -42,106 +63,78 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(Icons.refresh))
         ],
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          String reportName = dm.reports[index].name != ""
-              ? dm.reports[index].name
-              : "Report #${index + 1}";
-          return Card(
-              child: InkWell(
-            onTap: () {},
-            child: ListTile(
-                leading: const CircleAvatar(
-                  child: Icon(Icons.assignment),
-                ),
-                title: Text(reportName),
-                trailing: PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                        child: ListTile(
-                      leading: const Icon(Icons.edit),
-                      title: const Text('Edit'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return AddReportPage(
-                              report: dm.reports[index],
-                              dm: dm,
-                            );
-                          },
-                        ));
-                      },
-                    )),
-                    PopupMenuItem(
-                        child: ListTile(
-                      leading: const Icon(Icons.delete),
-                      title: const Text('Delete'),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title:
-                                Text('Delete \'${dm.reports[index].name}\'?'),
-                            content: const Text(
-                                "You won't be able to recover this report once it's gone"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Cancel')),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                    setState(() {
-                                      dm.reports.removeAt(index);
-                                    });
-                                  },
-                                  child: const Text('Delete'))
-                            ],
-                          ),
-                        );
-                      },
-                    ))
-                  ],
-                )),
-          ));
-        },
-        itemCount: dm.reports.length,
-      ),
+      body: page,
       drawer: Drawer(
         child: Column(
           children: [
             const ListTile(
-              title: Text('Checkup App', style: TextStyle(fontWeight: FontWeight.bold),),
+              title: Text(
+                'Checkup App',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
             const Divider(),
-            const ListTile(
+            ListTile(
               leading: Icon(Icons.assignment),
               title: Text('Reports'),
+              onTap: () {
+                setState(() {
+                  Navigator.pop(context);
+                  setPage(0);
+                });
+              },
             ),
-            const ListTile(
+            ListTile(
               leading: Icon(Icons.mode),
               title: Text('Object types'),
+              onTap: () {
+                setState(() {
+                  Navigator.pop(context);
+                  setPage(1);
+                });
+              },
             ),
-            const ListTile(
+            ListTile(
               leading: Icon(Icons.check_box),
               title: Text('Tasks'),
+              onTap: () {
+                setState(() {
+                  Navigator.pop(context);
+                  setPage(2);
+                });
+              },
             ),
             const Spacer(),
             ListTile(
               leading: const Icon(Icons.help),
               title: const Text('About'),
               onTap: () {
-                showAboutDialog(context: context, applicationName: 'Checkup app');
+                showAboutDialog(
+                    context: context, applicationName: 'Checkup app');
               },
             )
           ],
         ),
       ),
     );
+  }
+
+  //FAB functions
+
+  mainReportsFabTapped() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      Report report = Report(dm: dm);
+      dm.reports.add(report);
+      return AddReportPage(
+        report: report,
+        dm: dm,
+        isAdding: true,
+      );
+    }));
+  }
+
+  mainObjectTypesFabTapped() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AddObjectTypePage()));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:checkup_app/models/CheckupObject.dart';
+import 'package:checkup_app/models/checkupObject.dart';
 
 class Location {
   String name = "";

@@ -1,7 +1,8 @@
-import 'package:checkup_app/data/DataMaster.dart';
-import 'package:checkup_app/models/CheckupObject.dart';
-import 'package:checkup_app/models/Location.dart';
-import 'package:checkup_app/models/Report.dart';
+import 'package:checkup_app/data/dataMaster.dart';
+import 'package:checkup_app/models/checkupObject.dart';
+import 'package:checkup_app/models/location.dart';
+import 'package:checkup_app/models/report.dart';
+import 'package:checkup_app/models/objectType.dart';
 import 'package:flutter/material.dart';
 
 class AddReportPage extends StatefulWidget {
@@ -22,38 +23,55 @@ class _AddReportPageState extends State<AddReportPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<DropdownMenuItem> objectTypes = List.empty(growable: true);
+    objectTypes.add(DropdownMenuItem(
+      child: Text('(No type)'),
+      value: null,
+    ));
+    objectTypes.addAll(dm.objectTypes.map((e) => DropdownMenuItem(
+          child: Text(e.name),
+          value: e,
+        )));
+
     List<Widget> locations = List.empty(growable: true);
     for (var i = 0; i < report.locations.length; i++) {
       List<Widget> objects = List.empty(growable: true);
       for (var x = 0; x < report.locations[i].objects.length; x++) {
+        var object = report.locations[i].objects[x];
         objects.add(ListTile(
           leading: const Icon(Icons.desktop_windows),
           title: TextFormField(
             decoration: const InputDecoration(border: InputBorder.none),
-            initialValue: report.locations[i].objects[x].name == ""
-                ? "Unnamed object"
-                : report.locations[i].objects[x].name,
+            initialValue: object.name == "" ? "Unnamed object" : object.name,
             onChanged: (value) {
-              report.locations[i].objects[x].name = value;
+              object.name = value;
+            },
+          ),
+          trailing: DropdownButton(
+            items: objectTypes,
+            value: object.objectType,
+            onChanged: (value) {
+              setState(() {
+                object.objectType = value;
+              });
             },
           ),
         ));
       }
       objects.add(ListTile(
-      leading: const Icon(Icons.add),
-      title: const Text("Add new object"),
-      onTap: () {
-        setState(() {
-          report.locations[i].objects.add(CheckupObject(report: report));
-        });
-      },
-    ));
+        leading: const Icon(Icons.add),
+        title: const Text("Add new object"),
+        onTap: () {
+          setState(() {
+            report.locations[i].objects.add(CheckupObject(report: report));
+          });
+        },
+      ));
       locations.add(Column(
         children: [
           ListTile(
             leading: const Icon(Icons.location_on),
             title: TextFormField(
-              decoration: const InputDecoration(border: InputBorder.none),
               initialValue: report.locations[i].name == ""
                   ? "Unnamed location"
                   : report.locations[i].name,
@@ -101,6 +119,7 @@ class _AddReportPageState extends State<AddReportPage> {
                         onPressed: () {
                           Navigator.pop(context);
                           Navigator.pop(context);
+                          dm.reports.remove(report);
                         },
                         child: const Text('Discard'))
                   ],
@@ -117,11 +136,6 @@ class _AddReportPageState extends State<AddReportPage> {
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                setState(() {
-                  if (isAdding) {
-                    dm.reports.add(report);
-                  }
-                });
               },
               child: const Text(
                 'Save',
@@ -133,11 +147,11 @@ class _AddReportPageState extends State<AddReportPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Name'),
-                initialValue: report.name,
-                onChanged: (value) {
-                  report.name = value;
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Name'),
+              initialValue: report.name,
+              onChanged: (value) {
+                report.name = value;
                 },),
           ),
           Expanded(

@@ -1,6 +1,6 @@
-import 'package:checkup_app/models/Location.dart';
+import 'package:checkup_app/models/location.dart';
 
-import '../data/DataMaster.dart';
+import '../data/dataMaster.dart';
 
 class Report {
   late int id;
