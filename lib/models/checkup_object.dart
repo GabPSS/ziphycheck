@@ -1,4 +1,4 @@
-import 'package:checkup_app/models/objectType.dart';
+import 'package:checkup_app/models/object_type.dart';
 import 'package:checkup_app/models/report.dart';
 
 class CheckupObject {

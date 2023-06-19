@@ -1,4 +1,4 @@
-import 'package:checkup_app/ui/homePage.dart';
+import 'package:checkup_app/ui/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

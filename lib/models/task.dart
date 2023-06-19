@@ -1,4 +1,4 @@
-import 'package:checkup_app/data/dataMaster.dart';
+import 'package:checkup_app/data/data_master.dart';
 
 class Task {
   late int id;

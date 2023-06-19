@@ -1,8 +1,8 @@
-import 'package:checkup_app/ui/viewReportPage.dart';
+import 'package:checkup_app/ui/main_reports/view_report/view_report_page.dart';
 import 'package:flutter/material.dart';
 
-import '../data/dataMaster.dart';
-import 'addReportPage.dart';
+import '../../data/data_master.dart';
+import 'add_report_page.dart';
 
 class MainReportsPage extends StatefulWidget {
   DataMaster dm;
@@ -19,6 +19,7 @@ class _MainReportsPageState extends State<MainReportsPage> {
   
   @override
   Widget build(BuildContext context) {
+    if (dm.reports.isNotEmpty) {
     return ListView.builder(
         itemBuilder: (context, index) {
           String reportName = dm.reports[index].name != ""
@@ -49,6 +50,7 @@ class _MainReportsPageState extends State<MainReportsPage> {
                             return AddReportPage(
                               report: dm.reports[index],
                               dm: dm,
+                              parentSetState: setState,
                             );
                           },
                         ));
@@ -93,5 +95,10 @@ class _MainReportsPageState extends State<MainReportsPage> {
         },
         itemCount: dm.reports.length,
       );
+    } else {
+      return const Center(
+        child: Text('There are no reports. Tap + to add a new report'),
+      );
+    }
   }
 }

@@ -1,10 +1,10 @@
-import 'package:checkup_app/data/dataMaster.dart';
-import 'package:checkup_app/models/reportAnswer.dart';
-import 'package:checkup_app/ui/addReportPage.dart';
-import 'package:checkup_app/ui/fillAnswerPage.dart';
+import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/ui/main_reports/add_report_page.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_answer_page.dart';
 import 'package:flutter/material.dart';
 
-import '../models/report.dart';
+import '../../../models/report.dart';
 
 class ViewReportPage extends StatefulWidget {
   DataMaster dm;
@@ -32,7 +32,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
           child: Text(
             report.name,
-            style: TextStyle(fontSize: 32),
+            style: const TextStyle(fontSize: 32),
           ),
         ),
       ),
@@ -45,19 +45,19 @@ class _ViewReportPageState extends State<ViewReportPage> {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return AddReportPage(report: report, dm: dm);
+                      return AddReportPage(report: report, dm: dm, parentSetState: setState,);
                     },
                   ));
                 },
-                child: Text("Edit report")),
+                child: const Text("Edit report")),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: ElevatedButton(onPressed: null, child: Icon(Icons.delete)),
           )
         ],
       ),
-      Divider()
+      const Divider()
     ]);
     listWidgets.addAll(dm.getAnswersForReport(report).map((e) => ListTile(
           title: Text(e.answerDate.toString()),
@@ -69,11 +69,11 @@ class _ViewReportPageState extends State<ViewReportPage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return FillAnswerPage(adding: true, dm: dm, reportAnswer: ReportAnswer(dm: dm, baseReportId: report.id),);
+              return FillAnswerPage(adding: true, dm: dm, reportAnswer: ReportAnswer(dm: dm, baseReportId: report.id), parentSetState: setState,);
             },
           ));
         },
-        child: Icon(Icons.note_add),
+        child: const Icon(Icons.note_add),
       ),
       body: ListView(children: listWidgets),
     );

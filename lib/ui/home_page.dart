@@ -1,12 +1,11 @@
-import 'package:checkup_app/ui/addObjectTypePage.dart';
-import 'package:checkup_app/ui/mainObjectTypesPage.dart';
-import 'package:checkup_app/ui/mainReportsPage.dart';
-import 'package:checkup_app/ui/viewReportPage.dart';
+import 'package:checkup_app/ui/main_object_types/add_object_type_page.dart';
+import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
+import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
 
-import '../data/dataMaster.dart';
+import '../data/data_master.dart';
 import '../models/report.dart';
-import 'addReportPage.dart';
+import 'main_reports/add_report_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -19,28 +18,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Widget? page;
+  int pageIndex = 0;
   Function()? fabFunction;
   String title = "";
   DataMaster dm = DataMaster();
 
   _HomePageState() {
-    setPage(0);
+    setPage(index: 0);
   }
 
-  void setPage(int index) {
-    switch (index) {
+  void setPage({int? index}) {
+    if (index != null) {
+      pageIndex = index;
+    }
+    switch (pageIndex) {
       case 0:
         page = MainReportsPage(dm: dm);
         fabFunction = mainReportsFabTapped;
         title = "Reports";
         break;
       case 1:
-        page = Placeholder();
+        page = const MainObjectTypesPage();
         fabFunction = mainObjectTypesFabTapped;
         title = "Object Types";
         break;
       case 2:
-        page = Placeholder();
+        page = const Placeholder();
         fabFunction = null;
         title = "Tasks";
       default:
@@ -50,6 +53,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    setPage();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: fabFunction, child: const Icon(Icons.add)),
@@ -58,7 +62,9 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {});
+                setState(() {
+                  title = title;
+                });
               },
               icon: const Icon(Icons.refresh))
         ],
@@ -75,32 +81,32 @@ class _HomePageState extends State<HomePage> {
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.assignment),
-              title: Text('Reports'),
+              leading: const Icon(Icons.assignment),
+              title: const Text('Reports'),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
-                  setPage(0);
+                  setPage(index: 0);
                 });
               },
             ),
             ListTile(
-              leading: Icon(Icons.mode),
-              title: Text('Object types'),
+              leading: const Icon(Icons.mode),
+              title: const Text('Object types'),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
-                  setPage(1);
+                  setPage(index: 1);
                 });
               },
             ),
             ListTile(
-              leading: Icon(Icons.check_box),
-              title: Text('Tasks'),
+              leading: const Icon(Icons.check_box),
+              title: const Text('Tasks'),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
-                  setPage(2);
+                  setPage(index: 2);
                 });
               },
             ),
@@ -129,12 +135,13 @@ class _HomePageState extends State<HomePage> {
         report: report,
         dm: dm,
         isAdding: true,
+        parentSetState: setState,
       );
     }));
   }
 
   mainObjectTypesFabTapped() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AddObjectTypePage()));
+        context, MaterialPageRoute(builder: (context) => const AddObjectTypePage()));
   }
 }

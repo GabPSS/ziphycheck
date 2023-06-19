@@ -1,8 +1,8 @@
 import 'package:checkup_app/models/task.dart';
 
-import '../models/objectType.dart';
+import '../models/object_type.dart';
 import '../models/report.dart';
-import '../models/reportAnswer.dart';
+import '../models/report_answer.dart';
 
 class DataMaster {
   List<Report> reports = List.empty(growable: true);

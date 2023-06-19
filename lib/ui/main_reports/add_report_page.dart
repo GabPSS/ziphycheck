@@ -1,36 +1,50 @@
-import 'package:checkup_app/data/dataMaster.dart';
-import 'package:checkup_app/models/checkupObject.dart';
+import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
-import 'package:checkup_app/models/objectType.dart';
 import 'package:flutter/material.dart';
 
 class AddReportPage extends StatefulWidget {
   Report report;
   DataMaster dm;
   bool isAdding;
-  AddReportPage({super.key, required this.report, this.isAdding = false, required this.dm});
+  Function(Function()) parentSetState;
+  AddReportPage(
+      {super.key,
+      required this.report,
+      this.isAdding = false,
+      required this.dm,
+      required this.parentSetState});
 
   @override
-  State<AddReportPage> createState() => _AddReportPageState(report: report, isAdding: isAdding, dm: dm);
+  State<AddReportPage> createState() => _AddReportPageState(
+      report: report,
+      isAdding: isAdding,
+      dm: dm,
+      parentSetState: parentSetState);
 }
 
 class _AddReportPageState extends State<AddReportPage> {
   Report report;
   DataMaster dm;
   bool isAdding;
-  _AddReportPageState({required this.report, required this.isAdding, required this.dm});
+  Function(Function()) parentSetState;
+  _AddReportPageState(
+      {required this.report,
+      required this.isAdding,
+      required this.dm,
+      required this.parentSetState});
 
   @override
   Widget build(BuildContext context) {
     List<DropdownMenuItem> objectTypes = List.empty(growable: true);
-    objectTypes.add(DropdownMenuItem(
-      child: Text('(No type)'),
+    objectTypes.add(const DropdownMenuItem(
       value: null,
+      child: Text('(No type)'),
     ));
     objectTypes.addAll(dm.objectTypes.map((e) => DropdownMenuItem(
-          child: Text(e.name),
           value: e,
+          child: Text(e.name),
         )));
 
     List<Widget> locations = List.empty(growable: true);
@@ -127,7 +141,9 @@ class _AddReportPageState extends State<AddReportPage> {
               );
             } else {
               Navigator.pop(context);
-              setState(() {});
+              parentSetState(
+                () {},
+              );
             }
           },
         ),
@@ -136,6 +152,7 @@ class _AddReportPageState extends State<AddReportPage> {
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                parentSetState(() {});
               },
               child: const Text(
                 'Save',
@@ -152,7 +169,8 @@ class _AddReportPageState extends State<AddReportPage> {
               initialValue: report.name,
               onChanged: (value) {
                 report.name = value;
-                },),
+              },
+            ),
           ),
           Expanded(
               child: ListView(
