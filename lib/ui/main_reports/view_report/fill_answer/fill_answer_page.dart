@@ -6,18 +6,14 @@ import 'package:date_field/date_field.dart';
 import '../../../../models/report.dart';
 
 class FillAnswerPage extends StatelessWidget {
-  DataMaster dm;
-  ReportAnswer reportAnswer;
+  final DataMaster dm;
+  final ReportAnswer reportAnswer;
   Report get baseReport => dm.getReportById(reportAnswer.baseReportId);
-  bool adding = false;
-  Function(Function()) parentSetState;
+  final bool adding;
+  final Function(Function()) parentSetState;
 
-  FillAnswerPage(
-      {super.key,
-      required this.reportAnswer,
-      required this.dm,
-      required this.adding,
-      required this.parentSetState});
+  const FillAnswerPage(
+      {super.key, required this.reportAnswer, required this.dm, this.adding = false, required this.parentSetState});
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +53,7 @@ class FillAnswerPage extends StatelessWidget {
         locations.add(Padding(
             padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
             child: Card(
-                child: ListTile(
-                    leading: const Icon(Icons.computer),
-                    title: Text(baseReport.locations[i].objects[x].name)))));
+                child: ListTile(leading: const Icon(Icons.computer), title: Text(baseReport.locations[i].objects[x].name)))));
       }
     }
     return Scaffold(

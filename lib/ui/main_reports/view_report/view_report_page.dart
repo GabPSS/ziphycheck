@@ -7,22 +7,16 @@ import 'package:flutter/material.dart';
 import '../../../models/report.dart';
 
 class ViewReportPage extends StatefulWidget {
-  DataMaster dm;
-  Report report;
+  final DataMaster dm;
+  final Report report;
 
-  ViewReportPage({super.key, required this.dm, required this.report});
+  const ViewReportPage({super.key, required this.dm, required this.report});
 
   @override
-  State<ViewReportPage> createState() =>
-      _ViewReportPageState(dm: dm, report: report);
+  State<ViewReportPage> createState() => _ViewReportPageState();
 }
 
 class _ViewReportPageState extends State<ViewReportPage> {
-  DataMaster dm;
-  Report report;
-
-  _ViewReportPageState({required this.dm, required this.report});
-
   @override
   Widget build(BuildContext context) {
     List<Widget> listWidgets = List.empty(growable: true);
@@ -31,7 +25,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
           child: Text(
-            report.name,
+            widget.report.name,
             style: const TextStyle(fontSize: 32),
           ),
         ),
@@ -45,7 +39,11 @@ class _ViewReportPageState extends State<ViewReportPage> {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return AddReportPage(report: report, dm: dm, parentSetState: setState,);
+                      return AddReportPage(
+                        report: widget.report,
+                        dm: widget.dm,
+                        parentSetState: setState,
+                      );
                     },
                   ));
                 },
@@ -59,7 +57,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
       ),
       const Divider()
     ]);
-    listWidgets.addAll(dm.getAnswersForReport(report).map((e) => ListTile(
+    listWidgets.addAll(widget.dm.getAnswersForReport(widget.report).map((e) => ListTile(
           title: Text(e.answerDate.toString()),
         )));
 
@@ -69,7 +67,12 @@ class _ViewReportPageState extends State<ViewReportPage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return FillAnswerPage(adding: true, dm: dm, reportAnswer: ReportAnswer(dm: dm, baseReportId: report.id), parentSetState: setState,);
+              return FillAnswerPage(
+                adding: true,
+                dm: widget.dm,
+                reportAnswer: ReportAnswer(dm: widget.dm, baseReportId: widget.report.id),
+                parentSetState: setState,
+              );
             },
           ));
         },

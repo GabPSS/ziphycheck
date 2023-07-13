@@ -5,35 +5,18 @@ import 'package:checkup_app/models/report.dart';
 import 'package:flutter/material.dart';
 
 class AddReportPage extends StatefulWidget {
-  Report report;
-  DataMaster dm;
-  bool isAdding;
-  Function(Function()) parentSetState;
-  AddReportPage(
-      {super.key,
-      required this.report,
-      this.isAdding = false,
-      required this.dm,
-      required this.parentSetState});
+  final Report report;
+  final DataMaster dm;
+  final bool isAdding;
+  final Function(Function()) parentSetState;
+  const AddReportPage({super.key, required this.report, this.isAdding = false, required this.dm, required this.parentSetState});
 
   @override
-  State<AddReportPage> createState() => _AddReportPageState(
-      report: report,
-      isAdding: isAdding,
-      dm: dm,
-      parentSetState: parentSetState);
+  State<AddReportPage> createState() => _AddReportPageState();
 }
 
 class _AddReportPageState extends State<AddReportPage> {
-  Report report;
-  DataMaster dm;
-  bool isAdding;
-  Function(Function()) parentSetState;
-  _AddReportPageState(
-      {required this.report,
-      required this.isAdding,
-      required this.dm,
-      required this.parentSetState});
+  _AddReportPageState();
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +25,16 @@ class _AddReportPageState extends State<AddReportPage> {
       value: null,
       child: Text('(No type)'),
     ));
-    objectTypes.addAll(dm.objectTypes.map((e) => DropdownMenuItem(
+    objectTypes.addAll(widget.dm.objectTypes.map((e) => DropdownMenuItem(
           value: e,
           child: Text(e.name),
         )));
 
     List<Widget> locations = List.empty(growable: true);
-    for (var i = 0; i < report.locations.length; i++) {
+    for (var i = 0; i < widget.report.locations.length; i++) {
       List<Widget> objects = List.empty(growable: true);
-      for (var x = 0; x < report.locations[i].objects.length; x++) {
-        var object = report.locations[i].objects[x];
+      for (var x = 0; x < widget.report.locations[i].objects.length; x++) {
+        var object = widget.report.locations[i].objects[x];
         objects.add(ListTile(
           leading: const Icon(Icons.desktop_windows),
           title: TextFormField(
@@ -77,7 +60,7 @@ class _AddReportPageState extends State<AddReportPage> {
         title: const Text("Add new object"),
         onTap: () {
           setState(() {
-            report.locations[i].objects.add(CheckupObject(report: report));
+            widget.report.locations[i].objects.add(CheckupObject(report: widget.report));
           });
         },
       ));
@@ -86,11 +69,9 @@ class _AddReportPageState extends State<AddReportPage> {
           ListTile(
             leading: const Icon(Icons.location_on),
             title: TextFormField(
-              initialValue: report.locations[i].name == ""
-                  ? "Unnamed location"
-                  : report.locations[i].name,
+              initialValue: widget.report.locations[i].name == "" ? "Unnamed location" : widget.report.locations[i].name,
               onChanged: (value) {
-                report.locations[i].name = value;
+                widget.report.locations[i].name = value;
               },
             ),
           ),
@@ -107,7 +88,7 @@ class _AddReportPageState extends State<AddReportPage> {
       title: const Text("Add new location"),
       onTap: () {
         setState(() {
-          report.locations.add(Location());
+          widget.report.locations.add(Location());
         });
       },
     ));
@@ -117,7 +98,7 @@ class _AddReportPageState extends State<AddReportPage> {
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
-            if (isAdding) {
+            if (widget.isAdding) {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -133,7 +114,7 @@ class _AddReportPageState extends State<AddReportPage> {
                         onPressed: () {
                           Navigator.pop(context);
                           Navigator.pop(context);
-                          dm.reports.remove(report);
+                          widget.dm.reports.remove(widget.report);
                         },
                         child: const Text('Discard'))
                   ],
@@ -141,18 +122,18 @@ class _AddReportPageState extends State<AddReportPage> {
               );
             } else {
               Navigator.pop(context);
-              parentSetState(
+              widget.parentSetState(
                 () {},
               );
             }
           },
         ),
-        title: Text(isAdding ? 'New report' : 'Edit report'),
+        title: Text(widget.isAdding ? 'New report' : 'Edit report'),
         actions: [
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                parentSetState(() {});
+                widget.parentSetState(() {});
               },
               child: const Text(
                 'Save',
@@ -164,11 +145,10 @@ class _AddReportPageState extends State<AddReportPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Name'),
-              initialValue: report.name,
+              decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Name'),
+              initialValue: widget.report.name,
               onChanged: (value) {
-                report.name = value;
+                widget.report.name = value;
               },
             ),
           ),
