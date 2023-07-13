@@ -5,6 +5,8 @@ import 'package:checkup_app/models/task.dart';
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
+import 'package:checkup_app/ui/main_tasks/main_tasks_page.dart';
+import 'package:checkup_app/ui/main_tasks/tasks_editor_page.dart';
 import 'package:flutter/material.dart';
 
 import '../data/data_master.dart';
@@ -36,7 +38,6 @@ class _HomePageState extends State<HomePage> {
     // TODO: Replace placeholder DM with DM opening from file later
     var task = Task(dm: dm);
     task.name = "Check PCs later";
-    dm.tasks.add(task);
 
     var objectType = ObjectType(dm: dm);
     objectType.name = "PC";
@@ -77,8 +78,8 @@ class _HomePageState extends State<HomePage> {
         title = "Object Types";
         break;
       case 2:
-        page = const Placeholder();
-        fabFunction = null;
+        page = MainTasksPage(dm: dm);
+        fabFunction = mainTasksFabTapped;
         title = "Tasks";
       default:
         throw Error();
@@ -167,5 +168,17 @@ class _HomePageState extends State<HomePage> {
                   isAdding: true,
                   onUpdate: () => setState(() {}),
                 )));
+  }
+
+  mainTasksFabTapped() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TasksEditorPage(
+            dm: dm,
+            isAdding: true,
+            onUpdate: () => setState(() {}),
+          ),
+        ));
   }
 }
