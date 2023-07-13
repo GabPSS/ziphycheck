@@ -40,16 +40,16 @@ class _MainReportsPageState extends State<MainReportsPage> {
                   onSelected: (value) {
                     switch (value) {
                       case 0:
-                        Navigator.pop(context);
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return AddReportPage(
-                              report: widget.dm.reports[index],
-                              dm: widget.dm,
-                              parentSetState: setState,
-                            );
-                          },
-                        ));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddReportPage(
+                                isAdding: false,
+                                report: widget.dm.reports[index],
+                                dm: widget.dm,
+                                parentSetState: setState,
+                              ),
+                            ));
                         break;
                       case 1:
                         showDialog(
@@ -66,7 +66,6 @@ class _MainReportsPageState extends State<MainReportsPage> {
                                   child: const Text('Cancel')),
                               TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
                                     Navigator.pop(context);
                                     setState(() {
                                       widget.dm.reports.removeAt(index);

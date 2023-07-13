@@ -1,4 +1,8 @@
-import 'package:checkup_app/ui/main_object_types/add_object_type_page.dart';
+import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/location.dart';
+import 'package:checkup_app/models/object_type.dart';
+import 'package:checkup_app/models/task.dart';
+import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +31,34 @@ class _HomePageState extends State<HomePage> {
     setPage(index: 0);
   }
 
+  @override
+  void initState() {
+    // TODO: Replace placeholder DM with DM opening from file later
+    var task = Task(dm: dm);
+    task.name = "Check PCs later";
+    dm.tasks.add(task);
+
+    var objectType = ObjectType(dm: dm);
+    objectType.name = "PC";
+    objectType.addTask(task);
+
+    var report = Report(dm: dm);
+    report.name = "First report";
+
+    var location = Location();
+    location.name = "Place 1";
+
+    var checkupObject = CheckupObject(report: report);
+    checkupObject.objectType = objectType;
+    checkupObject.name = "PC 1";
+
+    location.objects.add(checkupObject);
+    report.locations.add(location);
+    dm.reports.add(report);
+
+    super.initState();
+  }
+
   void setPage({int? index}) {
     if (index != null) {
       pageIndex = index;
@@ -38,7 +70,9 @@ class _HomePageState extends State<HomePage> {
         title = "Reports";
         break;
       case 1:
-        page = const MainObjectTypesPage();
+        page = MainObjectTypesPage(
+          dm: dm,
+        );
         fabFunction = mainObjectTypesFabTapped;
         title = "Object Types";
         break;
@@ -55,31 +89,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     setPage();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: fabFunction, child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(onPressed: fabFunction, child: const Icon(Icons.add)),
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  title = title;
-                });
-              },
-              icon: const Icon(Icons.refresh))
-        ],
       ),
       body: page,
       drawer: Drawer(
         child: Column(
           children: [
-            const ListTile(
-              title: Text(
-                'Checkup App',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Divider(),
+            UserAccountsDrawerHeader(
+                accountName: Text('CheckupApp'), accountEmail: ElevatedButton(onPressed: () {}, child: Text("Sign in"))),
             ListTile(
               leading: const Icon(Icons.assignment),
               title: const Text('Reports'),
@@ -115,8 +134,7 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.help),
               title: const Text('About'),
               onTap: () {
-                showAboutDialog(
-                    context: context, applicationName: 'Checkup app');
+                showAboutDialog(context: context, applicationName: 'Checkup app');
               },
             )
           ],
@@ -142,6 +160,12 @@ class _HomePageState extends State<HomePage> {
 
   mainObjectTypesFabTapped() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const AddObjectTypePage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => ObjectTypeEditorPage(
+                  dm: dm,
+                  isAdding: true,
+                  onUpdate: () => setState(() {}),
+                )));
   }
 }

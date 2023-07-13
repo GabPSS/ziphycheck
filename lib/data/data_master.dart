@@ -18,8 +18,7 @@ class DataMaster {
   static const String unknownObject = "Unknown Object";
 
   List<ReportAnswer> getAnswersForReport(Report report) {
-    return List.from(
-        reportAnswers.where((element) => element.baseReportId == report.id));
+    return List.from(reportAnswers.where((element) => element.baseReportId == report.id));
   }
 
   Report getReportById(int id) => reports.where((element) => element.id == id).first;
