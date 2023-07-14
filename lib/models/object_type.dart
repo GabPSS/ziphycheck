@@ -7,6 +7,14 @@ class ObjectType {
   String name = "";
   final List<int> _taskIds = List<int>.empty(growable: true);
 
+  String _pluralName = "";
+
+  String get pluralName => _pluralName == "" ? name : _pluralName;
+
+  set pluralName(String value) => _pluralName = value;
+
+  String getName(bool plural) => plural ? pluralName : name;
+
   DataMaster dm;
 
   ObjectType({required this.dm}) {

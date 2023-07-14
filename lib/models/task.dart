@@ -1,4 +1,6 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/object_type.dart';
 
 class Task {
   late int id;
