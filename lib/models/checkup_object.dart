@@ -10,4 +10,6 @@ class CheckupObject {
     id = report.checkupObjectKey;
     report.checkupObjectKey++;
   }
+
+  String get fullName => (objectType?.name ?? "") + name;
 }

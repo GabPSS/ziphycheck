@@ -25,10 +25,11 @@ class ReportAnswer {
 
     for (var locationIndex = 0; locationIndex < baseReport.locations.length; locationIndex++) {
       Location location = baseReport.locations[locationIndex];
-      reportOut += "${location.name}\n\n";
 
       List<TaskAnswer> locationAnswers = List.empty(growable: true);
       getFalseAnswersByLocation(location, locationAnswers);
+
+      if (locationAnswers.isNotEmpty) reportOut += "${location.name}\n\n";
 
       List<String> answerPrompts = List.empty(growable: true);
       getAllAnswerPrompts(locationAnswers, answerPrompts);
@@ -39,9 +40,11 @@ class ReportAnswer {
         getCheckupObjectNamesFromTaskAnswers(locationAnswers, prompt, location, checkupObjectNames);
         reportOut += "${formatPrompt(prompt, checkupObjectNames)}\n";
       }
+
+      reportOut += "\n";
     }
 
-    return reportOut;
+    return reportOut.trim();
   }
 
   void getCheckupObjectNamesFromTaskAnswers(
@@ -58,9 +61,16 @@ class ReportAnswer {
   void getFalseAnswersByLocation(Location location, List<TaskAnswer> locationAnswers) {
     for (var objectIndex = 0; objectIndex < location.objects.length; objectIndex++) {
       CheckupObject object = location.objects[objectIndex];
-      TaskAnswer? objectTaskAnswer = getTaskAnswerByObjectId(object.id);
-      if (objectTaskAnswer != null && !objectTaskAnswer.status) {
-        locationAnswers.add(objectTaskAnswer);
+      if (object.objectType == null) {
+        continue;
+      }
+      var objectTasks = object.objectType!.getTasks();
+      for (var taskIndex = 0; taskIndex < objectTasks.length; taskIndex++) {
+        var task = objectTasks[taskIndex];
+        TaskAnswer? objectTaskAnswer = getTaskAnswerByObjectAndTaskIds(object.id, task.id);
+        if (objectTaskAnswer != null && !objectTaskAnswer.status) {
+          locationAnswers.add(objectTaskAnswer);
+        }
       }
     }
   }
@@ -77,6 +87,15 @@ class ReportAnswer {
   TaskAnswer? getTaskAnswerByObjectId(int id) {
     for (var i = 0; i < answers.length; i++) {
       if (answers[i].objectId == id) {
+        return answers[i];
+      }
+    }
+    return null;
+  }
+
+  TaskAnswer? getTaskAnswerByObjectAndTaskIds(int objectId, int taskId) {
+    for (var i = 0; i < answers.length; i++) {
+      if (answers[i].objectId == objectId && answers[i].taskId == taskId) {
         return answers[i];
       }
     }

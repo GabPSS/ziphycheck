@@ -1,5 +1,6 @@
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
 
@@ -17,8 +18,8 @@ class FillAnswerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> locations = List.empty(growable: true);
-    locations.add(
+    List<Widget> locationWidgets = List.empty(growable: true);
+    locationWidgets.add(
       Row(
         children: [
           Expanded(
@@ -42,19 +43,32 @@ class FillAnswerPage extends StatelessWidget {
     );
 
     for (var i = 0; i < baseReport.locations.length; i++) {
-      locations.add(
+      locationWidgets.add(
         ListTile(
           leading: const Icon(Icons.location_on),
           title: Text(baseReport.locations[i].name),
         ),
       );
 
-      for (var x = 0; x < baseReport.locations[i].objects.length; x++) {
-        locations.add(Padding(
-            padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
-            child: Card(
-                child: ListTile(leading: const Icon(Icons.computer), title: Text(baseReport.locations[i].objects[x].name)))));
-      }
+      locationWidgets.addAll(baseReport.locations[i].objects.map((checkupObject) => Padding(
+          padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
+          child: Card(
+            child: ListTile(
+              leading: Icon(checkupObject.objectType?.getIcon() ?? Icons.device_unknown),
+              title: Text(checkupObject.fullName),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FillObjectAnswerPage(
+                        dm: dm,
+                        checkupObject: checkupObject,
+                        reportAnswer: reportAnswer,
+                      ),
+                    ));
+              },
+            ),
+          ))));
     }
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +82,7 @@ class FillAnswerPage extends StatelessWidget {
               child: const Text('Save'))
         ],
       ),
-      body: ListView(children: locations),
+      body: ListView(children: locationWidgets),
     );
   }
 }
