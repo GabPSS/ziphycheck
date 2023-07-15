@@ -37,7 +37,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Name',
           ),
@@ -75,8 +75,8 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
 
     if (map.isNotEmpty) {
       var newMap = <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Text('Available tasks'),
         )
       ];
@@ -87,7 +87,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
     mainWidgets.addAll(map.isNotEmpty
         ? map
         : [
-            Expanded(
+            const Expanded(
                 child: Center(
               child: Text('There are no tasks to add right now. Add some, then come back later'),
             ))
@@ -125,7 +125,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
                 );
               }
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         title: Text(isAdding ? 'Add object type' : 'Edit object type'),
       ),
       body: Form(

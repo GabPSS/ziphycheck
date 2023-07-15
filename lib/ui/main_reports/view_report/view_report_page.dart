@@ -63,7 +63,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
           title: Text(e.answerDate.toString()),
           trailing: IconButton(
             //TODO: Replace with share function
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () => log(e.getReportString(widget.dm)),
           ),
         )));

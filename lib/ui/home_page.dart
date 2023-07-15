@@ -121,7 +121,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-                accountName: Text('CheckupApp'), accountEmail: ElevatedButton(onPressed: () {}, child: Text("Sign in"))),
+                accountName: const Text('CheckupApp'),
+                accountEmail: ElevatedButton(onPressed: () {}, child: const Text("Sign in"))),
             ListTile(
               leading: const Icon(Icons.assignment),
               title: const Text('Reports'),

@@ -29,7 +29,7 @@ class _MainTasksPageState extends State<MainTasksPage> {
                   ),
                 )),
             child: ListTile(
-              leading: Icon(Icons.check_box),
+              leading: const Icon(Icons.check_box),
               title: Text(task.name),
               trailing: PopupMenuButton(
                 onSelected: (value) {

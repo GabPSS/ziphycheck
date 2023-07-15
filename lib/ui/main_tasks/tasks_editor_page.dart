@@ -37,7 +37,7 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Name *',
           ),
@@ -59,7 +59,7 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Answer prompt',
             hintText: '% {has|have} display issues',
@@ -83,17 +83,17 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
           },
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
+      const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Text('Fail options'),
       )
     ].toList(growable: true);
 
     for (var i = 0; i < task.defaultFailOptions.length; i++) {
       listWidgets.add(ListTile(
-        leading: Icon(null),
+        leading: const Icon(null),
         title: TextFormField(
-          decoration: InputDecoration(hintText: '% {has|that have} some ghosting'),
+          decoration: const InputDecoration(hintText: '% {has|that have} some ghosting'),
           initialValue: task.defaultFailOptions[i],
           onChanged: (value) {
             task.defaultFailOptions[i] = value;
@@ -101,7 +101,7 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
         ),
         trailing: IconButton(
           onPressed: () => setState(() => task.defaultFailOptions.removeAt(i)),
-          icon: Icon(Icons.delete),
+          icon: const Icon(Icons.delete),
         ),
       ));
     }
@@ -109,8 +109,8 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
     // listWidgets.addAll(task.defaultFailOptions.map(
 
     listWidgets.add(ListTile(
-      leading: Icon(Icons.add),
-      title: Text('Add fail option'),
+      leading: const Icon(Icons.add),
+      title: const Text('Add fail option'),
       onTap: () {
         setState(() {
           task.defaultFailOptions.add('');
@@ -149,7 +149,7 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
                 );
               }
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         title: Text(isAdding ? 'Add task' : 'Edit task'),
       ),
       body: Form(
