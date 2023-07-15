@@ -62,9 +62,6 @@ class FillAnswerPage extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () {
-                if (adding) {
-                  dm.reportAnswers.add(reportAnswer);
-                }
                 Navigator.pop(context);
                 parentSetState(() {});
               },

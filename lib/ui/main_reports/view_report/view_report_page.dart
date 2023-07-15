@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/add_report_page.dart';
@@ -59,6 +61,11 @@ class _ViewReportPageState extends State<ViewReportPage> {
     ]);
     listWidgets.addAll(widget.dm.getAnswersForReport(widget.report).map((e) => ListTile(
           title: Text(e.answerDate.toString()),
+          trailing: IconButton(
+            //TODO: Replace with share function
+            icon: Icon(Icons.share),
+            onPressed: () => log(e.getReportString(widget.dm)),
+          ),
         )));
 
     return Scaffold(

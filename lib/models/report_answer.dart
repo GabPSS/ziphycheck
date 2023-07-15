@@ -1,6 +1,7 @@
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
+import 'package:intl/intl.dart';
 
 import '../data/data_master.dart';
 import 'task_answer.dart';
@@ -20,7 +21,7 @@ class ReportAnswer {
   String getReportString(DataMaster dm) {
     Report baseReport = dm.getReportById(baseReportId);
 
-    String reportOut = "${baseReport.name} ${answerDate.toString()}\n\n";
+    String reportOut = "${baseReport.name} ${DateFormat('d/M').format(answerDate)}\n\n";
 
     for (var locationIndex = 0; locationIndex < baseReport.locations.length; locationIndex++) {
       Location location = baseReport.locations[locationIndex];
