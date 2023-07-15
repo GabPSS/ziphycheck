@@ -4,12 +4,17 @@ class Task {
   late int id;
   String name = "";
   String _answerPrompt = "";
+  List<String> defaultFailOptions = List.empty(growable: true);
 
-  String get answerPrompt { return _answerPrompt == "" ? name : _answerPrompt; }
-  set answerPrompt(String value) {_answerPrompt = value;}
+  bool get isAnswerPromptEmpty => _answerPrompt == "";
+
+  String get answerPrompt => _answerPrompt == "" ? name : _answerPrompt;
+
+  set answerPrompt(String value) => _answerPrompt = value;
 
   Task({required DataMaster dm}) {
     id = dm.taskKey;
     dm.taskKey++;
+    dm.tasks.add(this);
   }
 }

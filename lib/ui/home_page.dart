@@ -1,10 +1,16 @@
+import 'dart:developer';
+
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/object_type.dart';
+import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/models/task.dart';
+import 'package:checkup_app/models/task_answer.dart';
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
+import 'package:checkup_app/ui/main_tasks/main_tasks_page.dart';
+import 'package:checkup_app/ui/main_tasks/tasks_editor_page.dart';
 import 'package:flutter/material.dart';
 
 import '../data/data_master.dart';
@@ -36,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: Replace placeholder DM with DM opening from file later
     var task = Task(dm: dm);
     task.name = "Check PCs later";
-    dm.tasks.add(task);
+    task.answerPrompt = "% {has an issue|have issues} there";
 
     var objectType = ObjectType(dm: dm);
     objectType.name = "PC";
@@ -50,11 +56,28 @@ class _HomePageState extends State<HomePage> {
 
     var checkupObject = CheckupObject(report: report);
     checkupObject.objectType = objectType;
-    checkupObject.name = "PC 1";
+    checkupObject.name = "1";
+
+    var checkupObject2 = CheckupObject(report: report);
+    checkupObject2.objectType = objectType;
+    checkupObject2.name = "2";
 
     location.objects.add(checkupObject);
+    location.objects.add(checkupObject2);
     report.locations.add(location);
+
+    var reportAnswer = ReportAnswer(dm: dm, baseReportId: report.id);
+    reportAnswer.answerDate = DateTime.now();
+
+    var taskAnswer = TaskAnswer(taskId: task.id, objectId: checkupObject.id);
+    taskAnswer.failAnswerPrompt = task.answerPrompt;
+    var taskAnswer2 = TaskAnswer(taskId: task.id, objectId: checkupObject2.id);
+    taskAnswer2.failAnswerPrompt = task.answerPrompt;
+    reportAnswer.answers.add(taskAnswer);
+    reportAnswer.answers.add(taskAnswer2);
     dm.reports.add(report);
+
+    log(reportAnswer.getReportString(dm));
 
     super.initState();
   }
@@ -77,8 +100,8 @@ class _HomePageState extends State<HomePage> {
         title = "Object Types";
         break;
       case 2:
-        page = const Placeholder();
-        fabFunction = null;
+        page = MainTasksPage(dm: dm);
+        fabFunction = mainTasksFabTapped;
         title = "Tasks";
       default:
         throw Error();
@@ -98,7 +121,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-                accountName: Text('CheckupApp'), accountEmail: ElevatedButton(onPressed: () {}, child: Text("Sign in"))),
+                accountName: const Text('CheckupApp'),
+                accountEmail: ElevatedButton(onPressed: () {}, child: const Text("Sign in"))),
             ListTile(
               leading: const Icon(Icons.assignment),
               title: const Text('Reports'),
@@ -167,5 +191,17 @@ class _HomePageState extends State<HomePage> {
                   isAdding: true,
                   onUpdate: () => setState(() {}),
                 )));
+  }
+
+  mainTasksFabTapped() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TasksEditorPage(
+            dm: dm,
+            isAdding: true,
+            onUpdate: () => setState(() {}),
+          ),
+        ));
   }
 }

@@ -98,6 +98,6 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
       );
     }
 
-    return Placeholder();
+    return const Placeholder();
   }
 }
