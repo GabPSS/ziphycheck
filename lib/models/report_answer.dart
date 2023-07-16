@@ -93,6 +93,16 @@ class ReportAnswer {
     return null;
   }
 
+  List<TaskAnswer> getTaskAnswersByObjectId(int id) {
+    List<TaskAnswer> output = List.empty(growable: true);
+    for (var i = 0; i < answers.length; i++) {
+      if (answers[i].objectId == id) {
+        output.add(answers[i]);
+      }
+    }
+    return output;
+  }
+
   TaskAnswer? getTaskAnswerByObjectAndTaskIds(int objectId, int taskId) {
     for (var i = 0; i < answers.length; i++) {
       if (answers[i].objectId == objectId && answers[i].taskId == taskId) {

@@ -98,6 +98,8 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
       );
     }
 
-    return const Placeholder();
+    return const Center(
+      child: Text('There are no object types. Tap + to add a new object type'),
+    );
   }
 }

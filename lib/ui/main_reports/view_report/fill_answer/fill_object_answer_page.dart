@@ -35,13 +35,40 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
 
   @override
   Widget build(BuildContext context) {
-    TaskAnswer? answer = widget.reportAnswer.getTaskAnswerByObjectAndTaskIds(widget.checkupObject.id, currentTask.id);
+    Widget mainWidget;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.checkupObject.fullName),
-      ),
-      body: Column(
+    if (widget.checkupObject.objectType != null) {
+      TaskAnswer? answer = widget.reportAnswer.getTaskAnswerByObjectAndTaskIds(widget.checkupObject.id, currentTask.id);
+
+      List<Widget> failAnswerPromptWidgets = List.empty(growable: true);
+      if (answer != null && !answer.status) {
+        failAnswerPromptWidgets.add(const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text('Select the option that best matches the problem'),
+        ));
+        failAnswerPromptWidgets.add(RadioListTile(
+          value: currentTask.answerPrompt,
+          groupValue: answer.failAnswerPrompt,
+          onChanged: (value) {
+            setState(() {
+              answer.failAnswerPrompt = value;
+            });
+          },
+          title: Text('${getFormattedPrompt(currentTask.answerPrompt)} (Default)'),
+        ));
+        failAnswerPromptWidgets.addAll(currentTask.defaultFailOptions.map((e) => RadioListTile(
+              value: e,
+              groupValue: answer.failAnswerPrompt,
+              onChanged: (value) {
+                setState(() {
+                  answer.failAnswerPrompt = value;
+                });
+              },
+              title: Text(getFormattedPrompt(e)),
+            )));
+      }
+
+      mainWidget = Column(
         children: [
           Row(
             children: [
@@ -51,7 +78,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: Text('Task:'),
+                        child: Text('Task ${currentTaskIndex + 1}/${widget.checkupObject.objectType?.getTasks().length ?? 0}'),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -139,11 +166,27 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                     style: ButtonStyle(iconSize: MaterialStatePropertyAll(48))),
               )),
             ],
+          ),
+          Expanded(
+            child: ListView(
+              children: failAnswerPromptWidgets,
+            ),
           )
         ],
+      );
+    } else {
+      mainWidget = const Center(child: Text("This object's type does not have any tasks"));
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.checkupObject.fullName),
       ),
+      body: mainWidget,
     );
   }
+
+  String getFormattedPrompt(String prompt) => widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.fullName]);
 
   void addIndex() {
     currentTaskIndex++;

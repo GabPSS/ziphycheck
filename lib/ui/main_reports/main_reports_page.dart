@@ -61,7 +61,6 @@ class _MainReportsPageState extends State<MainReportsPage> {
                               TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    Navigator.pop(context);
                                   },
                                   child: const Text('Cancel')),
                               TextButton(

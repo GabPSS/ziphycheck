@@ -49,26 +49,31 @@ class FillAnswerPage extends StatelessWidget {
           title: Text(baseReport.locations[i].name),
         ),
       );
+      locationWidgets.addAll(baseReport.locations[i].objects.map((checkupObject) {
+        int objectTasksCount = checkupObject.objectType?.getTasks().length ?? 0;
+        int answeredTasksCount = reportAnswer.getTaskAnswersByObjectId(checkupObject.id).length;
 
-      locationWidgets.addAll(baseReport.locations[i].objects.map((checkupObject) => Padding(
-          padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
-          child: Card(
-            child: ListTile(
-              leading: Icon(checkupObject.objectType?.getIcon() ?? Icons.device_unknown),
-              title: Text(checkupObject.fullName),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FillObjectAnswerPage(
-                        dm: dm,
-                        checkupObject: checkupObject,
-                        reportAnswer: reportAnswer,
-                      ),
-                    ));
-              },
-            ),
-          ))));
+        return Padding(
+            padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
+            child: Card(
+              child: ListTile(
+                leading: Icon(checkupObject.objectType?.getIcon() ?? Icons.device_unknown),
+                title: Text(checkupObject.fullName),
+                subtitle: Text("$answeredTasksCount/$objectTasksCount task${objectTasksCount == 1 ? "" : "s"}"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FillObjectAnswerPage(
+                          dm: dm,
+                          checkupObject: checkupObject,
+                          reportAnswer: reportAnswer,
+                        ),
+                      ));
+                },
+              ),
+            ));
+      }));
     }
     return Scaffold(
       appBar: AppBar(
