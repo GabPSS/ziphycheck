@@ -8,7 +8,7 @@ class TaskAnswer {
   bool status = false;
   String? failAnswerPrompt;
   String? notes;
-  dynamic attachment;
+  String? photo;
 
   TaskAnswer({required this.taskId, required this.objectId});
 

@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/models/task.dart';
 import 'package:checkup_app/models/task_answer.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FillObjectAnswerPage extends StatefulWidget {
   final DataMaster dm;
@@ -40,13 +44,13 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
     if (widget.checkupObject.objectType != null) {
       TaskAnswer? answer = widget.reportAnswer.getTaskAnswerByObjectAndTaskIds(widget.checkupObject.id, currentTask.id);
 
-      List<Widget> failAnswerPromptWidgets = List.empty(growable: true);
+      List<Widget> failAnswerWidgets = List.empty(growable: true);
       if (answer != null && !answer.status) {
-        failAnswerPromptWidgets.add(const Padding(
+        failAnswerWidgets.add(const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text('Select the option that best matches the problem'),
         ));
-        failAnswerPromptWidgets.add(RadioListTile(
+        failAnswerWidgets.add(RadioListTile(
           value: currentTask.answerPrompt,
           groupValue: answer.failAnswerPrompt,
           onChanged: (value) {
@@ -56,7 +60,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
           },
           title: Text('${getFormattedPrompt(currentTask.answerPrompt)} (Default)'),
         ));
-        failAnswerPromptWidgets.addAll(currentTask.defaultFailOptions.map((e) => RadioListTile(
+        failAnswerWidgets.addAll(currentTask.defaultFailOptions.map((e) => RadioListTile(
               value: e,
               groupValue: answer.failAnswerPrompt,
               onChanged: (value) {
@@ -66,6 +70,23 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               },
               title: Text(getFormattedPrompt(e)),
             )));
+        if (answer.photo != null) {
+          failAnswerWidgets.add(Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text('Attached photo'),
+          ));
+          failAnswerWidgets.add(Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: getPhotoWidgetFromTaskAnswer(answer),
+          ));
+        }
+        failAnswerWidgets.add(Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton.icon(
+              onPressed: () => pickPhoto(answer).then((value) => setState(() {})),
+              icon: Icon(Icons.add_a_photo),
+              label: Text('ADD PHOTO')),
+        ));
       }
 
       mainWidget = Column(
@@ -102,7 +123,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
             children: [
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 8, 4, 8),
+                padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
                 child: ElevatedButton.icon(
                   onPressed: () {
                     setState(() {
@@ -119,7 +140,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               )),
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
                 child: ElevatedButton.icon(
                   onPressed: () {
                     setState(() {
@@ -141,7 +162,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
             children: [
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
                 child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
@@ -154,7 +175,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               )),
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
                 child: ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
@@ -169,7 +190,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
           ),
           Expanded(
             child: ListView(
-              children: failAnswerPromptWidgets,
+              children: failAnswerWidgets,
             ),
           )
         ],
@@ -184,6 +205,21 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
       ),
       body: mainWidget,
     );
+  }
+
+  Future<void> pickPhoto(TaskAnswer answer) async {
+    XFile? photoFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (photoFile != null) {
+      Uint8List photoBytes = await photoFile.readAsBytes();
+      String encodedPhotoBytes = base64Encode(photoBytes);
+      answer.photo = encodedPhotoBytes;
+    }
+  }
+
+  Image getPhotoWidgetFromTaskAnswer(TaskAnswer answer) {
+    assert(answer.photo != null);
+
+    return Image.memory(base64Decode(answer.photo!));
   }
 
   String getFormattedPrompt(String prompt) => widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.fullName]);
