@@ -71,15 +71,16 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               title: Text(getFormattedPrompt(e)),
             )));
         if (answer.photo != null) {
-          failAnswerWidgets.add(Padding(
-            padding: const EdgeInsets.all(16),
+          failAnswerWidgets.add(const Padding(
+            padding: EdgeInsets.all(16),
             child: Text('Attached photo'),
           ));
           failAnswerWidgets.add(Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: Stack(children: [
               getPhotoWidgetFromTaskAnswer(answer),
-              IconButton(onPressed: () => setState(() => answer.photo = null), icon: Icon(Icons.delete, color: Colors.white))
+              IconButton(
+                  onPressed: () => setState(() => answer.photo = null), icon: const Icon(Icons.delete, color: Colors.white))
             ]),
           ));
         }
@@ -87,7 +88,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton.icon(
               onPressed: () => pickPhoto(answer).then((value) => setState(() {})),
-              icon: Icon(Icons.add_a_photo),
+              icon: const Icon(Icons.add_a_photo),
               label: Text('${answer.photo == null ? 'ADD' : 'REPLACE'} PHOTO')),
         ));
       }
@@ -133,12 +134,13 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                       setStatus(answer, false);
                     });
                   },
-                  icon: Icon(Icons.close),
-                  label: Text('NO'),
+                  icon: const Icon(Icons.close),
+                  label: const Text('NO'),
                   style: ButtonStyle(
-                      iconSize: MaterialStatePropertyAll(48),
-                      backgroundColor:
-                          (!(answer?.status ?? true)) ? MaterialStatePropertyAll(Color.fromARGB(255, 242, 145, 145)) : null),
+                      iconSize: const MaterialStatePropertyAll(48),
+                      backgroundColor: (!(answer?.status ?? true))
+                          ? const MaterialStatePropertyAll(Color.fromARGB(255, 242, 145, 145))
+                          : null),
                 ),
               )),
               Expanded(
@@ -151,12 +153,13 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                       addIndex();
                     });
                   },
-                  icon: Icon(Icons.check),
-                  label: Text('YES'),
+                  icon: const Icon(Icons.check),
+                  label: const Text('YES'),
                   style: ButtonStyle(
-                      iconSize: MaterialStatePropertyAll(48),
-                      backgroundColor:
-                          (answer?.status ?? false) ? MaterialStatePropertyAll(Color.fromARGB(255, 169, 219, 151)) : null),
+                      iconSize: const MaterialStatePropertyAll(48),
+                      backgroundColor: (answer?.status ?? false)
+                          ? const MaterialStatePropertyAll(Color.fromARGB(255, 169, 219, 151))
+                          : null),
                 ),
               )),
             ],
@@ -172,9 +175,9 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                         subtractIndex();
                       });
                     },
-                    icon: Icon(Icons.navigate_before),
-                    label: Text('PREVIOUS'),
-                    style: ButtonStyle(iconSize: MaterialStatePropertyAll(48))),
+                    icon: const Icon(Icons.navigate_before),
+                    label: const Text('PREVIOUS'),
+                    style: const ButtonStyle(iconSize: MaterialStatePropertyAll(48))),
               )),
               Expanded(
                   child: Padding(
@@ -185,9 +188,9 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                         addIndex();
                       });
                     },
-                    icon: Icon(Icons.navigate_next),
-                    label: Text('NEXT'),
-                    style: ButtonStyle(iconSize: MaterialStatePropertyAll(48))),
+                    icon: const Icon(Icons.navigate_next),
+                    label: const Text('NEXT'),
+                    style: const ButtonStyle(iconSize: MaterialStatePropertyAll(48))),
               )),
             ],
           ),

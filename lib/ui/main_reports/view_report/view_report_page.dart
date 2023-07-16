@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/add_report_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_answer_page.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
