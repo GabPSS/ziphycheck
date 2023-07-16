@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../data/data_master.dart';
@@ -125,5 +128,17 @@ class ReportAnswer {
     prompt = prompt.replaceAll('%', checkupObjectNames.join(', '));
 
     return prompt;
+  }
+
+  List<XFile> getAnswerImages() {
+    List<XFile> output = List.empty(growable: true);
+
+    for (var answer in answers) {
+      if (answer.photo != null) {
+        output.add(XFile.fromData(base64Decode(answer.photo!), mimeType: 'image/jpeg'));
+      }
+    }
+
+    return output;
   }
 }

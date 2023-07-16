@@ -77,7 +77,10 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
           ));
           failAnswerWidgets.add(Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: getPhotoWidgetFromTaskAnswer(answer),
+            child: Stack(children: [
+              getPhotoWidgetFromTaskAnswer(answer),
+              IconButton(onPressed: () => setState(() => answer.photo = null), icon: Icon(Icons.delete, color: Colors.white))
+            ]),
           ));
         }
         failAnswerWidgets.add(Padding(
@@ -85,7 +88,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
           child: ElevatedButton.icon(
               onPressed: () => pickPhoto(answer).then((value) => setState(() {})),
               icon: Icon(Icons.add_a_photo),
-              label: Text('ADD PHOTO')),
+              label: Text('${answer.photo == null ? 'ADD' : 'REPLACE'} PHOTO')),
         ));
       }
 

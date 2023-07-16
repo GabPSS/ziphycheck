@@ -65,7 +65,10 @@ class _ViewReportPageState extends State<ViewReportPage> {
           title: Text(reportAnswer.answerDate.toString()),
           trailing: IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => Share.share(reportAnswer.getReportString(widget.dm)),
+            onPressed: () {
+              Share.shareXFiles(reportAnswer.getAnswerImages(), text: 'Hello');
+              // Share.share(reportAnswer.getReportString(widget.dm));
+            },
           ),
           onTap: () => Navigator.push(
               context,
