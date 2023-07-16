@@ -91,7 +91,6 @@ class _TasksEditorPageState extends State<TasksEditorPage> {
 
     for (var i = 0; i < task.defaultFailOptions.length; i++) {
       listWidgets.add(ListTile(
-        leading: const Icon(null),
         title: TextFormField(
           decoration: const InputDecoration(hintText: '% {has|that have} some ghosting'),
           initialValue: task.defaultFailOptions[i],

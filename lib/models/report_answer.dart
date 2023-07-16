@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../data/data_master.dart';
@@ -25,10 +28,11 @@ class ReportAnswer {
 
     for (var locationIndex = 0; locationIndex < baseReport.locations.length; locationIndex++) {
       Location location = baseReport.locations[locationIndex];
-      reportOut += "${location.name}\n\n";
 
       List<TaskAnswer> locationAnswers = List.empty(growable: true);
       getFalseAnswersByLocation(location, locationAnswers);
+
+      if (locationAnswers.isNotEmpty) reportOut += "${location.name}\n\n";
 
       List<String> answerPrompts = List.empty(growable: true);
       getAllAnswerPrompts(locationAnswers, answerPrompts);
@@ -39,9 +43,11 @@ class ReportAnswer {
         getCheckupObjectNamesFromTaskAnswers(locationAnswers, prompt, location, checkupObjectNames);
         reportOut += "${formatPrompt(prompt, checkupObjectNames)}\n";
       }
+
+      reportOut += "\n";
     }
 
-    return reportOut;
+    return reportOut.trim();
   }
 
   void getCheckupObjectNamesFromTaskAnswers(
@@ -58,9 +64,16 @@ class ReportAnswer {
   void getFalseAnswersByLocation(Location location, List<TaskAnswer> locationAnswers) {
     for (var objectIndex = 0; objectIndex < location.objects.length; objectIndex++) {
       CheckupObject object = location.objects[objectIndex];
-      TaskAnswer? objectTaskAnswer = getTaskAnswerByObjectId(object.id);
-      if (objectTaskAnswer != null && !objectTaskAnswer.status) {
-        locationAnswers.add(objectTaskAnswer);
+      if (object.objectType == null) {
+        continue;
+      }
+      var objectTasks = object.objectType!.getTasks();
+      for (var taskIndex = 0; taskIndex < objectTasks.length; taskIndex++) {
+        var task = objectTasks[taskIndex];
+        TaskAnswer? objectTaskAnswer = getTaskAnswerByObjectAndTaskIds(object.id, task.id);
+        if (objectTaskAnswer != null && !objectTaskAnswer.status) {
+          locationAnswers.add(objectTaskAnswer);
+        }
       }
     }
   }
@@ -83,6 +96,25 @@ class ReportAnswer {
     return null;
   }
 
+  List<TaskAnswer> getTaskAnswersByObjectId(int id) {
+    List<TaskAnswer> output = List.empty(growable: true);
+    for (var i = 0; i < answers.length; i++) {
+      if (answers[i].objectId == id) {
+        output.add(answers[i]);
+      }
+    }
+    return output;
+  }
+
+  TaskAnswer? getTaskAnswerByObjectAndTaskIds(int objectId, int taskId) {
+    for (var i = 0; i < answers.length; i++) {
+      if (answers[i].objectId == objectId && answers[i].taskId == taskId) {
+        return answers[i];
+      }
+    }
+    return null;
+  }
+
   String formatPrompt(String prompt, List<String> checkupObjectNames) {
     // RegExp matchWholeKey = RegExp(r'/\{.*?\}/gm');
     RegExp matchNonSingular = RegExp(r'(\|.*?})|{');
@@ -96,5 +128,17 @@ class ReportAnswer {
     prompt = prompt.replaceAll('%', checkupObjectNames.join(', '));
 
     return prompt;
+  }
+
+  List<XFile> getAnswerImages() {
+    List<XFile> output = List.empty(growable: true);
+
+    for (var answer in answers) {
+      if (answer.photo != null) {
+        output.add(XFile.fromData(base64Decode(answer.photo!), mimeType: 'image/jpeg'));
+      }
+    }
+
+    return output;
   }
 }

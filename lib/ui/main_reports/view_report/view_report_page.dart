@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/add_report_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_answer_page.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../models/report.dart';
 
@@ -59,13 +58,19 @@ class _ViewReportPageState extends State<ViewReportPage> {
       ),
       const Divider()
     ]);
-    listWidgets.addAll(widget.dm.getAnswersForReport(widget.report).map((e) => ListTile(
-          title: Text(e.answerDate.toString()),
+    listWidgets.addAll(widget.dm.getAnswersForReport(widget.report).map((reportAnswer) => ListTile(
+          title: Text(reportAnswer.answerDate.toString()),
           trailing: IconButton(
-            //TODO: Replace with share function
             icon: const Icon(Icons.share),
-            onPressed: () => log(e.getReportString(widget.dm)),
+            onPressed: () {
+              Share.shareXFiles(reportAnswer.getAnswerImages(), text: 'Hello');
+              // Share.share(reportAnswer.getReportString(widget.dm));
+            },
           ),
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FillAnswerPage(dm: widget.dm, reportAnswer: reportAnswer, parentSetState: setState))),
         )));
 
     return Scaffold(

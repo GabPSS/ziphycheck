@@ -10,7 +10,10 @@ dependencies:
   date_field: ^3.0.5
   flutter:
     sdk: flutter
+  image_picker: ^1.0.1
   intl: ^0.18.1
+  path: ^1.8.3
+  share_plus: ^7.0.2
 
 dev_dependencies:
   flutter_test:
