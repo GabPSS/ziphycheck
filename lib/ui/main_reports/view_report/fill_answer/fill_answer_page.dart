@@ -3,18 +3,25 @@ import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../models/report.dart';
 
-class FillAnswerPage extends StatelessWidget {
+class FillAnswerPage extends StatefulWidget {
   final DataMaster dm;
   final ReportAnswer reportAnswer;
-  Report get baseReport => dm.getReportById(reportAnswer.baseReportId);
   final bool adding;
   final Function(Function()) parentSetState;
 
   const FillAnswerPage(
       {super.key, required this.reportAnswer, required this.dm, this.adding = false, required this.parentSetState});
+
+  @override
+  State<FillAnswerPage> createState() => _FillAnswerPageState();
+}
+
+class _FillAnswerPageState extends State<FillAnswerPage> {
+  Report get baseReport => widget.dm.getReportById(widget.reportAnswer.baseReportId);
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +33,14 @@ class FillAnswerPage extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: DateTimeFormField(
-              initialValue: reportAnswer.answerDate,
+              initialValue: widget.reportAnswer.answerDate,
               decoration: const InputDecoration(
                 icon: Icon(Icons.today),
                 border: OutlineInputBorder(),
                 labelText: "Date and time",
               ),
               onDateSelected: (value) {
-                reportAnswer.answerDate = value;
+                widget.reportAnswer.answerDate = value;
               },
               mode: DateTimeFieldPickerMode.dateAndTime,
             ),
@@ -51,7 +58,7 @@ class FillAnswerPage extends StatelessWidget {
       );
       locationWidgets.addAll(baseReport.locations[i].objects.map((checkupObject) {
         int objectTasksCount = checkupObject.objectType?.getTasks().length ?? 0;
-        int answeredTasksCount = reportAnswer.getTaskAnswersByObjectId(checkupObject.id).length;
+        int answeredTasksCount = widget.reportAnswer.getTaskAnswersByObjectId(checkupObject.id).length;
 
         return Padding(
             padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
@@ -65,9 +72,9 @@ class FillAnswerPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => FillObjectAnswerPage(
-                          dm: dm,
+                          dm: widget.dm,
                           checkupObject: checkupObject,
-                          reportAnswer: reportAnswer,
+                          reportAnswer: widget.reportAnswer,
                         ),
                       ));
                 },
@@ -77,12 +84,30 @@ class FillAnswerPage extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(adding ? "Fill answer" : "View answer"),
+        title: Text(widget.adding ? "Fill answer" : "View answer"),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+                widget.dm.reportAnswers.remove(widget.reportAnswer);
+              },
+              icon: Icon(Icons.delete)),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              var answerImages = widget.reportAnswer.getAnswerImages();
+              var reportString = widget.reportAnswer.getReportString(widget.dm);
+              if (answerImages.isNotEmpty) {
+                Share.shareXFiles(answerImages, text: reportString);
+              } else {
+                Share.share(reportString);
+              }
+            },
+          ),
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                parentSetState(() {});
+                widget.parentSetState(() {});
               },
               child: const Text('Save'))
         ],

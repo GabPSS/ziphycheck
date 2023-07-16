@@ -120,9 +120,7 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(
-                accountName: const Text('CheckupApp'),
-                accountEmail: ElevatedButton(onPressed: () {}, child: const Text("Sign in"))),
+            UserAccountsDrawerHeader(accountName: const Text('CheckupApp'), accountEmail: null),
             ListTile(
               leading: const Icon(Icons.assignment),
               title: const Text('Reports'),
