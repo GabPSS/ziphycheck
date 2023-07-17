@@ -115,6 +115,66 @@ class _ViewReportPageState extends State<ViewReportPage> {
     return ListTile(
       leading: Icon(Icons.assignment),
       title: Text(DateFormat('dd/MM/yyyy HH:mm').format(reportAnswer.answerDate)),
+      trailing: PopupMenuButton(
+        onSelected: (value) {
+          switch (value) {
+            case 0:
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          FillAnswerPage(reportAnswer: reportAnswer, dm: widget.dm, parentSetState: setState)));
+              break;
+            case 1:
+              reportAnswer.share(widget.dm);
+              break;
+            case 2:
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Delete report answer?'),
+                  content: const Text("You won't be able to recover this report answer once it's gone"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            widget.dm.reportAnswers.remove(reportAnswer);
+                          });
+                        },
+                        child: const Text('Delete'))
+                  ],
+                ),
+              );
+            default:
+          }
+        },
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+              value: 0,
+              child: ListTile(
+                leading: Icon(Icons.edit),
+                title: Text('Edit'),
+              )),
+          const PopupMenuItem(
+              value: 1,
+              child: ListTile(
+                leading: Icon(Icons.share),
+                title: Text('Share'),
+              )),
+          const PopupMenuItem(
+              value: 2,
+              child: ListTile(
+                leading: Icon(Icons.delete),
+                title: Text('Delete'),
+              ))
+        ],
+      ),
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(

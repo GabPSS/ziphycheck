@@ -94,15 +94,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
               icon: Icon(Icons.delete)),
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {
-              var answerImages = widget.reportAnswer.getAnswerImages();
-              var reportString = widget.reportAnswer.getReportString(widget.dm);
-              if (answerImages.isNotEmpty) {
-                Share.shareXFiles(answerImages, text: reportString);
-              } else {
-                Share.share(reportString);
-              }
-            },
+            onPressed: () => widget.reportAnswer.share(widget.dm),
           ),
           TextButton(
               onPressed: () {
