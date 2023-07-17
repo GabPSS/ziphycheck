@@ -1,4 +1,5 @@
 import 'package:checkup_app/ui/home_page.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,9 +11,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.teal, useMaterial3: true),
-      home: const HomePage(),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) => MaterialApp(
+        theme: ThemeData(colorScheme: lightDynamic, useMaterial3: true),
+        darkTheme: ThemeData(colorScheme: darkDynamic, useMaterial3: true),
+        home: const HomePage(),
+      ),
     );
   }
 }
