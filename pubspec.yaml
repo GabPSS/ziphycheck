@@ -16,6 +16,7 @@ dependencies:
   intl: ^0.18.1
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
+  localstorage: ^4.0.1+4
   path: ^1.8.3
   share_plus: ^7.0.2
 
