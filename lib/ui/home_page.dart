@@ -1,12 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:checkup_app/models/checkup_object.dart';
-import 'package:checkup_app/models/location.dart';
-import 'package:checkup_app/models/object_type.dart';
-import 'package:checkup_app/models/report_answer.dart';
-import 'package:checkup_app/models/task.dart';
-import 'package:checkup_app/models/task_answer.dart';
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
@@ -96,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   });
                 }
               },
-              icon: Icon(Icons.file_open))
+              icon: const Icon(Icons.file_open))
         ],
       ),
       body: page,
