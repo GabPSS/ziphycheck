@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:checkup_app/ui/main_tasks/main_tasks_page.dart';
 import 'package:checkup_app/ui/main_tasks/tasks_editor_page.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../data/data_master.dart';
 import '../models/report.dart';
@@ -127,6 +131,33 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
+            const Divider(),
+            ListTile(
+              title: const Text('Import/Export data'),
+              leading: const Icon(Icons.import_export),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      title: const Text('Pick an option'),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.download),
+                          title: const Text('Import from file...'),
+                          onTap: () => importFromFile(),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.upload),
+                          title: const Text('Share data export...'),
+                          onTap: () => shareData(),
+                        )
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
             const Spacer(),
             ListTile(
               leading: const Icon(Icons.help),
@@ -177,5 +208,33 @@ class _HomePageState extends State<HomePage> {
             onUpdate: () => setState(() {}),
           ),
         ));
+  }
+
+  // https://stackoverflow.com/questions/28565242/convert-uint8list-to-string-with-dart by Günter Zöchbauer
+
+  importFromFile() {
+    FilePicker.platform.pickFiles().then((value) {
+      if (value != null && value.files.length == 1) {
+        String path = value.files.single.path!;
+        try {
+          var file = XFile(path);
+          file.readAsString().then((value) {
+            DataMaster newDm = DataMaster.fromJson(jsonDecode(value));
+            setState(() {
+              dm = newDm;
+            });
+            save();
+          });
+        } catch (e) {
+          return;
+        }
+      }
+    });
+  }
+
+  shareData() {
+    String jsonData = jsonEncode(dm.toJson());
+    XFile file = XFile.fromData(Uint8List.fromList(utf8.encode(jsonData)));
+    Share.shareXFiles([file]);
   }
 }
