@@ -56,15 +56,15 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
         ),
       );
       locationWidgets.addAll(baseReport.locations[i].objects.map((checkupObject) {
-        int objectTasksCount = checkupObject.objectType?.getTasks().length ?? 0;
+        int objectTasksCount = checkupObject.getObjectType(widget.dm)?.getTasks(widget.dm).length ?? 0;
         int answeredTasksCount = widget.reportAnswer.getTaskAnswersByObjectId(checkupObject.id).length;
 
         return Padding(
             padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
             child: Card(
               child: ListTile(
-                leading: Icon(checkupObject.objectType?.getIcon() ?? Icons.device_unknown),
-                title: Text(checkupObject.fullName),
+                leading: Icon(checkupObject.getObjectType(widget.dm)?.getIcon() ?? Icons.device_unknown),
+                title: Text(checkupObject.getFullName(widget.dm)),
                 subtitle: Text("$answeredTasksCount/$objectTasksCount task${objectTasksCount == 1 ? "" : "s"}"),
                 onTap: () {
                   Navigator.push(

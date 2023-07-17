@@ -33,7 +33,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
 
   @override
   void initState() {
-    tasks = widget.checkupObject.objectType?.getTasks() ?? List.empty();
+    tasks = widget.checkupObject.getObjectType(widget.dm)?.getTasks(widget.dm) ?? List.empty();
     super.initState();
   }
 
@@ -41,7 +41,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
   Widget build(BuildContext context) {
     Widget mainWidget;
 
-    if (widget.checkupObject.objectType != null) {
+    if (widget.checkupObject.getObjectType(widget.dm) != null) {
       TaskAnswer? answer = widget.reportAnswer.getTaskAnswerByObjectAndTaskIds(widget.checkupObject.id, currentTask.id);
 
       List<Widget> failAnswerWidgets = List.empty(growable: true);
@@ -103,7 +103,8 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: Text('Task ${currentTaskIndex + 1}/${widget.checkupObject.objectType?.getTasks().length ?? 0}'),
+                        child: Text(
+                            'Task ${currentTaskIndex + 1}/${widget.checkupObject.getObjectType(widget.dm)?.getTasks(widget.dm).length ?? 0}'),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -207,7 +208,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.checkupObject.fullName),
+        title: Text(widget.checkupObject.getFullName(widget.dm)),
       ),
       body: mainWidget,
     );
@@ -228,7 +229,8 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
     return Image.memory(base64Decode(answer.photo!));
   }
 
-  String getFormattedPrompt(String prompt) => widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.fullName]);
+  String getFormattedPrompt(String prompt) =>
+      widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.getFullName(widget.dm)]);
 
   void addIndex() {
     currentTaskIndex++;

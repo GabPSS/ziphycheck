@@ -4,21 +4,27 @@ import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../data/data_master.dart';
 import 'task_answer.dart';
 
+part 'report_answer.g.dart';
+
+@JsonSerializable()
 class ReportAnswer {
   late int id;
   int baseReportId = -1;
   DateTime answerDate = DateTime.now();
   List<TaskAnswer> answers = List.empty(growable: true);
 
-  ReportAnswer({required DataMaster dm, required this.baseReportId}) {
-    id = dm.reportAnswerKey;
-    dm.reportAnswerKey++;
-    dm.reportAnswers.add(this);
+  ReportAnswer({DataMaster? dm, required this.baseReportId}) {
+    if (dm != null) {
+      id = dm.reportAnswerKey;
+      dm.reportAnswerKey++;
+      dm.reportAnswers.add(this);
+    }
   }
 
   String getReportString(DataMaster dm) {
@@ -30,7 +36,7 @@ class ReportAnswer {
       Location location = baseReport.locations[locationIndex];
 
       List<TaskAnswer> locationAnswers = List.empty(growable: true);
-      getFalseAnswersByLocation(location, locationAnswers);
+      getFalseAnswersByLocation(location, locationAnswers, dm);
 
       if (locationAnswers.isNotEmpty) reportOut += "${location.name}\n\n";
 
@@ -40,7 +46,7 @@ class ReportAnswer {
       for (var promptIndex = 0; promptIndex < answerPrompts.length; promptIndex++) {
         String prompt = answerPrompts[promptIndex];
         List<String> checkupObjectNames = List.empty(growable: true);
-        getCheckupObjectNamesFromTaskAnswers(locationAnswers, prompt, location, checkupObjectNames);
+        getCheckupObjectNamesFromTaskAnswers(locationAnswers, prompt, location, checkupObjectNames, dm);
         reportOut += "${formatPrompt(prompt, checkupObjectNames)}\n";
       }
 
@@ -51,23 +57,23 @@ class ReportAnswer {
   }
 
   void getCheckupObjectNamesFromTaskAnswers(
-      List<TaskAnswer> locationAnswers, String prompt, Location location, List<String> checkupObjectNames) {
+      List<TaskAnswer> locationAnswers, String prompt, Location location, List<String> checkupObjectNames, DataMaster dm) {
     for (var answerIndex = 0; answerIndex < locationAnswers.length; answerIndex++) {
       var answer = locationAnswers[answerIndex];
       if (answer.failAnswerPrompt == prompt) {
         var checkupObject = location.getCheckupObjectById(answer.objectId);
-        checkupObjectNames.add((checkupObject.objectType?.name ?? "") + checkupObject.name);
+        checkupObjectNames.add((checkupObject.getObjectType(dm)?.name ?? "") + checkupObject.name);
       }
     }
   }
 
-  void getFalseAnswersByLocation(Location location, List<TaskAnswer> locationAnswers) {
+  void getFalseAnswersByLocation(Location location, List<TaskAnswer> locationAnswers, DataMaster dm) {
     for (var objectIndex = 0; objectIndex < location.objects.length; objectIndex++) {
       CheckupObject object = location.objects[objectIndex];
-      if (object.objectType == null) {
+      if (object.getObjectType(dm) == null) {
         continue;
       }
-      var objectTasks = object.objectType!.getTasks();
+      var objectTasks = object.getObjectType(dm)!.getTasks(dm);
       for (var taskIndex = 0; taskIndex < objectTasks.length; taskIndex++) {
         var task = objectTasks[taskIndex];
         TaskAnswer? objectTaskAnswer = getTaskAnswerByObjectAndTaskIds(object.id, task.id);
@@ -151,4 +157,8 @@ class ReportAnswer {
       Share.share(reportString);
     }
   }
+
+  factory ReportAnswer.fromJson(Map<String, dynamic> json) => _$ReportAnswerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReportAnswerToJson(this);
 }

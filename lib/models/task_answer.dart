@@ -1,5 +1,9 @@
 import 'package:checkup_app/models/task.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'task_answer.g.dart';
+
+@JsonSerializable()
 class TaskAnswer {
   int taskId;
   int objectId;
@@ -14,4 +18,8 @@ class TaskAnswer {
     status = value;
     failAnswerPrompt = status ? null : task.answerPrompt;
   }
+
+  factory TaskAnswer.fromJson(Map<String, dynamic> json) => _$TaskAnswerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TaskAnswerToJson(this);
 }
