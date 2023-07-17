@@ -3,7 +3,7 @@ import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/add_report_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_answer_page.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:intl/intl.dart';
 
 import '../../../models/report.dart';
 
@@ -50,28 +50,44 @@ class _ViewReportPageState extends State<ViewReportPage> {
                 },
                 child: const Text("Edit report")),
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: ElevatedButton(onPressed: null, child: Icon(Icons.delete)),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Delete \'${widget.report.name}\'?'),
+                    content: const Text("You won't be able to recover this report once it's gone"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Scaffold.of(context).setState(() {});
+                          },
+                          child: const Text('Cancel')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            setState(() {
+                              widget.dm.reports.remove(widget.report);
+                            });
+                          },
+                          child: const Text('Delete'))
+                    ],
+                  ),
+                );
+              },
+              child: const Icon(Icons.delete),
+            ),
           )
         ],
       ),
       const Divider()
     ]);
-    listWidgets.addAll(widget.dm.getAnswersForReport(widget.report).map((reportAnswer) => ListTile(
-          title: Text(reportAnswer.answerDate.toString()),
-          trailing: IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              Share.shareXFiles(reportAnswer.getAnswerImages(), text: 'Hello');
-              // Share.share(reportAnswer.getReportString(widget.dm));
-            },
-          ),
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => FillAnswerPage(dm: widget.dm, reportAnswer: reportAnswer, parentSetState: setState))),
-        )));
+    listWidgets
+        .addAll(widget.dm.getAnswersForReport(widget.report).map((reportAnswer) => buildAnswerListTile(reportAnswer, context)));
 
     return Scaffold(
       appBar: AppBar(),
@@ -91,6 +107,77 @@ class _ViewReportPageState extends State<ViewReportPage> {
         child: const Icon(Icons.note_add),
       ),
       body: ListView(children: listWidgets),
+    );
+  }
+
+  ListTile buildAnswerListTile(ReportAnswer reportAnswer, BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.assignment),
+      title: Text(DateFormat('dd/MM/yyyy HH:mm').format(reportAnswer.answerDate)),
+      trailing: PopupMenuButton(
+        onSelected: (value) {
+          switch (value) {
+            case 0:
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          FillAnswerPage(reportAnswer: reportAnswer, dm: widget.dm, parentSetState: setState)));
+              break;
+            case 1:
+              reportAnswer.share(widget.dm);
+              break;
+            case 2:
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Delete report answer?'),
+                  content: const Text("You won't be able to recover this report answer once it's gone"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel')),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            widget.dm.reportAnswers.remove(reportAnswer);
+                          });
+                        },
+                        child: const Text('Delete'))
+                  ],
+                ),
+              );
+            default:
+          }
+        },
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+              value: 0,
+              child: ListTile(
+                leading: Icon(Icons.edit),
+                title: Text('Edit'),
+              )),
+          const PopupMenuItem(
+              value: 1,
+              child: ListTile(
+                leading: Icon(Icons.share),
+                title: Text('Share'),
+              )),
+          const PopupMenuItem(
+              value: 2,
+              child: ListTile(
+                leading: Icon(Icons.delete),
+                title: Text('Delete'),
+              ))
+        ],
+      ),
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => FillAnswerPage(dm: widget.dm, reportAnswer: reportAnswer, parentSetState: setState))),
     );
   }
 }

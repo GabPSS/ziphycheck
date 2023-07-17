@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../data/data_master.dart';
 import 'task_answer.dart';
@@ -140,5 +140,15 @@ class ReportAnswer {
     }
 
     return output;
+  }
+
+  void share(DataMaster dm) {
+    var answerImages = getAnswerImages();
+    var reportString = getReportString(dm);
+    if (answerImages.isNotEmpty) {
+      Share.shareXFiles(answerImages, text: reportString);
+    } else {
+      Share.share(reportString);
+    }
   }
 }
