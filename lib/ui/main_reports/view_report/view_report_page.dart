@@ -4,7 +4,6 @@ import 'package:checkup_app/ui/main_reports/add_report_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../models/report.dart';
 
@@ -52,7 +51,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                 child: const Text("Edit report")),
           ),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
                 showDialog(
@@ -80,7 +79,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                   ),
                 );
               },
-              child: Icon(Icons.delete),
+              child: const Icon(Icons.delete),
             ),
           )
         ],
@@ -113,7 +112,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
 
   ListTile buildAnswerListTile(ReportAnswer reportAnswer, BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.assignment),
+      leading: const Icon(Icons.assignment),
       title: Text(DateFormat('dd/MM/yyyy HH:mm').format(reportAnswer.answerDate)),
       trailing: PopupMenuButton(
         onSelected: (value) {
@@ -132,7 +131,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Delete report answer?'),
+                  title: const Text('Delete report answer?'),
                   content: const Text("You won't be able to recover this report answer once it's gone"),
                   actions: [
                     TextButton(

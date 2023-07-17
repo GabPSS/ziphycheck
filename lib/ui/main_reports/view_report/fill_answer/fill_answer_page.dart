@@ -3,7 +3,6 @@ import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../../models/report.dart';
 
@@ -91,7 +90,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
                 Navigator.pop(context);
                 widget.dm.reportAnswers.remove(widget.reportAnswer);
               },
-              icon: Icon(Icons.delete)),
+              icon: const Icon(Icons.delete)),
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: () => widget.reportAnswer.share(widget.dm),
