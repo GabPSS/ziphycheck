@@ -46,7 +46,7 @@ class _AddReportPageState extends State<AddReportPage> {
           ),
           trailing: DropdownButton(
             items: objectTypes,
-            value: object.objectType,
+            value: object.getObjectType(widget.dm),
             onChanged: (value) {
               setState(() {
                 object.objectType = value;
