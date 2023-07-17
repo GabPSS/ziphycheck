@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
