@@ -230,7 +230,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
   }
 
   String getFormattedPrompt(String prompt) =>
-      widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.getFullName(widget.dm)]);
+      widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.getFullName(widget.dm)], null);
 
   void addIndex() {
     currentTaskIndex++;
