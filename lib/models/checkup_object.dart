@@ -10,7 +10,7 @@ class CheckupObject {
   late int id = -1;
   String name = "";
 
-  int? objectTypeId; //TODO: Stopped here
+  int? objectTypeId;
 
   ObjectType? getObjectType(DataMaster dm) => objectTypeId != null ? dm.getObjectTypeById(objectTypeId!) : null;
 
