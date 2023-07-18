@@ -10,11 +10,11 @@ class CheckupObject {
   late int id = -1;
   String name = "";
 
-  int? _objectTypeId;
+  int? objectTypeId; //TODO: Stopped here
 
-  ObjectType? getObjectType(DataMaster dm) => _objectTypeId != null ? dm.getObjectTypeById(_objectTypeId!) : null;
+  ObjectType? getObjectType(DataMaster dm) => objectTypeId != null ? dm.getObjectTypeById(objectTypeId!) : null;
 
-  set objectType(ObjectType? value) => _objectTypeId = value?.id;
+  set objectType(ObjectType? value) => objectTypeId = value?.id;
 
   CheckupObject({Report? report, ObjectType? objectType}) {
     this.objectType = objectType;
