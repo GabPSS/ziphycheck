@@ -91,6 +91,20 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               icon: const Icon(Icons.add_a_photo),
               label: Text('${answer.photo == null ? 'ADD' : 'REPLACE'} PHOTO')),
         ));
+        failAnswerWidgets.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Notes'),
+            initialValue: answer.notes,
+            onChanged: (value) {
+              if (value.trim() == "") {
+                answer.notes = null;
+              } else {
+                answer.notes = value.trim();
+              }
+            },
+          ),
+        ));
       }
 
       mainWidget = Column(
@@ -208,6 +222,12 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+              widget.dm.save();
+            },
+            icon: Icon(Icons.arrow_back)),
         title: Text(widget.checkupObject.getFullName(widget.dm)),
       ),
       body: mainWidget,
@@ -230,7 +250,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
   }
 
   String getFormattedPrompt(String prompt) =>
-      widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.getFullName(widget.dm)]);
+      widget.reportAnswer.formatPrompt(prompt, [widget.checkupObject.getFullName(widget.dm)], null);
 
   void addIndex() {
     currentTaskIndex++;

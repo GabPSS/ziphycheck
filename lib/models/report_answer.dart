@@ -30,44 +30,48 @@ class ReportAnswer {
   String getReportString(DataMaster dm) {
     Report baseReport = dm.getReportById(baseReportId);
 
-    String reportOut = "${baseReport.name} ${DateFormat('d/M').format(answerDate)}\n\n";
+    String reportString = "${baseReport.name} ${DateFormat('d/M').format(answerDate)}\n\n";
 
-    for (var locationIndex = 0; locationIndex < baseReport.locations.length; locationIndex++) {
-      Location location = baseReport.locations[locationIndex];
+    for (Location location in baseReport.locations) {
+      List<TaskAnswer> locationAnswers = getFalseAnswersByLocation(location, dm);
 
-      List<TaskAnswer> locationAnswers = List.empty(growable: true);
-      getFalseAnswersByLocation(location, locationAnswers, dm);
-
-      if (locationAnswers.isNotEmpty) reportOut += "${location.name}\n\n";
-
-      List<String> answerPrompts = List.empty(growable: true);
-      getAllAnswerPrompts(locationAnswers, answerPrompts);
-
-      for (var promptIndex = 0; promptIndex < answerPrompts.length; promptIndex++) {
-        String prompt = answerPrompts[promptIndex];
-        List<String> checkupObjectNames = List.empty(growable: true);
-        getCheckupObjectNamesFromTaskAnswers(locationAnswers, prompt, location, checkupObjectNames, dm);
-        reportOut += "${formatPrompt(prompt, checkupObjectNames)}\n";
+      if (locationAnswers.isEmpty) {
+        continue;
       }
 
-      reportOut += "\n";
+      reportString += "${location.name}\n\n";
+
+      List<String> prompts = getPromptsFromAnswers(locationAnswers);
+
+      for (String prompt in prompts) {
+        List<String> checkupObjectNames = getCheckupObjectNamesForPrompt(locationAnswers, prompt, location, dm);
+        String? answerNotes = getAnswerNotesForPrompt(locationAnswers, prompt, location, dm);
+        reportString += "${formatPrompt(prompt, checkupObjectNames, answerNotes)}\n";
+      }
+
+      reportString += "\n";
     }
 
-    return reportOut.trim();
+    return reportString.trim();
   }
 
-  void getCheckupObjectNamesFromTaskAnswers(
-      List<TaskAnswer> locationAnswers, String prompt, Location location, List<String> checkupObjectNames, DataMaster dm) {
-    for (var answerIndex = 0; answerIndex < locationAnswers.length; answerIndex++) {
-      var answer = locationAnswers[answerIndex];
+  List<String> getCheckupObjectNamesForPrompt(List<TaskAnswer> answers, String prompt, Location location, DataMaster dm) {
+    List<String> output = List.empty(growable: true);
+
+    for (var answerIndex = 0; answerIndex < answers.length; answerIndex++) {
+      var answer = answers[answerIndex];
       if (answer.failAnswerPrompt == prompt) {
         var checkupObject = location.getCheckupObjectById(answer.objectId);
-        checkupObjectNames.add((checkupObject.getObjectType(dm)?.name ?? "") + checkupObject.name);
+        output.add(checkupObject.getFullName(dm));
       }
     }
+
+    return output;
   }
 
-  void getFalseAnswersByLocation(Location location, List<TaskAnswer> locationAnswers, DataMaster dm) {
+  List<TaskAnswer> getFalseAnswersByLocation(Location location, DataMaster dm) {
+    List<TaskAnswer> locationAnswers = List.empty(growable: true);
+
     for (var objectIndex = 0; objectIndex < location.objects.length; objectIndex++) {
       CheckupObject object = location.objects[objectIndex];
       if (object.getObjectType(dm) == null) {
@@ -82,15 +86,21 @@ class ReportAnswer {
         }
       }
     }
+
+    return locationAnswers;
   }
 
-  void getAllAnswerPrompts(List<TaskAnswer> locationAnswers, List<String> answerPrompts) {
+  List<String> getPromptsFromAnswers(List<TaskAnswer> locationAnswers) {
+    List<String> answerPrompts = List.empty(growable: true);
+
     for (var answerIndex = 0; answerIndex < locationAnswers.length; answerIndex++) {
       TaskAnswer answer = locationAnswers[answerIndex];
       if (answer.failAnswerPrompt != null && !answerPrompts.contains(answer.failAnswerPrompt)) {
         answerPrompts.add(answer.failAnswerPrompt!);
       }
     }
+
+    return answerPrompts;
   }
 
   TaskAnswer? getTaskAnswerByObjectId(int id) {
@@ -121,7 +131,7 @@ class ReportAnswer {
     return null;
   }
 
-  String formatPrompt(String prompt, List<String> checkupObjectNames) {
+  String formatPrompt(String prompt, List<String> checkupObjectNames, String? notes) {
     // RegExp matchWholeKey = RegExp(r'/\{.*?\}/gm');
     RegExp matchNonSingular = RegExp(r'(\|.*?})|{');
     RegExp matchNonPlural = RegExp(r'({.*?\|)|}');
@@ -132,6 +142,10 @@ class ReportAnswer {
         : prompt.replaceAllMapped(matchNonPlural, (match) => "");
 
     prompt = prompt.replaceAll('%', checkupObjectNames.join(', '));
+
+    if (notes != null && notes != "") {
+      prompt += " ($notes)";
+    }
 
     return prompt;
   }
@@ -161,4 +175,28 @@ class ReportAnswer {
   factory ReportAnswer.fromJson(Map<String, dynamic> json) => _$ReportAnswerFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportAnswerToJson(this);
+
+  String? getAnswerNotesForPrompt(List<TaskAnswer> locationAnswers, String prompt, Location location, DataMaster dm) {
+    List<CheckupObject> objects = List.empty(growable: true);
+    List<String> answerNotes = List.empty(growable: true);
+
+    for (var answer in locationAnswers) {
+      if (answer.failAnswerPrompt == prompt && answer.notes != null) {
+        objects.add(location.getCheckupObjectById(answer.objectId));
+        answerNotes.add(answer.notes!);
+      }
+    }
+
+    if (answerNotes.isEmpty) {
+      return null;
+    }
+
+    if (objects.length > 1) {
+      for (var i = 0; i < answerNotes.length; i++) {
+        answerNotes[i] = "${objects[i].getFullName(dm)}: ${answerNotes[i]}";
+      }
+    }
+
+    return answerNotes.join('; ').trim();
+  }
 }

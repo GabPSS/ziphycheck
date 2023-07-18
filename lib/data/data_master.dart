@@ -24,6 +24,13 @@ class DataMaster {
 
   DataMaster();
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Function()? saveFunction;
+
+  void save() {
+    if (saveFunction != null) saveFunction!();
+  }
+
   static const String unknownObject = "Unknown Object";
 
   List<ReportAnswer> getAnswersForReport(Report report) {

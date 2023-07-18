@@ -38,7 +38,9 @@ class _HomePageState extends State<HomePage> {
     if (await storage.ready) {
       String? item = storage.getItem('data');
       if (item != null) {
-        return DataMaster.fromJson(jsonDecode(item));
+        var dataMaster = DataMaster.fromJson(jsonDecode(item));
+        dataMaster.saveFunction = save;
+        return dataMaster;
       }
     }
     return null;
@@ -71,7 +73,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void save() {
-    storage.setItem('data', jsonEncode(dm.toJson()));
+    try {
+      storage.setItem('data', jsonEncode(dm.toJson()));
+    } catch (e) {
+      return;
+    }
   }
 
   @override
