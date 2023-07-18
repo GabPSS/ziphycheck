@@ -28,6 +28,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
           child: Text(
             widget.report.name,
             style: const TextStyle(fontSize: 32),
+            textAlign: TextAlign.center,
           ),
         ),
       ),

@@ -91,6 +91,20 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               icon: const Icon(Icons.add_a_photo),
               label: Text('${answer.photo == null ? 'ADD' : 'REPLACE'} PHOTO')),
         ));
+        failAnswerWidgets.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Notes'),
+            initialValue: answer.notes,
+            onChanged: (value) {
+              if (value.trim() == "") {
+                answer.notes = null;
+              } else {
+                answer.notes = value.trim();
+              }
+            },
+          ),
+        ));
       }
 
       mainWidget = Column(
