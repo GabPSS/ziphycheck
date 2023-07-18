@@ -9,7 +9,7 @@ part 'object_type.g.dart';
 class ObjectType {
   late int id;
   String name = "";
-  final List<int> _taskIds = List<int>.empty(growable: true);
+  List<int> taskIds = List<int>.empty(growable: true);
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   String _pluralName = "";
@@ -27,19 +27,19 @@ class ObjectType {
     }
   }
 
-  List<Task> getTasks(DataMaster dm) => dm.tasks.where((element) => _taskIds.contains(element.id)).toList();
+  List<Task> getTasks(DataMaster dm) => dm.tasks.where((element) => taskIds.contains(element.id)).toList();
 
   void addTask(Task task) {
     var id = task.id;
-    if (!_taskIds.contains(id)) _taskIds.add(id);
+    if (!taskIds.contains(id)) taskIds.add(id);
   }
 
   void removeTask(Task task) {
     var id = task.id;
-    if (_taskIds.contains(id)) _taskIds.remove(id);
+    if (taskIds.contains(id)) taskIds.remove(id);
   }
 
-  bool hasTask(Task task) => _taskIds.contains(task.id);
+  bool hasTask(Task task) => taskIds.contains(task.id);
 
   IconData getIcon() {
     switch (name) {
