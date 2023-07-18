@@ -227,7 +227,7 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
               Navigator.pop(context);
               widget.dm.save();
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         title: Text(widget.checkupObject.getFullName(widget.dm)),
       ),
       body: mainWidget,
