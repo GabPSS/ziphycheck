@@ -222,6 +222,12 @@ class _FillObjectAnswerPageState extends State<FillObjectAnswerPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+              widget.dm.save();
+            },
+            icon: Icon(Icons.arrow_back)),
         title: Text(widget.checkupObject.getFullName(widget.dm)),
       ),
       body: mainWidget,
