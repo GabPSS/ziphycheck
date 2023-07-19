@@ -33,7 +33,7 @@ class ReportAnswer {
     String reportString = "${baseReport.name} ${DateFormat('d/M').format(answerDate)}\n\n";
 
     for (Location location in baseReport.locations) {
-      List<TaskAnswer> locationAnswers = getFalseAnswersByLocation(location, dm);
+      List<TaskAnswer> locationAnswers = getAnswersByLocation(location, dm);
 
       if (locationAnswers.isEmpty) {
         continue;
@@ -69,7 +69,7 @@ class ReportAnswer {
     return output;
   }
 
-  List<TaskAnswer> getFalseAnswersByLocation(Location location, DataMaster dm) {
+  List<TaskAnswer> getAnswersByLocation(Location location, DataMaster dm, [bool falseOnly = true]) {
     List<TaskAnswer> locationAnswers = List.empty(growable: true);
 
     for (var objectIndex = 0; objectIndex < location.objects.length; objectIndex++) {
@@ -81,7 +81,7 @@ class ReportAnswer {
       for (var taskIndex = 0; taskIndex < objectTasks.length; taskIndex++) {
         var task = objectTasks[taskIndex];
         TaskAnswer? objectTaskAnswer = getTaskAnswerByObjectAndTaskIds(object.id, task.id);
-        if (objectTaskAnswer != null && !objectTaskAnswer.status) {
+        if (objectTaskAnswer != null && !(objectTaskAnswer.status && falseOnly)) {
           locationAnswers.add(objectTaskAnswer);
         }
       }
@@ -102,6 +102,9 @@ class ReportAnswer {
 
     return answerPrompts;
   }
+
+  List<String> getPromptsFromLocation(Location location, DataMaster dm, [bool falseOnly = true]) =>
+      getPromptsFromAnswers(getAnswersByLocation(location, dm, falseOnly));
 
   TaskAnswer? getTaskAnswerByObjectId(int id) {
     for (var i = 0; i < answers.length; i++) {
