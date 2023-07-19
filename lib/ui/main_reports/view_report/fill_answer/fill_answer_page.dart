@@ -2,6 +2,7 @@ import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/models/task_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
@@ -118,7 +119,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
     return ListTile(
       leading: Icon(checkupObject.getObjectType(widget.dm)?.getIcon() ?? Icons.device_unknown),
       title: Text(checkupObject.getFullName(widget.dm)),
-      subtitle: Text("$answeredTasksCount/$objectTasksCount task${objectTasksCount == 1 ? "" : "s"}"),
+      subtitle: Text("$answeredTasksCount/$objectTasksCount answer${objectTasksCount != 1 ? 's' : ''}"),
       onTap: () {
         Navigator.push(
             context,
@@ -140,24 +141,27 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
   void buildTasksView(List<Widget> widgets) {
     for (var location in baseReport.locations) {
       widgets.add(getLocationTile(location));
-      widgets.addAll(widget.dm.getTasksForLocation(location).map((task) => getItemTile(ListTile(
+      widgets.addAll(widget.dm.getTasksForLocation(location).map((task) {
+        List<CheckupObject> objects = widget.dm.getObjectsByTask(task, location);
+        Iterable<TaskAnswer> answers =
+            widget.reportAnswer.getAnswersByLocation(location, widget.dm, false).where((element) => element.taskId == task.id);
+        return getItemTile(ListTile(
             leading: const Icon(Icons.check_box),
             title: Text(task.name),
+            subtitle: Text('${answers.length}/${objects.length} answer${objects.length != 1 ? 's' : ''}'),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FillObjectAnswerPage(
-                      dm: widget.dm,
-                      reportAnswer: widget.reportAnswer,
-                      sortByTasks: true,
-                      startLocation: location,
-                      startTask: task,
-                    ),
-                  ));
-            },
-          ))));
+                      builder: (context) => FillObjectAnswerPage(
+                            dm: widget.dm,
+                            reportAnswer: widget.reportAnswer,
+                            sortByTasks: true,
+                            startLocation: location,
+                            startTask: task,
+                          )));
+            }));
+      }));
     }
-    // widgets.addAll(baseReport.locations.map((e) => null));
   }
 }
