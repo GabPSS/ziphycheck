@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/task.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:localstorage/localstorage.dart';
@@ -56,5 +58,39 @@ class DataMaster {
 
       return dm;
     }
+  }
+
+  List<Task> getTasksForLocation(Location location) {
+    List<ObjectType> types = List.empty(growable: true);
+
+    for (CheckupObject object in location.objects) {
+      ObjectType? objectType = object.getObjectType(this);
+      if (objectType != null && !types.contains(objectType)) {
+        types.add(objectType);
+      }
+    }
+
+    List<Task> tasks = List.empty(growable: true);
+    for (ObjectType type in types) {
+      tasks.addAll(type.getTasks(this).where((element) => !tasks.contains(element)));
+    }
+
+    return tasks;
+  }
+
+  List<CheckupObject> getObjectsByTask(Task task, Location location) {
+    List<CheckupObject> objects = List.empty(growable: true);
+
+    for (var object in location.objects) {
+      var objectType = object.getObjectType(this);
+      if (objectType != null) {
+        var tasks = objectType.getTasks(this);
+        if (tasks.contains(task)) {
+          objects.add(object);
+        }
+      }
+    }
+
+    return objects;
   }
 }
