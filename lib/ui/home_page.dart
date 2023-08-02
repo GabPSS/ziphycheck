@@ -84,7 +84,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     setPage();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: fabFunction, child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(
+          onPressed: fabFunction, child: const Icon(Icons.add)),
       appBar: AppBar(
         title: Text(title),
         actions: [
@@ -105,7 +106,8 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: Column(
           children: [
-            const UserAccountsDrawerHeader(accountName: Text('CheckupApp'), accountEmail: null),
+            const UserAccountsDrawerHeader(
+                accountName: Text('CheckupApp'), accountEmail: null),
             ListTile(
               leading: const Icon(Icons.assignment),
               title: const Text('Reports'),
@@ -168,7 +170,8 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.help),
               title: const Text('About'),
               onTap: () {
-                showAboutDialog(context: context, applicationName: 'Checkup app');
+                showAboutDialog(
+                    context: context, applicationName: 'Checkup app');
               },
             )
           ],
@@ -215,8 +218,6 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  // https://stackoverflow.com/questions/28565242/convert-uint8list-to-string-with-dart by Günter Zöchbauer
-
   importFromFile() {
     FilePicker.platform.pickFiles().then((value) {
       if (value != null && value.files.length == 1) {
@@ -238,8 +239,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   shareData() {
-    String jsonData = jsonEncode(dm.toJson());
-    XFile file = XFile.fromData(Uint8List.fromList(utf8.encode(jsonData)));
-    Share.shareXFiles([file]);
+    throw UnimplementedError();
   }
 }
