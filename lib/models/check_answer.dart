@@ -1,5 +1,9 @@
 import 'package:checkup_app/models/issue.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'check_answer.g.dart';
+
+@JsonSerializable()
 class CheckAnswer {
   int? checkId;
   int objectId;
@@ -12,4 +16,7 @@ class CheckAnswer {
       required this.objectId,
       this.status = false,
       this.photoReference});
+
+  factory CheckAnswer.fromJson(Map<String, dynamic> json) =>
+      _$CheckAnswerFromJson(json);
 }
