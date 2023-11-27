@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
@@ -238,7 +238,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  shareData() {
-    throw UnimplementedError();
+  shareData() async {
+    String? path = await FilePicker.platform.saveFile();
+    if (path != null) {
+      var file = File(path);
+      await file.writeAsString(jsonEncode(dm.toJson()));
+    }
   }
 }
