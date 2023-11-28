@@ -7,10 +7,11 @@ part 'location.g.dart';
 class Location {
   int id;
   String name;
-  List<CheckupObject> checkupObjects;
+  List<CheckupObject> checkupObjects = List.empty(growable: true);
 
-  Location({this.id = -1, required this.name, required this.checkupObjects});
+  Location({this.id = -1, this.name = "Unnamed location"});
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
+  Map<String, dynamic> toJson() => _$LocationToJson(this);
 }

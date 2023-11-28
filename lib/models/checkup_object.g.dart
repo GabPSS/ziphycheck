@@ -9,7 +9,7 @@ part of 'checkup_object.dart';
 CheckupObject _$CheckupObjectFromJson(Map<String, dynamic> json) =>
     CheckupObject(
       id: json['id'] as int? ?? -1,
-      name: json['name'] as String,
+      name: json['name'] as String? ?? "Unnamed object",
       objectTypeId: json['objectTypeId'] as int?,
     );
 

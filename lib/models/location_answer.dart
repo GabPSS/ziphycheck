@@ -14,4 +14,5 @@ class LocationAnswer {
 
   factory LocationAnswer.fromJson(Map<String, dynamic> json) =>
       _$LocationAnswerFromJson(json);
+  Map<String, dynamic> toJson() => _$LocationAnswerToJson(this);
 }

@@ -19,4 +19,6 @@ class CheckAnswer {
 
   factory CheckAnswer.fromJson(Map<String, dynamic> json) =>
       _$CheckAnswerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CheckAnswerToJson(this);
 }

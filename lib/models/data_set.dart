@@ -13,10 +13,10 @@ class DataSet {
   List<Report> reports = List.empty(growable: true);
   List<ReportAnswer> reportAnswers = List.empty(growable: true);
 
-  int checkKey = 0;
-  int objectTypeKey = 0;
-  int reportKey = 0;
-  int reportAnswerKey = 0;
+  int checkKey = -1;
+  int objectTypeKey = -1;
+  int reportKey = -1;
+  int reportAnswerKey = -1;
 
   DataSet();
 
@@ -32,5 +32,25 @@ class DataSet {
         ReportAnswer: reportAnswerKey
       };
 
-  int? getId<T>() => _keys[T]; //TODO: Write way to update IDs
+  int? getId<T>() {
+    incrementId<T>();
+    return _keys[T];
+  } //TODO: Write way to update IDs
+
+  void incrementId<T>() {
+    switch (T) {
+      case Check:
+        checkKey++;
+        break;
+      case ObjectType:
+        objectTypeKey++;
+        break;
+      case Report:
+        reportKey++;
+        break;
+      case ReportAnswer:
+        reportAnswerKey++;
+        break;
+    }
+  }
 }

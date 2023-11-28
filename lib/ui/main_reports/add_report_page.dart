@@ -3,38 +3,85 @@ import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddReportPage extends StatefulWidget {
-  final Report report;
-  final DataMaster dm;
-  final bool isAdding;
-  final Function(Function()) parentSetState;
-  const AddReportPage({super.key, required this.report, this.isAdding = false, required this.dm, required this.parentSetState});
+  final Report? report;
+  bool get isAdding => report == null;
+
+  const AddReportPage({
+    super.key,
+    required this.report,
+  });
 
   @override
   State<AddReportPage> createState() => _AddReportPageState();
 }
 
 class _AddReportPageState extends State<AddReportPage> {
-  _AddReportPageState();
+  late Report report;
+  late DataMaster dm;
+
+  @override
+  void initState() {
+    report = widget.isAdding ? Report(name: 'New report') : widget.report!;
+    dm = Provider.of<DataMaster>(context, listen: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading:
+            IconButton(onPressed: closePage, icon: const Icon(Icons.close)),
+        title: Text(widget.isAdding ? 'New report' : 'Edit report'),
+        actions: [
+          TextButton(
+              onPressed: save,
+              child: const Text(
+                'Save',
+              ))
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Name'),
+              initialValue: report.name,
+              onChanged: (value) {
+                report.name = value;
+              },
+            ),
+          ),
+          Expanded(
+              child: ListView(
+            children: buildWidgets(),
+          ))
+        ],
+      ),
+    );
+  }
+
+  List<Widget> buildWidgets() {
     List<DropdownMenuItem> objectTypes = List.empty(growable: true);
     objectTypes.add(const DropdownMenuItem(
       value: null,
       child: Text('(No type)'),
     ));
-    objectTypes.addAll(widget.dm.objectTypes.map((e) => DropdownMenuItem(
+    objectTypes.addAll(dm.objectTypes.map((e) => DropdownMenuItem(
           value: e,
           child: Text(e.name),
         )));
 
     List<Widget> locations = List.empty(growable: true);
-    for (var i = 0; i < widget.report.locations.length; i++) {
+    for (var i = 0; i < report.locations.length; i++) {
       List<Widget> objects = List.empty(growable: true);
-      for (var x = 0; x < widget.report.locations[i].objects.length; x++) {
-        var object = widget.report.locations[i].objects[x];
+      for (var x = 0; x < report.locations[i].checkupObjects.length; x++) {
+        var object = report.locations[i].checkupObjects[x];
         objects.add(ListTile(
           leading: const Icon(Icons.desktop_windows),
           title: TextFormField(
@@ -46,7 +93,7 @@ class _AddReportPageState extends State<AddReportPage> {
           ),
           trailing: DropdownButton(
             items: objectTypes,
-            value: object.getObjectType(widget.dm),
+            value: object.getObjectType(dm),
             onChanged: (value) {
               setState(() {
                 object.objectType = value;
@@ -57,10 +104,10 @@ class _AddReportPageState extends State<AddReportPage> {
       }
       objects.add(ListTile(
         leading: const Icon(Icons.add),
-        title: const Text("Add new object"),
+        title: const Text("New object"),
         onTap: () {
           setState(() {
-            widget.report.locations[i].objects.add(CheckupObject(report: widget.report));
+            report.locations[i].checkupObjects.add(CheckupObject());
           });
         },
       ));
@@ -69,9 +116,11 @@ class _AddReportPageState extends State<AddReportPage> {
           ListTile(
             leading: const Icon(Icons.location_on),
             title: TextFormField(
-              initialValue: widget.report.locations[i].name == "" ? "Unnamed location" : widget.report.locations[i].name,
+              initialValue: report.locations[i].name == ""
+                  ? "Unnamed location"
+                  : report.locations[i].name,
               onChanged: (value) {
-                widget.report.locations[i].name = value;
+                report.locations[i].name = value;
               },
             ),
           ),
@@ -88,76 +137,48 @@ class _AddReportPageState extends State<AddReportPage> {
       title: const Text("Add new location"),
       onTap: () {
         setState(() {
-          widget.report.locations.add(Location());
+          report.locations.add(Location());
         });
       },
     ));
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            if (widget.isAdding) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Discard report?'),
-                  content: const Text('Closing will discard this report'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel')),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          widget.dm.reports.remove(widget.report);
-                        },
-                        child: const Text('Discard'))
-                  ],
-                ),
-              );
-            } else {
-              Navigator.pop(context);
-              widget.parentSetState(
-                () {},
-              );
-            }
-          },
-        ),
-        title: Text(widget.isAdding ? 'New report' : 'Edit report'),
+    return locations;
+  }
+
+  Future<void> closePage() async {
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Discard report?'),
+        content: const Text('Closing will discard this report'),
         actions: [
           TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                widget.parentSetState(() {});
+                Navigator.pop(context, false);
               },
-              child: const Text(
-                'Save',
-              ))
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Name'),
-              initialValue: widget.report.name,
-              onChanged: (value) {
-                widget.report.name = value;
+              child: const Text('Cancel')),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
               },
-            ),
-          ),
-          Expanded(
-              child: ListView(
-            children: locations,
-          ))
+              child: const Text('Discard')),
         ],
       ),
     );
+
+    if (result == true) {
+      if (!mounted) return;
+      Navigator.pop(context);
+      dm.removeReport(report);
+    }
+  }
+
+  void save() {
+    Navigator.pop(context);
+    if (widget.isAdding) {
+      dm.addObject(report);
+    } else {
+      dm.update();
+    }
   }
 }

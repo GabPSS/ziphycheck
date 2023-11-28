@@ -11,4 +11,5 @@ class Issue {
   Issue({required this.name, this.notes, this.solved = false});
 
   factory Issue.fromJson(Map<String, dynamic> json) => _$IssueFromJson(json);
+  Map<String, dynamic> toJson() => _$IssueToJson(this);
 }
