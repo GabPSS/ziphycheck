@@ -1,3 +1,5 @@
+import 'package:checkup_app/ui/main_checks/check_editor_page.dart';
+import 'package:checkup_app/ui/main_checks/main_checks_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
 import 'main_reports/add_report_page.dart';
@@ -31,9 +33,9 @@ class _HomePageState extends State<HomePage> {
       //   page = const MainObjectTypesPage();
       //   title = "Object Types";
       //   break;
-      // case 2:
-      //   page = const MainTasksPage();
-      //   title = "Tasks";
+      case 2:
+        page = const MainChecksPage();
+        title = "Checks";
       default:
         throw Error();
     }
@@ -81,7 +83,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.check_box),
-            title: const Text('Tasks'),
+            title: const Text('Checks'),
             onTap: () {
               setState(() {
                 Navigator.pop(context);
@@ -138,7 +140,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context) => switch (pageIndex) {
             0 => const AddReportPage(report: null),
             // 1 => const ObjectTypeEditorPage(objectType: null), TODO: Readd these when they're implemented back
-            // 2 => const TasksEditorPage(task: null),
+            2 => const CheckEditorPage(check: null),
             _ => throw UnimplementedError(),
           },
         ));
