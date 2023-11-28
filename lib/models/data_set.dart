@@ -1,4 +1,5 @@
 import 'package:checkup_app/models/check.dart';
+import 'package:checkup_app/models/identifiable_object.dart';
 import 'package:checkup_app/models/object_type.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
@@ -25,32 +26,23 @@ class DataSet {
 
   Map<String, dynamic> toJson() => _$DataSetToJson(this);
 
-  Map<Type, int> get _keys => {
-        Check: checkKey,
-        ObjectType: objectTypeKey,
-        Report: reportKey,
-        ReportAnswer: reportAnswerKey
-      };
-
-  int? getId<T>() {
-    incrementId<T>();
-    return _keys[T];
-  } //TODO: Write way to update IDs
-
-  void incrementId<T>() {
-    switch (T) {
-      case Check:
-        checkKey++;
-        break;
-      case ObjectType:
-        objectTypeKey++;
-        break;
-      case Report:
-        reportKey++;
-        break;
-      case ReportAnswer:
-        reportAnswerKey++;
-        break;
+  int? getIdFor(IdentifiableObject object) {
+    if (object is Check) {
+      checkKey++;
+      return checkKey;
     }
+    if (object is ObjectType) {
+      objectTypeKey++;
+      return objectTypeKey;
+    }
+    if (object is Report) {
+      reportKey++;
+      return reportKey;
+    }
+    if (object is ReportAnswer) {
+      reportAnswerKey++;
+      return reportAnswerKey;
+    }
+    return null;
   }
 }

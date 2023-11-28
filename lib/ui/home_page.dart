@@ -1,5 +1,7 @@
 import 'package:checkup_app/ui/main_checks/check_editor_page.dart';
 import 'package:checkup_app/ui/main_checks/main_checks_page.dart';
+import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
+import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
 import 'main_reports/add_report_page.dart';
@@ -29,10 +31,10 @@ class _HomePageState extends State<HomePage> {
         page = const MainReportsPage();
         title = "Reports";
         break;
-      // case 1: TODO: Readd these when they're implemented back
-      //   page = const MainObjectTypesPage();
-      //   title = "Object Types";
-      //   break;
+      case 1:
+        page = const MainObjectTypesPage();
+        title = "Object Types";
+        break;
       case 2:
         page = const MainChecksPage();
         title = "Checks";
@@ -139,7 +141,7 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
           builder: (context) => switch (pageIndex) {
             0 => const AddReportPage(report: null),
-            // 1 => const ObjectTypeEditorPage(objectType: null), TODO: Readd these when they're implemented back
+            1 => const ObjectTypeEditorPage(objectType: null),
             2 => const CheckEditorPage(check: null),
             _ => throw UnimplementedError(),
           },

@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CheckEditorPage extends StatefulWidget {
-  final bool isAdding;
+  bool get isAdding => check == null;
   final Check? check;
-  final Function()? onUpdate;
 
-  const CheckEditorPage(
-      {super.key, this.isAdding = false, this.check, this.onUpdate});
+  const CheckEditorPage({super.key, this.check});
 
   @override
   State<CheckEditorPage> createState() => _CheckEditorPageState();
@@ -18,13 +16,11 @@ class CheckEditorPage extends StatefulWidget {
 
 class _CheckEditorPageState extends State<CheckEditorPage> {
   late Check check;
-  bool isAdding = false;
   var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     if (widget.check == null || widget.isAdding) {
-      isAdding = true;
       check = Check();
     } else {
       assert(widget.check != null);
@@ -47,7 +43,6 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
           onChanged: (value) {
             if (formKey.currentState!.validate()) {
               check.name = value.trim();
-              update();
             }
           },
           validator: (value) {
@@ -127,7 +122,7 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
               if (formKey.currentState!.validate()) {
                 Navigator.pop(context);
                 var dm = Provider.of<DataMaster>(context, listen: false);
-                if (isAdding) {
+                if (widget.isAdding) {
                   dm.addObject(check);
                 } else {
                   dm.update();
@@ -157,7 +152,7 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
               }
             },
             icon: const Icon(Icons.arrow_back)),
-        title: Text(isAdding ? 'Add check' : 'Edit check'),
+        title: Text(widget.isAdding ? 'Add check' : 'Edit check'),
       ),
       body: Form(
         key: formKey,
@@ -166,9 +161,5 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
         ),
       ),
     );
-  }
-
-  void update() {
-    if (widget.onUpdate != null) widget.onUpdate!();
   }
 }

@@ -56,7 +56,8 @@ class DataMaster extends ChangeNotifier {
     update();
   }
 
-  void addObject(Object object) {
+  void addObject(IdentifiableObject object) {
+    object.id = _dataSet.getIdFor(object) ?? -1;
     _getObjectList(object)?.add(object);
     update();
   }
