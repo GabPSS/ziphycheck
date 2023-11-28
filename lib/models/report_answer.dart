@@ -2,6 +2,7 @@ import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/identifiable_object.dart';
+import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/location_answer.dart';
 import 'package:checkup_app/models/object_type.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -47,5 +48,41 @@ class ReportAnswer extends IdentifiableObject {
       };
     }
     return {'total': 0, 'answers': 0, 'issues': 0};
+  }
+
+  List<CheckAnswer> getAnswersByLocation(Location location, DataMaster dm,
+      [bool falseOnly = true]) {
+    List<CheckAnswer> locationAnswers = List.empty(growable: true);
+
+    for (var objectIndex = 0;
+        objectIndex < location.checkupObjects.length;
+        objectIndex++) {
+      CheckupObject object = location.checkupObjects[objectIndex];
+      if (object.getObjectType(dm) == null) {
+        continue;
+      }
+      var objectChecks = dm.getChecksForObjectType(object.getObjectType(dm));
+      for (var checkIndex = 0; checkIndex < objectChecks.length; checkIndex++) {
+        var check = objectChecks[checkIndex];
+        CheckAnswer? objectCheckAnswer =
+            getCheckAnswerByObjectAndTaskIds(object.id, check.id);
+        if (objectCheckAnswer != null &&
+            !(objectCheckAnswer.status && falseOnly)) {
+          locationAnswers.add(objectCheckAnswer);
+        }
+      }
+    }
+
+    return locationAnswers;
+  }
+
+  CheckAnswer? getCheckAnswerByObjectAndTaskIds(int objectId, int taskId) {
+    for (var i = 0; i < checkAnswers.length; i++) {
+      if (checkAnswers[i].objectId == objectId &&
+          checkAnswers[i].checkId == taskId) {
+        return checkAnswers[i];
+      }
+    }
+    return null;
   }
 }

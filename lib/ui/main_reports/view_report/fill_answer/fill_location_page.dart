@@ -1,4 +1,5 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
@@ -42,7 +43,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
         body: Consumer<DataMaster>(builder: (context, dm, child) {
           return TabBarView(children: [
             buildDefaultView(context, dm),
-            const Placeholder(), //TODO: Readd tasks view here
+            buildTasksView(dm) //TODO: Readd tasks view here
           ]);
         }),
       ),
@@ -97,5 +98,36 @@ class _FillLocationPageState extends State<FillLocationPage> {
         //     ));
       },
     );
+  }
+
+  Widget buildTasksView(DataMaster dm) {
+    List<Widget> widgets = List.empty(growable: true);
+    widgets.addAll(dm.getChecksForLocation(widget.location).map((check) {
+      List<CheckupObject> objects =
+          dm.filterObjectsByCheck(widget.location.checkupObjects, check);
+      Iterable<CheckAnswer> answers = widget.answer
+          .getAnswersByLocation(widget.location, dm, false)
+          .where((element) => element.checkId == check.id);
+      return Card(
+        child: ListTile(
+            leading: const Icon(Icons.check_box),
+            title: Text(check.name),
+            subtitle: Text(
+                '${answers.length}/${objects.length} answer${objects.length != 1 ? 's' : ''}'),
+            onTap: () {
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => FillObjectAnswerPage(
+              //               dm: dm,
+              //               reportAnswer: widget.reportAnswer,
+              //               sortByTasks: true,
+              //               startLocation: location,
+              //               startTask: task,
+              //             )));
+            }),
+      );
+    }));
+    return ListView(children: widgets);
   }
 }

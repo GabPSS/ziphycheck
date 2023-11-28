@@ -117,34 +117,4 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
           ),
         )));
   }
-
-  // void buildTasksView(List<Widget> widgets) {
-  //   for (var location in baseReport.locations) {
-  //     widgets.add(getLocationTile(location));
-  //     widgets.addAll(dm.getTasksForLocation(location).map((task) {
-  //       List<CheckupObject> objects =
-  //           dm.getObjectsByTask(task, location);
-  //       Iterable<TaskAnswer> answers = widget.reportAnswer
-  //           .getAnswersByLocation(location, dm, false)
-  //           .where((element) => element.taskId == task.id);
-  //       return getItemTile(ListTile(
-  //           leading: const Icon(Icons.check_box),
-  //           title: Text(task.name),
-  //           subtitle: Text(
-  //               '${answers.length}/${objects.length} answer${objects.length != 1 ? 's' : ''}'),
-  //           onTap: () {
-  //             Navigator.push(
-  //                 context,
-  //                 MaterialPageRoute(
-  //                     builder: (context) => FillObjectAnswerPage(
-  //                           dm: dm,
-  //                           reportAnswer: widget.reportAnswer,
-  //                           sortByTasks: true,
-  //                           startLocation: location,
-  //                           startTask: task,
-  //                         )));
-  //           }));
-  //     }));
-  //   }
-  // }
 }
