@@ -78,4 +78,8 @@ class DataMaster extends ChangeNotifier {
 
   List<ReportAnswer> getAnswersForReport(Report report) => List.from(
       reportAnswers.where((element) => element.reportId == report.id));
+
+  List<Check> getChecksForObjectType(ObjectType? ot) => checks
+      .where((element) => ot?.checkIds.contains(element.id) ?? false)
+      .toList();
 }

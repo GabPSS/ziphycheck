@@ -1,0 +1,101 @@
+import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/location.dart';
+import 'package:checkup_app/models/report.dart';
+import 'package:checkup_app/models/report_answer.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class FillLocationPage extends StatefulWidget {
+  final ReportAnswer answer;
+  final Location location;
+
+  const FillLocationPage(
+      {super.key, required this.answer, required this.location});
+
+  @override
+  State<FillLocationPage> createState() => _FillLocationPageState();
+}
+
+class _FillLocationPageState extends State<FillLocationPage> {
+  Report? get report => Provider.of<DataMaster>(context)
+      .reports
+      .where((element) => widget.answer.reportId == element.id)
+      .singleOrNull;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("${widget.location.name} checks"),
+          bottom: const TabBar(tabs: [
+            Tab(
+              text: 'Overview',
+            ),
+            Tab(
+              text: 'Details',
+            )
+          ]),
+        ),
+        body: Consumer<DataMaster>(builder: (context, dm, child) {
+          return TabBarView(children: [
+            buildDefaultView(context, dm),
+            const Placeholder(), //TODO: Readd tasks view here
+          ]);
+        }),
+      ),
+    );
+  }
+
+  Widget buildDefaultView(BuildContext context, DataMaster dm) {
+    List<Widget> widgets = List.empty(growable: true);
+    widgets.addAll(widget.location.checkupObjects.map((checkupObject) {
+      Map<String, dynamic> checkupObjectInfo =
+          widget.answer.getCheckupObjectInfo(checkupObject, dm);
+
+      return Card(
+        child: getObjectTile(
+            checkupObject, checkupObjectInfo, context, widget.location, dm),
+      );
+    }));
+    return ListView(children: widgets);
+  }
+
+  Padding getItemTile(ListTile listTile) {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
+        child: Card(
+          child: listTile,
+        ));
+  }
+
+  ListTile getObjectTile(
+      CheckupObject checkupObject,
+      Map<String, dynamic> checkupObjectInfo,
+      BuildContext context,
+      Location location,
+      DataMaster dm) {
+    return ListTile(
+      leading: Icon(
+          checkupObject.getObjectType(dm)?.getIcon() ?? Icons.device_unknown),
+      title: Text(checkupObject.getFullName(dm)),
+      subtitle: Text(
+          "${checkupObjectInfo['answers']}/${checkupObjectInfo['total']} answer${checkupObjectInfo['total'] != 1 ? 's' : ''}, ${checkupObjectInfo['issues']} issue${checkupObjectInfo['issues'] != 1 ? "s" : ""}"),
+      onTap: () {
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => FillObjectAnswerPage(
+        //         dm: dm,
+        //         startObject: checkupObject,
+        //         startLocation: location,
+        //         reportAnswer: widget.reportAnswer,
+        //         sortByTasks: false,
+        //       ),
+        //     ));
+      },
+    );
+  }
+}

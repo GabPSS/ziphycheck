@@ -16,4 +16,6 @@ class Report extends IdentifiableObject {
 
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
+
+  getCheckupObjectById(int id) {}
 }

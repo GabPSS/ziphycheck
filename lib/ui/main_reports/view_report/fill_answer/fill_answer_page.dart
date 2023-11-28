@@ -1,6 +1,6 @@
 import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/view_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,6 @@ class FillAnswerPage extends StatefulWidget {
 
 class _FillAnswerPageState extends State<FillAnswerPage> {
   bool tasksView = false;
-  late ReportAnswer reportAnswer;
   late DataMaster dm;
   late Report baseReport;
 
@@ -61,6 +60,8 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
     //   buildDefaultView(widgets, context);
     // }
 
+    buildLocationWidgets(widgets);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("View answer"),
@@ -94,62 +95,28 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
     );
   }
 
-  // void buildDefaultView(List<Widget> widgets, BuildContext context) {
-  //   for (var i = 0; i < baseReport.locations.length; i++) {
-  //     var location = baseReport.locations[i];
-  //     widgets.add(
-  //       getLocationTile(location),
-  //     );
-  //     widgets.addAll(location.objects.map((checkupObject) {
-  //       int objectTasksCount = checkupObject
-  //               .getObjectType(dm)
-  //               ?.getTasks(dm)
-  //               .length ??
-  //           0;
-  //       int answeredTasksCount = widget.reportAnswer
-  //           .getTaskAnswersByObjectId(checkupObject.id)
-  //           .length;
-
-  //       return getItemTile(getObjectTile(checkupObject, answeredTasksCount,
-  //           objectTasksCount, context, location));
-  //     }));
-  //   }
-  // }
-
-  Padding getItemTile(ListTile listTile) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
-        child: Card(
-          child: listTile,
-        ));
+  void buildLocationWidgets(List<Widget> widgets) {
+    widgets.addAll(baseReport.locations.map((e) => Card(
+          child: ListTile(
+            leading: const Icon(Icons.place),
+            title: Text(e.name),
+            subtitle: Consumer<DataMaster>(builder: (context, dm, child) {
+              Map<String, int> info = e.getInfo(widget.reportAnswer, dm);
+              return Text(
+                  "${info['checked']}/${info['total']} checked, ${info['issues']} issue${info['issues'] != 1 ? 's' : ''}");
+            }),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ViewLocationPage(
+                            location: e,
+                            reportAnswer: widget.reportAnswer,
+                          )));
+            },
+          ),
+        )));
   }
-
-  // ListTile getObjectTile(CheckupObject checkupObject, int answeredTasksCount,
-  //     int objectTasksCount, BuildContext context, Location location) {
-  //   return ListTile(
-  //     leading: Icon(
-  //         checkupObject.getObjectType(dm)?.getIcon() ?? Icons.device_unknown),
-  //     title: Text(checkupObject.getFullName(dm)),
-  //     subtitle: Text(
-  //         "$answeredTasksCount/$objectTasksCount answer${objectTasksCount != 1 ? 's' : ''}"),
-  //     onTap: () {
-  //       Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => FillObjectAnswerPage(
-  //               dm: dm,
-  //               startObject: checkupObject,
-  //               startLocation: location,
-  //               reportAnswer: widget.reportAnswer,
-  //               sortByTasks: false,
-  //             ),
-  //           ));
-  //     },
-  //   );
-  // }
-
-  ListTile getLocationTile(Location location) => ListTile(
-      leading: const Icon(Icons.location_on), title: Text(location.name));
 
   // void buildTasksView(List<Widget> widgets) {
   //   for (var location in baseReport.locations) {

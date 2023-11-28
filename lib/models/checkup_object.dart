@@ -20,4 +20,7 @@ class CheckupObject {
   ObjectType? getObjectType(DataMaster dm) =>
       objectTypeId != null ? dm.getObjectById<ObjectType>(objectTypeId!) : null;
   set objectType(ObjectType? value) => objectTypeId = value?.id;
+
+  String getFullName(DataMaster dm) =>
+      ("${getObjectType(dm)?.name ?? ""} $name").trim();
 }
