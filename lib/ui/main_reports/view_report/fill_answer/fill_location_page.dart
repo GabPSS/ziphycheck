@@ -4,6 +4,7 @@ import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -82,20 +83,15 @@ class _FillLocationPageState extends State<FillLocationPage> {
       leading: Icon(
           checkupObject.getObjectType(dm)?.getIcon() ?? Icons.device_unknown),
       title: Text(checkupObject.getFullName(dm)),
-      subtitle: Text(
-          "${checkupObjectInfo['answers']}/${checkupObjectInfo['total']} answer${checkupObjectInfo['total'] != 1 ? 's' : ''}, ${checkupObjectInfo['issues']} issue${checkupObjectInfo['issues'] != 1 ? "s" : ""}"),
+      subtitle: Text(widget.answer.formatCheckupObjectInfo(
+          checkupObject, dm, "%AW/%TT check%sTT, %IS issue%sIS")),
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => FillObjectAnswerPage(
-        //         dm: dm,
-        //         startObject: checkupObject,
-        //         startLocation: location,
-        //         reportAnswer: widget.reportAnswer,
-        //         sortByTasks: false,
-        //       ),
-        //     ));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FillObjectAnswerpage(
+                  answer: widget.answer, initialObject: checkupObject),
+            ));
       },
     );
   }

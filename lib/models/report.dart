@@ -1,3 +1,4 @@
+import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/identifiable_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -17,5 +18,9 @@ class Report extends IdentifiableObject {
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 
-  getCheckupObjectById(int id) {}
+  Location? getLocationOf(CheckupObject object) {
+    return locations
+        .where((element) => element.checkupObjects.contains(object))
+        .singleOrNull;
+  }
 }
