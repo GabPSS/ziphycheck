@@ -10,8 +10,8 @@ class Report extends IdentifiableObject {
   String name;
   List<Location> locations = List.empty(growable: true);
 
-  int checkupObjectKey = 0;
-  int locationKey = 0;
+  int checkupObjectKey = -1;
+  int locationKey = -1;
 
   Report({super.id = -1, required this.name});
 
@@ -22,5 +22,17 @@ class Report extends IdentifiableObject {
     return locations
         .where((element) => element.checkupObjects.contains(object))
         .singleOrNull;
+  }
+
+  void addLocation(Location location) {
+    locationKey++;
+    location.id = locationKey;
+    locations.add(location);
+  }
+
+  void addObject(Location location, CheckupObject object) {
+    checkupObjectKey++;
+    object.id = checkupObjectKey;
+    location.checkupObjects.add(object);
   }
 }

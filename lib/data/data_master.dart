@@ -85,6 +85,9 @@ class DataMaster extends ChangeNotifier {
       .where((element) => ot?.checkIds.contains(element.id) ?? false)
       .toList();
 
+  List<Check> getChecksForObject(CheckupObject object) =>
+      getChecksForObjectType(object.getObjectType(this));
+
   List<Check> getChecksForLocation(Location location) {
     List<ObjectType> types = List.empty(growable: true);
 

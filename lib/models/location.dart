@@ -20,16 +20,14 @@ class Location {
   Map<String, dynamic> toJson() => _$LocationToJson(this);
 
   Map<String, int> getInfo(ReportAnswer ra, DataMaster dm) {
-    // ra.checkAnswers
-    //     .where((element) => checkupObjectIds.contains(element.objectId));
-    // return {'total': checkupObjects.length};
     int checkedObjects = 0, issues = 0;
     for (var co in checkupObjects) {
       Map<String, dynamic> checkupObjectInfo = ra.getCheckupObjectInfo(co, dm);
-      if (checkupObjectInfo['checked'] as bool) {
+      var checkedBool = checkupObjectInfo['checked'] ?? false;
+      if (checkedBool != null && checkedBool as bool) {
         checkedObjects++;
       }
-      issues += (checkupObjectInfo['issues'] as int);
+      issues += (checkupObjectInfo['issues'] ?? 0) as int;
     }
     return {
       'total': checkupObjects.length,

@@ -82,67 +82,76 @@ class _AddReportPageState extends State<AddReportPage> {
       List<Widget> objects = List.empty(growable: true);
       for (var x = 0; x < report.locations[i].checkupObjects.length; x++) {
         var object = report.locations[i].checkupObjects[x];
-        objects.add(ListTile(
-          leading: const Icon(Icons.desktop_windows),
-          title: TextFormField(
-            decoration: const InputDecoration(border: InputBorder.none),
-            initialValue: object.name == "" ? "Unnamed object" : object.name,
-            onChanged: (value) {
-              object.name = value;
-            },
-          ),
-          trailing: DropdownButton(
-            items: objectTypes,
-            value: object.getObjectType(dm),
-            onChanged: (value) {
-              setState(() {
-                object.objectType = value;
-              });
-            },
-          ),
-        ));
+        objects.add(buildObjectListTile(object, objectTypes));
       }
       objects.add(ListTile(
         leading: const Icon(Icons.add),
         title: const Text("New object"),
         onTap: () {
           setState(() {
-            report.locations[i].checkupObjects.add(CheckupObject());
+            report.addObject(report.locations[i], CheckupObject());
           });
         },
       ));
-      locations.add(Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.location_on),
-            title: TextFormField(
-              initialValue: report.locations[i].name == ""
-                  ? "Unnamed location"
-                  : report.locations[i].name,
-              onChanged: (value) {
-                report.locations[i].name = value;
-              },
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(32, 0, 0, 0),
-              child: Column(
-                children: objects,
-              ))
-        ],
-      ));
+      locations.add(buildLocationWidget(i, objects));
     }
     locations.add(ListTile(
       leading: const Icon(Icons.add),
       title: const Text("Add new location"),
       onTap: () {
         setState(() {
-          report.locations.add(Location());
+          report.addLocation(Location());
         });
       },
     ));
 
     return locations;
+  }
+
+  Column buildLocationWidget(int i, List<Widget> objects) {
+    return Column(
+      children: [
+        ListTile(
+          leading: const Icon(Icons.location_on),
+          title: TextFormField(
+            initialValue: report.locations[i].name == ""
+                ? "Unnamed location"
+                : report.locations[i].name,
+            onChanged: (value) {
+              report.locations[i].name = value;
+            },
+          ),
+        ),
+        Padding(
+            padding: const EdgeInsets.fromLTRB(32, 0, 0, 0),
+            child: Column(
+              children: objects,
+            ))
+      ],
+    );
+  }
+
+  ListTile buildObjectListTile(
+      CheckupObject object, List<DropdownMenuItem<dynamic>> objectTypes) {
+    return ListTile(
+      leading: const Icon(Icons.desktop_windows),
+      title: TextFormField(
+        decoration: const InputDecoration(border: InputBorder.none),
+        initialValue: object.name == "" ? "Unnamed object" : object.name,
+        onChanged: (value) {
+          object.name = value;
+        },
+      ),
+      trailing: DropdownButton(
+        items: objectTypes,
+        value: object.getObjectType(dm),
+        onChanged: (value) {
+          setState(() {
+            object.objectType = value;
+          });
+        },
+      ),
+    );
   }
 
   Future<void> closePage() async {

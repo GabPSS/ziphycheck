@@ -90,7 +90,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
             context,
             MaterialPageRoute(
               builder: (context) => FillObjectAnswerpage(
-                  answer: widget.answer, initialObject: checkupObject),
+                  reportAnswer: widget.answer, initialObject: checkupObject),
             ));
       },
     );

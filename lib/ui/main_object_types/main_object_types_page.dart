@@ -63,8 +63,9 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        setState(() =>
-                                            dm.objectTypes.remove(objectType));
+                                        setState(() {
+                                          dm.removeObject(objectType);
+                                        });
                                       },
                                       child: const Text('Delete'))
                                 ],

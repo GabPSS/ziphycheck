@@ -2,6 +2,7 @@ import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/identifiable_object.dart';
+import 'package:checkup_app/models/issue.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/location_answer.dart';
 import 'package:checkup_app/models/object_type.dart';
@@ -28,6 +29,21 @@ class ReportAnswer extends IdentifiableObject {
     throw UnimplementedError();
   }
 
+  void markObjectTasksTrue(CheckupObject co, DataMaster dm) {
+    removeObjectAnswers(co);
+
+    checkAnswers.addAll(
+      dm.getChecksForObjectType(co.getObjectType(dm)).map(
+        (check) {
+          return CheckAnswer(checkId: check.id, objectId: co.id, status: true);
+        },
+      ),
+    );
+  }
+
+  void removeObjectAnswers(CheckupObject co) =>
+      checkAnswers.removeWhere((element) => element.objectId == co.id);
+
   Map<String, dynamic> getCheckupObjectInfo(CheckupObject co, DataMaster dm) {
     if (co.objectTypeId != null) {
       List<int> checkIdsForCheckupObject = dm
@@ -35,10 +51,14 @@ class ReportAnswer extends IdentifiableObject {
               dm.getObjectById<ObjectType>(co.objectTypeId!))
           .map((e) => e.id)
           .toList();
-      Iterable<CheckAnswer> answersForCheckupObject =
-          checkAnswers.where((answer) => answer.objectId == co.id);
-      Iterable<CheckAnswer> answersWithIssues =
-          answersForCheckupObject.where((element) => element.status = false);
+      Iterable<CheckAnswer> answersForCheckupObject = checkAnswers.where(
+          (answer) => answer.objectId == co.id && answer.checkId != null);
+      int answersWithIssues = answersForCheckupObject
+          .where((element) => element.status == false)
+          .fold<int>(
+              0,
+              (previousValue, element) =>
+                  previousValue + element.issues.length);
       List<CheckupObject>? allObjects =
           dm.getObjectById<Report>(reportId).getLocationOf(co)?.checkupObjects;
 
@@ -49,10 +69,10 @@ class ReportAnswer extends IdentifiableObject {
         'answers': answersForCheckupObject.length,
         'checked':
             checkIdsForCheckupObject.length == answersForCheckupObject.length,
-        'issues': answersWithIssues.length
+        'issues': answersWithIssues
       };
     }
-    return {'total': 0, 'answers': 0, 'issues': 0};
+    return {};
   }
 
   ///Gets checkupobject info and formats it onto a string using the specified [format]
@@ -95,8 +115,7 @@ class ReportAnswer extends IdentifiableObject {
       var objectChecks = dm.getChecksForObjectType(object.getObjectType(dm));
       for (var checkIndex = 0; checkIndex < objectChecks.length; checkIndex++) {
         var check = objectChecks[checkIndex];
-        CheckAnswer? objectCheckAnswer =
-            getCheckAnswerByObjectAndTaskIds(object.id, check.id);
+        CheckAnswer? objectCheckAnswer = getCheckAnswer(object.id, check.id);
         if (objectCheckAnswer != null &&
             !(objectCheckAnswer.status && falseOnly)) {
           locationAnswers.add(objectCheckAnswer);
@@ -107,7 +126,7 @@ class ReportAnswer extends IdentifiableObject {
     return locationAnswers;
   }
 
-  CheckAnswer? getCheckAnswerByObjectAndTaskIds(int objectId, int taskId) {
+  CheckAnswer? getCheckAnswer(int objectId, int taskId) {
     for (var i = 0; i < checkAnswers.length; i++) {
       if (checkAnswers[i].objectId == objectId &&
           checkAnswers[i].checkId == taskId) {
@@ -115,6 +134,23 @@ class ReportAnswer extends IdentifiableObject {
       }
     }
     return null;
+  }
+
+  CheckAnswer getOrCreateAnswer(int objectId, int checkId) {
+    var answer = getCheckAnswer(objectId, checkId);
+    if (answer == null) {
+      answer = CheckAnswer(checkId: checkId, objectId: objectId);
+      checkAnswers.add(answer);
+    }
+    return answer;
+  }
+
+  List<Issue> getObjectIssues(CheckupObject object) {
+    List<Issue> issues = List.empty(growable: true);
+    getAnswersByObject(object).forEach((element) {
+      issues.addAll(element.issues);
+    });
+    return issues;
   }
 
   List<CheckAnswer> getAnswersByObject(CheckupObject object) =>
