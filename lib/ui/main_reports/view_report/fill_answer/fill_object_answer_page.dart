@@ -232,14 +232,27 @@ class _FillObjectAnswerpageState extends State<FillObjectAnswerpage> {
         for (Issue customIssue in genericCheckAnswer.issues)
           if (status == false)
             CustomIssueTile(
-              issue: customIssue,
-              onDeleteIssue: () =>
-                  setState(() => genericCheckAnswer.issues.remove(customIssue)),
+              name: customIssue.name,
+              solved: customIssue.solved,
+              onUpdateIssue: (value, solved) {
+                setState(() {
+                  customIssue.name = value;
+                  customIssue.solved = solved;
+                });
+              },
+              onDeleteIssue: () {
+                setState(() {
+                  genericCheckAnswer.issues.remove(customIssue);
+                });
+              },
             ),
       if (status == false)
-        CustomIssueTile(
-          onCreateIssue: (issue) =>
-              setState(() => genericCheckAnswer.issues.add(issue)),
+        CustomAddIssueTile(
+          onCreateIssue: (name) {
+            setState(() {
+              genericCheckAnswer.issues.add(Issue(name: name));
+            });
+          },
         ),
       if (status == null)
         const Text(
@@ -345,62 +358,99 @@ class IssueTile extends StatelessWidget {
   }
 }
 
-class CustomIssueTile extends StatefulWidget {
-  final Issue? issue;
-  final Function(Issue issue)? onCreateIssue;
-  final Function()? onDeleteIssue;
-
-  const CustomIssueTile(
-      {super.key, this.issue, this.onCreateIssue, this.onDeleteIssue});
+class CustomAddIssueTile extends StatefulWidget {
+  const CustomAddIssueTile({super.key, required this.onCreateIssue});
+  final Function(String name) onCreateIssue;
 
   @override
-  State<CustomIssueTile> createState() => _CustomIssueTileState();
+  State<CustomAddIssueTile> createState() => _CustomAddIssueTileState();
 }
 
-class _CustomIssueTileState extends State<CustomIssueTile> {
-  late Issue issue;
-
+class _CustomAddIssueTileState extends State<CustomAddIssueTile> {
+  late TextEditingController textEditingController;
   @override
   void initState() {
-    issue = widget.issue ?? Issue(name: '');
-
+    textEditingController =
+        TextEditingController.fromValue(TextEditingValue.empty);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: TextFormField(
-        decoration: const InputDecoration(hintText: 'Custom issue'),
-        initialValue: issue.name,
-        onChanged: (value) {
-          setState(() {
-            issue.name = value;
-          });
-        },
-        onEditingComplete: () {
-          if (issue.name.trim() == "") {
-            widget.onDeleteIssue?.call();
-            return;
-          }
-          if (widget.issue == null) {
-            widget.onCreateIssue?.call(issue);
-            return;
-          }
-          //TODO: Close the keyboard after this
+      title: TextField(
+        controller: textEditingController,
+        decoration: const InputDecoration(hintText: 'Other issue'),
+        onSubmitted: (value) {
+          widget.onCreateIssue(value);
+          textEditingController.text = "";
         },
       ),
-      trailing: issue.name.trim() != ""
-          ? Checkbox(
-              value: issue.solved,
-              onChanged: (value) {
-                setState(() {
-                  issue.solved = value ?? false;
-                });
-              },
-            )
-          : null,
     );
+  }
+}
+
+class CustomIssueTile extends StatefulWidget {
+  final String? name;
+  final bool solved;
+  // final Function(Issue issue)? onCreateIssue;
+  final Function(String value, bool solved)? onUpdateIssue;
+  final Function()? onDeleteIssue;
+
+  const CustomIssueTile(
+      {super.key,
+      // this.onCreateIssue,
+      this.onDeleteIssue,
+      required this.name,
+      this.solved = false,
+      this.onUpdateIssue});
+
+  @override
+  State<CustomIssueTile> createState() => _CustomIssueTileState();
+}
+
+class _CustomIssueTileState extends State<CustomIssueTile> {
+  late String name;
+  late bool solved;
+  // late bool created = false;
+  late TextEditingController textEditingController;
+
+  @override
+  void initState() {
+    name = widget.name ?? '';
+    solved = widget.solved;
+    // created = widget.name != null;
+    textEditingController = TextEditingController(text: name);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    name = widget.name ?? '';
+    textEditingController.text = name;
+    return ListTile(
+        title: TextFormField(
+          decoration: const InputDecoration(hintText: 'Other issue'),
+          controller: textEditingController,
+          onChanged: (value) {
+            if (value.trim() == "") {
+              widget.onDeleteIssue?.call();
+              // created = false;
+              setState(() {});
+              return;
+            }
+            name = value;
+            widget.onUpdateIssue?.call(name, solved);
+          },
+        ),
+        trailing: //created
+            Checkbox(
+          value: solved,
+          onChanged: (value) {
+            solved = value ?? false;
+            widget.onUpdateIssue?.call(name, solved);
+          },
+        ));
   }
 }
 
