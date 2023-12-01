@@ -45,10 +45,8 @@ class _FillLocationPageState extends State<FillLocationPage> {
           ]),
         ),
         body: Consumer<DataMaster>(builder: (context, dm, child) {
-          return TabBarView(children: [
-            buildOverview(context, dm),
-            buildTasksView(dm) //TODO: Readd tasks view here
-          ]);
+          return TabBarView(
+              children: [buildOverview(context, dm), buildTasksView(dm)]);
         }),
       ),
     );
@@ -148,16 +146,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
                         reportAnswer: widget.answer,
                         location: widget.location),
                   ));
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => FillObjectAnswerPage(
-              //               dm: dm,
-              //               reportAnswer: widget.reportAnswer,
-              //               sortByTasks: true,
-              //               startLocation: location,
-              //               startTask: task,
-              //             )));
+              //TODO: #20 Figure out how to reunite the two object pages back into a single thing
             }),
       );
     }));

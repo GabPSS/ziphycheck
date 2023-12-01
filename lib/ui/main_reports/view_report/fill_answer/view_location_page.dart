@@ -31,7 +31,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
       body: ListView(
         children: [
           buildLocationHeader(),
-          //TODO: Add new redesign widgets
+          //TODO: #21 Add new redesign widgets
           buildIssueReporter(),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -46,7 +46,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                     ));
               },
               label: const Text("View checks"),
-              icon: Icon(Icons.exit_to_app),
+              icon: const Icon(Icons.exit_to_app),
             ),
           )
         ],
@@ -77,8 +77,8 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
       children: [
         SwitchListTile(
           value: !locationAnswer.status,
-          title: Text("Report issue"),
-          subtitle: Text("Use this if you found location issues"),
+          title: const Text("Report issue"),
+          subtitle: const Text("Use this if you found location issues"),
           onChanged: (value) {
             setState(() {
               locationAnswer.status = !value;
@@ -88,14 +88,15 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
         ),
         if (!locationAnswer.status)
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Builder(builder: (context) {
               return TextField(
                 controller: TextEditingController(text: locationAnswer.notes),
-                decoration: InputDecoration(labelText: 'Issue description'),
+                decoration:
+                    const InputDecoration(labelText: 'Issue description'),
                 onChanged: (value) {
                   locationAnswer.notes = value;
-                  //TODO: Why issues and notes? Why not a single thing?
+                  //TODO: #22 Why issues and notes? Why not a single thing?
                 },
               );
             }),

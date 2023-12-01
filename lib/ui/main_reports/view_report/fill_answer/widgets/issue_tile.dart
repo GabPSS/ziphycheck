@@ -31,7 +31,7 @@ class IssueTile extends StatelessWidget {
         ListTile(
           leading: getLeading(),
           title: Text(issueName),
-          //TODO: Change to formatted text once that's been implemented
+          //TODO: #23 Change to formatted text once that's been implemented
           onTap: style == IssueTileStyle.selection
               ? () {
                   onUpdateIssue?.call(!value, issueName, notes, solved);
@@ -72,7 +72,7 @@ class IssueTile extends StatelessWidget {
             onPressed: () {
               onDelete?.call();
             },
-            icon: Icon(Icons.delete));
+            icon: const Icon(Icons.delete));
       default:
         throw UnimplementedError();
     }

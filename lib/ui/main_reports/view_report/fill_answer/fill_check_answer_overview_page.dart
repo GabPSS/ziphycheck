@@ -179,7 +179,7 @@ class _FillCheckAnswerOverviewPageState
                 child: Text(widget.reportAnswer.formatCheckupObjectInfo(
                     object, dm, "%AW/%TT check%sTT, %IS issue%sIS")),
 
-                //TODO: Add option to see yesterday's answers right from here
+                //TODO: #18 Add option to see yesterday's answers right from here
               ),
             ],
           ),
@@ -191,7 +191,7 @@ class _FillCheckAnswerOverviewPageState
   List<Check> expandedChecks = List.empty(growable: true);
 
   Widget getContent() {
-    //TODO: Finish implementing content
+    //TODO: #19 Finish implementing content
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (status == false)
         for (Check check in checks)
@@ -252,7 +252,7 @@ class _FillCheckAnswerOverviewPageState
         ),
       if (status == null)
         const Text(
-            "Yesterday's issues\n- bla bla bla\n- bla bla bla\n- bla bla bla\n- bla bla bla") //TODO: Change this onto a retrieval of the previous issues
+            "Yesterday's issues\n- bla bla bla\n- bla bla bla\n- bla bla bla\n- bla bla bla") //TODO: #18 Change this onto a retrieval of the previous issues
     ]);
   }
 }
