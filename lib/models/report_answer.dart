@@ -52,7 +52,7 @@ class ReportAnswer extends IdentifiableObject {
           .map((e) => e.id)
           .toList();
       Iterable<CheckAnswer> answersForCheckupObject = checkAnswers.where(
-          (answer) => answer.objectId == co.id && answer.checkId != null);
+          (answer) => answer.objectId == co.id); //&& answer.checkId != null);
       int answersWithIssues = answersForCheckupObject
           .where((element) => element.status == false)
           .fold<int>(
@@ -66,7 +66,9 @@ class ReportAnswer extends IdentifiableObject {
         'index': (allObjects?.indexOf(co) ?? -2) + 1,
         'objs': allObjects?.length ?? -1,
         'total': checkIdsForCheckupObject.length,
-        'answers': answersForCheckupObject.length,
+        'answers': answersForCheckupObject
+            .where((element) => element.checkId != null)
+            .length,
         'checked':
             checkIdsForCheckupObject.length == answersForCheckupObject.length,
         'issues': answersWithIssues
@@ -155,4 +157,15 @@ class ReportAnswer extends IdentifiableObject {
 
   List<CheckAnswer> getAnswersByObject(CheckupObject object) =>
       checkAnswers.where((element) => element.objectId == object.id).toList();
+
+  LocationAnswer getOrCreateLocationAnswer(Location location) =>
+      locationAnswers.singleWhere(
+        (element) => element.locationId == location.id,
+        orElse: () {
+          LocationAnswer newAnswer =
+              LocationAnswer(locationId: location.id, status: true);
+          locationAnswers.add(newAnswer);
+          return newAnswer;
+        },
+      );
 }

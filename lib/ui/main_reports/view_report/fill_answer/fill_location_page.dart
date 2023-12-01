@@ -4,7 +4,7 @@ import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_check_answer_overview_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -89,7 +89,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FillObjectAnswerpage(
+              builder: (context) => FillCheckAnswerOverviewPage(
                   reportAnswer: widget.answer, initialObject: checkupObject),
             ));
       },
