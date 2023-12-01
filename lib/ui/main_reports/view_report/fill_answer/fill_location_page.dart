@@ -1,11 +1,13 @@
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/issue.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_check_answer_details_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_check_answer_overview_page.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,7 +46,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
         ),
         body: Consumer<DataMaster>(builder: (context, dm, child) {
           return TabBarView(children: [
-            buildDefaultView(context, dm),
+            buildOverview(context, dm),
             buildTasksView(dm) //TODO: Readd tasks view here
           ]);
         }),
@@ -52,15 +54,41 @@ class _FillLocationPageState extends State<FillLocationPage> {
     );
   }
 
-  Widget buildDefaultView(BuildContext context, DataMaster dm) {
+  Widget buildOverview(BuildContext context, DataMaster dm) {
     List<Widget> widgets = List.empty(growable: true);
     widgets.addAll(widget.location.checkupObjects.map((checkupObject) {
       Map<String, dynamic> checkupObjectInfo =
           widget.answer.getCheckupObjectInfo(checkupObject, dm);
 
-      return Card(
-        child: getObjectTile(
-            checkupObject, checkupObjectInfo, context, widget.location, dm),
+      return Column(
+        children: [
+          Card(
+            child: getObjectTile(
+                checkupObject, checkupObjectInfo, context, widget.location, dm),
+          ),
+          for (Issue issue in widget.answer.getObjectIssues(checkupObject))
+            Padding(
+              padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
+              child: Card(
+                child: IssueTile(
+                  style: IssueTileStyle.preview,
+                  solved: issue.solved,
+                  value: true,
+                  issueName: issue.name,
+                  onDelete: () {
+                    setState(() {
+                      widget.answer.removeIssue(issue, checkupObject);
+                    });
+                  },
+                  onUpdateIssue: (exists, name, notes, solved) {
+                    setState(() {
+                      issue.solved = solved ?? false;
+                    });
+                  },
+                ),
+              ),
+            )
+        ],
       );
     }));
     return ListView(children: widgets);

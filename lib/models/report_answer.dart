@@ -155,6 +155,10 @@ class ReportAnswer extends IdentifiableObject {
     return issues;
   }
 
+  void removeIssue(Issue issue, CheckupObject object) =>
+      getAnswersByObject(object)
+          .forEach((element) => element.issues.remove(issue));
+
   List<CheckAnswer> getAnswersByObject(CheckupObject object) =>
       checkAnswers.where((element) => element.objectId == object.id).toList();
 
