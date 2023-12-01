@@ -1,96 +1,126 @@
-import 'dart:convert';
-
 import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/data_set.dart';
+import 'package:checkup_app/models/check.dart';
+import 'package:checkup_app/models/identifiable_object.dart';
 import 'package:checkup_app/models/location.dart';
-import 'package:checkup_app/models/task.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:checkup_app/models/object_type.dart';
+import 'package:checkup_app/models/report.dart';
+import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/data/storage.dart';
+import 'package:flutter/material.dart';
 
-import '../models/object_type.dart';
-import '../models/report.dart';
-import '../models/report_answer.dart';
+class DataMaster extends ChangeNotifier {
+  Storage storage = Storage();
+  DataSet _dataSet = DataSet();
 
-part 'data_master.g.dart';
+  List<Check> get checks => _dataSet.checks;
+  List<ObjectType> get objectTypes => _dataSet.objectTypes;
+  List<Report> get reports => _dataSet.reports;
+  List<ReportAnswer> get reportAnswers => _dataSet.reportAnswers;
 
-@JsonSerializable()
-class DataMaster {
-  List<Task> tasks = List.empty(growable: true);
-  List<ObjectType> objectTypes = List.empty(growable: true);
-  List<Report> reports = List.empty(growable: true);
-  List<ReportAnswer> reportAnswers = List.empty(growable: true);
+  T getObjectById<T>(int id) {
+    List<IdentifiableObject>? list = switch (T) {
+      Check => checks,
+      ObjectType => objectTypes,
+      Report => reports,
+      ReportAnswer => reportAnswers,
+      Type() => null,
+    };
 
-  int reportKey = 0;
-  int objectTypeKey = 0;
-  int taskKey = 0;
-  int reportAnswerKey = 0;
-
-  DataMaster();
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  Function()? saveFunction;
-
-  void save() {
-    if (saveFunction != null) saveFunction!();
+    return (list?.firstWhere((element) => element.id == id)
+        as IdentifiableObject) as T;
   }
 
-  static const String unknownObject = "Unknown Object";
-
-  List<ReportAnswer> getAnswersForReport(Report report) {
-    return List.from(reportAnswers.where((element) => element.baseReportId == report.id));
+  Future<void> init() async {
+    _dataSet = await storage.getData();
   }
 
-  Report getReportById(int id) => reports.where((element) => element.id == id).first;
-
-  ObjectType getObjectTypeById(int id) => objectTypes.where((element) => element.id == id).first;
-
-  factory DataMaster.fromJson(Map<String, dynamic> json) => _$DataMasterFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DataMasterToJson(this);
-
-  static DataMaster fromStorage(LocalStorage storage) {
-    String? data = storage.getItem('data');
-    if (data != null) {
-      DataMaster dm = DataMaster.fromJson(jsonDecode(data));
-
-      return dm;
-    } else {
-      var dm = DataMaster();
-
-      return dm;
-    }
+  Future<void> import() async {
+    DataSet? dataSet = await storage.open();
+    if (dataSet != null) _dataSet = dataSet;
+    notifyListeners();
   }
 
-  List<Task> getTasksForLocation(Location location) {
+  void save() => storage.save(_dataSet);
+
+  void export() {
+    //TODO: Write function to export datasets without answers
+    throw UnimplementedError();
+  }
+
+  void removeReport(Report report) {
+    reports.remove(report);
+    update();
+  }
+
+  void removeObject(Object object) {
+    _getObjectList(object)?.remove(object);
+    update();
+  }
+
+  void addObject(IdentifiableObject object) {
+    object.id = _dataSet.getIdFor(object) ?? -1;
+    _getObjectList(object)?.add(object);
+    update();
+  }
+
+  List<Object>? _getObjectList(Object object) {
+    List<Object>? list;
+    if (object is Check) list = checks;
+    if (object is ObjectType) list = objectTypes;
+    if (object is Report) list = reports;
+    if (object is ReportAnswer) list = reportAnswers;
+    return list;
+  }
+
+  void update() {
+    save();
+    notifyListeners();
+  }
+
+  List<ReportAnswer> getAnswersForReport(Report report) => List.from(
+      reportAnswers.where((element) => element.reportId == report.id));
+
+  List<Check> getChecksForObjectType(ObjectType? ot) => checks
+      .where((element) => ot?.checkIds.contains(element.id) ?? false)
+      .toList();
+
+  List<Check> getChecksForObject(CheckupObject object) =>
+      getChecksForObjectType(object.getObjectType(this));
+
+  List<Check> getChecksForLocation(Location location) {
     List<ObjectType> types = List.empty(growable: true);
 
-    for (CheckupObject object in location.objects) {
+    for (CheckupObject object in location.checkupObjects) {
       ObjectType? objectType = object.getObjectType(this);
       if (objectType != null && !types.contains(objectType)) {
         types.add(objectType);
       }
     }
 
-    List<Task> tasks = List.empty(growable: true);
+    List<Check> checks = List.empty(growable: true);
     for (ObjectType type in types) {
-      tasks.addAll(type.getTasks(this).where((element) => !tasks.contains(element)));
+      checks.addAll(getChecksForObjectType(type)
+          .where((element) => !checks.contains(element)));
     }
 
-    return tasks;
+    return checks;
   }
 
-  List<CheckupObject> getObjectsByTask(Task task, Location location) {
-    List<CheckupObject> objects = List.empty(growable: true);
+  List<CheckupObject> filterObjectsByCheck(
+      List<CheckupObject> objects, Check check) {
+    List<CheckupObject> objects2 = List.empty(growable: true);
 
-    for (var object in location.objects) {
+    for (var object in objects) {
       var objectType = object.getObjectType(this);
       if (objectType != null) {
-        var tasks = objectType.getTasks(this);
-        if (tasks.contains(task)) {
-          objects.add(object);
+        var tasks = getChecksForObjectType(objectType);
+        if (tasks.contains(check)) {
+          objects2.add(object);
         }
       }
     }
 
-    return objects;
+    return objects2;
   }
 }

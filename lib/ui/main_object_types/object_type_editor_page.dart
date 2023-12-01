@@ -1,14 +1,13 @@
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/object_type.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ObjectTypeEditorPage extends StatefulWidget {
-  final DataMaster dm;
   final ObjectType? objectType;
-  final bool isAdding;
-  final Function()? onUpdate;
+  bool get isAdding => objectType == null;
 
-  const ObjectTypeEditorPage({super.key, required this.dm, this.objectType, this.isAdding = false, this.onUpdate});
+  const ObjectTypeEditorPage({super.key, this.objectType});
 
   @override
   State<ObjectTypeEditorPage> createState() => _ObjectTypeEditorPageState();
@@ -16,14 +15,14 @@ class ObjectTypeEditorPage extends StatefulWidget {
 
 class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
   late ObjectType objectType;
+  late DataMaster dm;
   final formKey = GlobalKey<FormState>();
-  bool isAdding = false;
 
   @override
   void initState() {
+    dm = Provider.of<DataMaster>(context, listen: false);
     if (widget.isAdding) {
-      objectType = ObjectType(dm: widget.dm);
-      isAdding = true;
+      objectType = ObjectType();
     } else {
       assert(widget.objectType != null);
       objectType = widget.objectType!;
@@ -46,7 +45,6 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
           onChanged: (value) {
             if (formKey.currentState!.validate()) {
               objectType.name = value.trim();
-              update();
             }
           },
           validator: (value) {
@@ -59,15 +57,15 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
       ),
     ].toList(growable: true);
 
-    Iterable<Widget> map = widget.dm.tasks.map((task) => CheckboxListTile(
-          value: objectType.hasTask(task),
-          title: Text(task.name),
+    Iterable<Widget> map = dm.checks.map((check) => CheckboxListTile(
+          value: objectType.hasCheck(check),
+          title: Text(check.name),
           onChanged: (value) {
             setState(() {
               if (value ?? false) {
-                objectType.addTask(task);
+                objectType.addCheck(check);
               } else {
-                objectType.removeTask(task);
+                objectType.removeCheck(check);
               }
             });
           },
@@ -89,7 +87,8 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
         : [
             const Expanded(
                 child: Center(
-              child: Text('There are no tasks to add right now. Add some, then come back later'),
+              child: Text(
+                  'There are no tasks to add right now. Add some, then come back later'),
             ))
           ].toList());
 
@@ -99,12 +98,18 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 Navigator.pop(context);
+                if (widget.isAdding) {
+                  dm.addObject(objectType);
+                } else {
+                  dm.update();
+                }
               } else {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text('Discard changes?'),
-                    content: const Text('Closing will discard changes to this object type due to invalid inputs'),
+                    content: const Text(
+                        'Closing will discard changes to this object type due to invalid inputs'),
                     actions: [
                       TextButton(
                           onPressed: () {
@@ -115,9 +120,6 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
-                            if (isAdding) {
-                              widget.dm.objectTypes.remove(objectType);
-                            }
                           },
                           child: const Text('Discard'))
                     ],
@@ -126,7 +128,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
               }
             },
             icon: const Icon(Icons.arrow_back)),
-        title: Text(isAdding ? 'Add object type' : 'Edit object type'),
+        title: Text(widget.isAdding ? 'Add object type' : 'Edit object type'),
       ),
       body: Form(
         key: formKey,
@@ -135,9 +137,5 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
         ),
       ),
     );
-  }
-
-  void update() {
-    if (widget.onUpdate != null) widget.onUpdate!();
   }
 }

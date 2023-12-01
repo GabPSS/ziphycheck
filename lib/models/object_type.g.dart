@@ -6,16 +6,15 @@ part of 'object_type.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ObjectType _$ObjectTypeFromJson(Map<String, dynamic> json) => ObjectType()
-  ..id = json['id'] as int
-  ..name = json['name'] as String
-  ..taskIds = (json['taskIds'] as List<dynamic>).map((e) => e as int).toList()
-  ..pluralName = json['pluralName'] as String;
+ObjectType _$ObjectTypeFromJson(Map<String, dynamic> json) => ObjectType(
+      id: json['id'] as int? ?? -1,
+      name: json['name'] as String? ?? "Unnamed Object type",
+    )..checkIds =
+        (json['checkIds'] as List<dynamic>).map((e) => e as int).toList();
 
 Map<String, dynamic> _$ObjectTypeToJson(ObjectType instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'taskIds': instance.taskIds,
-      'pluralName': instance.pluralName,
+      'checkIds': instance.checkIds,
     };

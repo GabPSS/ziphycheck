@@ -1,30 +1,32 @@
 import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/checkup_object.dart';
-import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report_answer.dart';
-import 'package:checkup_app/models/task_answer.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_object_answer_page.dart';
+import 'package:checkup_app/ui/main_reports/view_report/fill_answer/view_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../models/report.dart';
 
 class FillAnswerPage extends StatefulWidget {
-  final DataMaster dm;
   final ReportAnswer reportAnswer;
-  final bool adding;
-  final Function(Function()) parentSetState;
 
-  const FillAnswerPage(
-      {super.key, required this.reportAnswer, required this.dm, this.adding = false, required this.parentSetState});
+  const FillAnswerPage({super.key, required this.reportAnswer});
 
   @override
   State<FillAnswerPage> createState() => _FillAnswerPageState();
 }
 
 class _FillAnswerPageState extends State<FillAnswerPage> {
-  Report get baseReport => widget.dm.getReportById(widget.reportAnswer.baseReportId);
   bool tasksView = false;
+  late DataMaster dm;
+  late Report baseReport;
+
+  @override
+  void initState() {
+    dm = Provider.of<DataMaster>(context, listen: false);
+    baseReport = dm.getObjectById<Report>(widget.reportAnswer.reportId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +54,17 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
       ),
     );
 
-    if (tasksView) {
-      buildTasksView(widgets);
-    } else {
-      buildDefaultView(widgets, context);
-    }
+    // if (tasksView) {
+    //   buildTasksView(widgets);
+    // } else {
+    //   buildDefaultView(widgets, context);
+    // }
+
+    buildLocationWidgets(widgets);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.adding ? "Fill answer" : "View answer"),
+        title: const Text("View answer"),
         actions: [
           IconButton(
               onPressed: () {
@@ -72,17 +76,17 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
           IconButton(
               onPressed: () {
                 Navigator.pop(context);
-                widget.dm.reportAnswers.remove(widget.reportAnswer);
+                dm.removeObject(widget.reportAnswer);
               },
               icon: const Icon(Icons.delete)),
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => widget.reportAnswer.share(widget.dm),
+            onPressed: () => widget.reportAnswer.share(),
           ),
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                widget.parentSetState(() {});
+                dm.update();
               },
               child: const Text('Save'))
         ],
@@ -91,77 +95,26 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
     );
   }
 
-  void buildDefaultView(List<Widget> widgets, BuildContext context) {
-    for (var i = 0; i < baseReport.locations.length; i++) {
-      var location = baseReport.locations[i];
-      widgets.add(
-        getLocationTile(location),
-      );
-      widgets.addAll(location.objects.map((checkupObject) {
-        int objectTasksCount = checkupObject.getObjectType(widget.dm)?.getTasks(widget.dm).length ?? 0;
-        int answeredTasksCount = widget.reportAnswer.getTaskAnswersByObjectId(checkupObject.id).length;
-
-        return getItemTile(getObjectTile(checkupObject, answeredTasksCount, objectTasksCount, context, location));
-      }));
-    }
-  }
-
-  Padding getItemTile(ListTile listTile) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
-        child: Card(
-          child: listTile,
-        ));
-  }
-
-  ListTile getObjectTile(
-      CheckupObject checkupObject, int answeredTasksCount, int objectTasksCount, BuildContext context, Location location) {
-    return ListTile(
-      leading: Icon(checkupObject.getObjectType(widget.dm)?.getIcon() ?? Icons.device_unknown),
-      title: Text(checkupObject.getFullName(widget.dm)),
-      subtitle: Text("$answeredTasksCount/$objectTasksCount answer${objectTasksCount != 1 ? 's' : ''}"),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FillObjectAnswerPage(
-                dm: widget.dm,
-                startObject: checkupObject,
-                startLocation: location,
-                reportAnswer: widget.reportAnswer,
-                sortByTasks: false,
-              ),
-            ));
-      },
-    );
-  }
-
-  ListTile getLocationTile(Location location) => ListTile(leading: const Icon(Icons.location_on), title: Text(location.name));
-
-  void buildTasksView(List<Widget> widgets) {
-    for (var location in baseReport.locations) {
-      widgets.add(getLocationTile(location));
-      widgets.addAll(widget.dm.getTasksForLocation(location).map((task) {
-        List<CheckupObject> objects = widget.dm.getObjectsByTask(task, location);
-        Iterable<TaskAnswer> answers =
-            widget.reportAnswer.getAnswersByLocation(location, widget.dm, false).where((element) => element.taskId == task.id);
-        return getItemTile(ListTile(
-            leading: const Icon(Icons.check_box),
-            title: Text(task.name),
-            subtitle: Text('${answers.length}/${objects.length} answer${objects.length != 1 ? 's' : ''}'),
+  void buildLocationWidgets(List<Widget> widgets) {
+    widgets.addAll(baseReport.locations.map((e) => Card(
+          child: ListTile(
+            leading: const Icon(Icons.place),
+            title: Text(e.name),
+            subtitle: Consumer<DataMaster>(builder: (context, dm, child) {
+              Map<String, int> info = e.getInfo(widget.reportAnswer, dm);
+              return Text(
+                  "${info['checked']}/${info['total']} checked, ${info['issues']} issue${info['issues'] != 1 ? 's' : ''}");
+            }),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => FillObjectAnswerPage(
-                            dm: widget.dm,
+                      builder: (context) => ViewLocationPage(
+                            location: e,
                             reportAnswer: widget.reportAnswer,
-                            sortByTasks: true,
-                            startLocation: location,
-                            startTask: task,
                           )));
-            }));
-      }));
-    }
+            },
+          ),
+        )));
   }
 }

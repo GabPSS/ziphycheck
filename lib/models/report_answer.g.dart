@@ -7,18 +7,22 @@ part of 'report_answer.dart';
 // **************************************************************************
 
 ReportAnswer _$ReportAnswerFromJson(Map<String, dynamic> json) => ReportAnswer(
-      baseReportId: json['baseReportId'] as int,
+      id: json['id'] as int? ?? -1,
+      reportId: json['reportId'] as int,
     )
-      ..id = json['id'] as int
       ..answerDate = DateTime.parse(json['answerDate'] as String)
-      ..answers = (json['answers'] as List<dynamic>)
-          .map((e) => TaskAnswer.fromJson(e as Map<String, dynamic>))
+      ..checkAnswers = (json['checkAnswers'] as List<dynamic>)
+          .map((e) => CheckAnswer.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..locationAnswers = (json['locationAnswers'] as List<dynamic>)
+          .map((e) => LocationAnswer.fromJson(e as Map<String, dynamic>))
           .toList();
 
 Map<String, dynamic> _$ReportAnswerToJson(ReportAnswer instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'baseReportId': instance.baseReportId,
+      'reportId': instance.reportId,
       'answerDate': instance.answerDate.toIso8601String(),
-      'answers': instance.answers,
+      'checkAnswers': instance.checkAnswers,
+      'locationAnswers': instance.locationAnswers,
     };

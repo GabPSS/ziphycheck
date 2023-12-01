@@ -1,45 +1,35 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/task.dart';
+import 'package:checkup_app/models/check.dart';
+import 'package:checkup_app/models/identifiable_object.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'object_type.g.dart';
 
 @JsonSerializable()
-class ObjectType {
-  late int id;
-  String name = "";
-  List<int> taskIds = List<int>.empty(growable: true);
+class ObjectType extends IdentifiableObject {
+  String name;
+  List<int> checkIds = List.empty(growable: true);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  String _pluralName = "";
+  ObjectType({
+    super.id = -1,
+    this.name = "Unnamed Object type",
+  });
 
-  String get pluralName => _pluralName == "" ? name : _pluralName;
-  set pluralName(String value) => _pluralName = value;
+  factory ObjectType.fromJson(Map<String, dynamic> json) =>
+      _$ObjectTypeFromJson(json);
+  Map<String, dynamic> toJson() => _$ObjectTypeToJson(this);
 
-  String getName(bool plural) => plural ? pluralName : name;
-
-  ObjectType({DataMaster? dm}) {
-    if (dm != null) {
-      id = dm.objectTypeKey;
-      dm.objectTypeKey++;
-      dm.objectTypes.add(this);
-    }
+  void addCheck(Check check) {
+    var id = check.id;
+    if (!checkIds.contains(id)) checkIds.add(id);
   }
 
-  List<Task> getTasks(DataMaster dm) => dm.tasks.where((element) => taskIds.contains(element.id)).toList();
-
-  void addTask(Task task) {
-    var id = task.id;
-    if (!taskIds.contains(id)) taskIds.add(id);
+  void removeCheck(Check check) {
+    var id = check.id;
+    if (checkIds.contains(id)) checkIds.remove(id);
   }
 
-  void removeTask(Task task) {
-    var id = task.id;
-    if (taskIds.contains(id)) taskIds.remove(id);
-  }
-
-  bool hasTask(Task task) => taskIds.contains(task.id);
+  bool hasCheck(Check check) => checkIds.contains(check.id);
 
   IconData getIcon() {
     switch (name) {
@@ -53,8 +43,4 @@ class ObjectType {
         return Icons.token;
     }
   }
-
-  factory ObjectType.fromJson(Map<String, dynamic> json) => _$ObjectTypeFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ObjectTypeToJson(this);
 }
