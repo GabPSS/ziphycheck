@@ -35,4 +35,7 @@ class Location {
       'issues': issues
     };
   }
+
+  CheckupObject? getCheckupObjectById(int id) =>
+      checkupObjects.where((element) => element.id == id).singleOrNull;
 }

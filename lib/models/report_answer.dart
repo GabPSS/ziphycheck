@@ -7,7 +7,9 @@ import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/location_answer.dart';
 import 'package:checkup_app/models/object_type.dart';
 import 'package:checkup_app/models/report.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:share_plus/share_plus.dart';
 
 part 'report_answer.g.dart';
 
@@ -24,9 +26,9 @@ class ReportAnswer extends IdentifiableObject {
       _$ReportAnswerFromJson(json);
   Map<String, dynamic> toJson() => _$ReportAnswerToJson(this);
 
-  void share() {
+  void share(DataMaster dm) {
     //TODO: Implement sharing
-    throw UnimplementedError();
+    Share.share(makeString(dm));
   }
 
   void markObjectTasksTrue(CheckupObject co, DataMaster dm) {
@@ -105,27 +107,33 @@ class ReportAnswer extends IdentifiableObject {
 
   List<CheckAnswer> getAnswersByLocation(Location location, DataMaster dm,
       [bool falseOnly = true]) {
-    List<CheckAnswer> locationAnswers = List.empty(growable: true);
+    // List<CheckAnswer> locationAnswers = List.empty(growable: true);
 
-    for (var objectIndex = 0;
-        objectIndex < location.checkupObjects.length;
-        objectIndex++) {
-      CheckupObject object = location.checkupObjects[objectIndex];
-      if (object.getObjectType(dm) == null) {
-        continue;
-      }
-      var objectChecks = dm.getChecksForObjectType(object.getObjectType(dm));
-      for (var checkIndex = 0; checkIndex < objectChecks.length; checkIndex++) {
-        var check = objectChecks[checkIndex];
-        CheckAnswer? objectCheckAnswer = getCheckAnswer(object.id, check.id);
-        if (objectCheckAnswer != null &&
-            !(objectCheckAnswer.status && falseOnly)) {
-          locationAnswers.add(objectCheckAnswer);
-        }
-      }
-    }
+    // for (var objectIndex = 0;
+    //     objectIndex < location.checkupObjects.length;
+    //     objectIndex++) {
+    //   CheckupObject object = location.checkupObjects[objectIndex];
+    //   if (object.getObjectType(dm) == null) {
+    //     continue;
+    //   }
+    //   // var objectChecks = dm.getChecksForObjectType(object.getObjectType(dm));
+    //   // for (var checkIndex = 0; checkIndex < objectChecks.length; checkIndex++) {
+    //   //   var check = objectChecks[checkIndex];
+    //   //   CheckAnswer? objectCheckAnswer = getCheckAnswer(object.id, check.id);
+    //   //   if (objectCheckAnswer != null &&
+    //   //       !(objectCheckAnswer.status && falseOnly)) {
+    //   //     locationAnswers.add(objectCheckAnswer);
+    //   //   }
+    //   // }
+    // }
 
-    return locationAnswers;
+    return checkAnswers
+        .where((element) =>
+            location.checkupObjectIds.contains(element.objectId) &&
+            !(element.status && falseOnly))
+        .toList();
+
+    // return locationAnswers;
   }
 
   CheckAnswer? getCheckAnswer(int objectId, int taskId) {
@@ -172,4 +180,127 @@ class ReportAnswer extends IdentifiableObject {
           return newAnswer;
         },
       );
+
+  String makeString(DataMaster dm) {
+    Report? report =
+        dm.reports.where((element) => element.id == reportId).firstOrNull;
+    if (report == null) return "";
+
+    String output =
+        "${report.name} ${DateFormat("dd/MM").format(answerDate)}\n\n";
+
+    for (Location location in report.locations) {
+      output += "${makeLocationString(location, dm)}\n\n";
+    }
+
+    return output.trim();
+  }
+
+  String makeLocationString(Location location, DataMaster dm) {
+    String output = "${location.name}\n\n";
+
+    List<String> issues = getFormattedIssues(location, dm);
+
+    if (issues.isEmpty) {
+      output += "No issues found";
+    } else {
+      output += "${issues.join("\n")}\n\n";
+    }
+
+    output += formatLocationAnswer(location);
+
+    return output.trim();
+  }
+
+  List<String> getFormattedIssues(Location location, DataMaster dm) {
+    List<Issue> issues = List.empty(growable: true);
+    List<CheckAnswer> answers = getAnswersByLocation(location, dm).toList();
+    for (CheckAnswer answer in answers) {
+      issues.addAll(answer.issues);
+    }
+
+    return issues.map((e) => formatIssueString(e.name, location, dm)).toList();
+  }
+
+  String formatIssueString(String source, Location location, DataMaster dm) {
+    //Obtain all issues that match the name
+    //Obtain list of objects that have issues with that name matching
+    //format accordingly
+
+    List<CheckAnswer> matchingAnswers = checkAnswers
+        .where((element) => element.issueNames.contains(source))
+        .toList();
+
+    Map<Issue, CheckupObject?> issueMap = Map.identity();
+    for (var answer in matchingAnswers) {
+      List<Issue> filterIssues = answer.filterIssues(source);
+      for (var issue in filterIssues) {
+        issueMap
+            .addAll({issue: location.getCheckupObjectById(answer.objectId)});
+      }
+    }
+
+    bool plural = issueMap.length > 1;
+
+    String suffix = "";
+    if (plural) {
+      suffix = issueMap.entries
+          .map((e) => e.key.notes != null
+              ? "${e.value?.getFullName(dm)}: ${e.key.notes}${e.key.solved ? ", solved" : ""}" //TODO: Localize this
+              : null)
+          .where((element) => element != null)
+          .cast<String>()
+          .join("; ");
+    } else {
+      suffix = issueMap.entries
+          .map((e) => [
+                if (e.key.notes != null) e.key.notes,
+                (e.key.solved ? "solved" : "")
+              ].join(", "))
+          .join("; ");
+    }
+
+    if (suffix.trim() != "") suffix = "($suffix)";
+
+    List<String> matchingObjectNames = matchingAnswers
+        .map((e) => location.getCheckupObjectById(e.objectId)?.getFullName(dm))
+        .where((element) => element != null)
+        .cast<String>()
+        .toList();
+
+    source = formatIssueBody(source, plural, matchingObjectNames);
+
+    return "$source $suffix".trim();
+  }
+
+  String formatIssueBody(
+      String source, bool plural, List<String> matchingObjectNames) {
+    RegExp matchNonSingular = RegExp(r'(\|.*?})|{');
+    RegExp matchNonPlural = RegExp(r'({.*?\|)|}');
+
+    source = plural
+        ? source.replaceAllMapped(matchNonPlural, (match) => "")
+        : source.replaceAllMapped(matchNonSingular, (match) => "");
+
+    source = source.replaceAll('%', matchingObjectNames.join(', '));
+    return source;
+  }
+
+  String formatLocationAnswer(Location location) {
+    String output = "";
+    LocationAnswer? answer = locationAnswers
+        .where((element) =>
+            element.locationId == location.id && element.notes != null)
+        .singleOrNull;
+    if (answer != null) {
+      output = "Notes: "; //TODO: Localize this too
+      List<String> notes = answer.notes!.split("\n");
+      if (notes.length > 1) {
+        output += "\n${notes.map((e) => "- ${e.trim()}").join("\n")}";
+      } else {
+        output += notes.join(". ");
+      }
+    }
+    return output.trim();
+  }
 }

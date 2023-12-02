@@ -139,7 +139,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                           FillAnswerPage(reportAnswer: reportAnswer)));
               break;
             case 1:
-              reportAnswer.share();
+              reportAnswer.share(dm);
               break;
             case 2:
               showDialog(
