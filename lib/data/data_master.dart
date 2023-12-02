@@ -123,4 +123,11 @@ class DataMaster extends ChangeNotifier {
 
     return objects2;
   }
+
+  ReportAnswer? getPreviousAnswer(ReportAnswer answer) {
+    List<ReportAnswer> answers = reportAnswers.cast();
+    answers.sort((a, b) => a.answerDate.compareTo(b.answerDate));
+    int indexOf = answers.indexOf(answer);
+    return indexOf < 1 ? null : answers[indexOf - 1];
+  }
 }

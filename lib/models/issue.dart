@@ -12,4 +12,7 @@ class Issue {
 
   factory Issue.fromJson(Map<String, dynamic> json) => _$IssueFromJson(json);
   Map<String, dynamic> toJson() => _$IssueToJson(this);
+
+  @override
+  String toString() => name;
 }

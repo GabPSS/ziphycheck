@@ -178,8 +178,6 @@ class _FillCheckAnswerOverviewPageState
                 padding: const EdgeInsets.all(4.0),
                 child: Text(widget.reportAnswer.formatCheckupObjectInfo(
                     object, dm, "%AW/%TT check%sTT, %IS issue%sIS")),
-
-                //TODO: #18 Add option to see yesterday's answers right from here
               ),
             ],
           ),
@@ -251,8 +249,11 @@ class _FillCheckAnswerOverviewPageState
           },
         ),
       if (status == null)
-        const Text(
-            "Yesterday's issues\n- bla bla bla\n- bla bla bla\n- bla bla bla\n- bla bla bla") //TODO: #18 Change this onto a retrieval of the previous issues
+        Text(dm
+                .getPreviousAnswer(widget.reportAnswer)
+                ?.getObjectIssues(object)
+                .join(", ") ??
+            "No previous issues") //TODO: Change this when #23's methods are written
     ]);
   }
 }
