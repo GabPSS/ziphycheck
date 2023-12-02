@@ -1,5 +1,7 @@
 import 'package:checkup_app/models/check.dart';
+import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/issue.dart';
+import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,8 @@ class CheckWidget extends StatelessWidget {
   final List<Issue> issues;
   final Function(bool exists, String name, String? notes, bool? solved)?
       onUpdateIssue;
+  final CheckupObject? checkupObject;
+  final ReportAnswer? reportAnswer;
 
   const CheckWidget({
     super.key,
@@ -20,6 +24,8 @@ class CheckWidget extends StatelessWidget {
     required this.issues,
     this.onUpdateIssue,
     this.showHeader = false,
+    this.checkupObject,
+    this.reportAnswer,
   });
 
   @override
@@ -44,6 +50,8 @@ class CheckWidget extends StatelessWidget {
                 solved: issue?.solved ?? false,
                 onUpdateIssue: onUpdateIssue,
                 notes: issue?.notes,
+                checkupObject: checkupObject,
+                reportAnswer: reportAnswer,
               );
             })
       ],
