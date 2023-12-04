@@ -69,6 +69,8 @@ class _FillLocationPageState extends State<FillLocationPage> {
               padding: const EdgeInsets.fromLTRB(48, 0, 0, 0),
               child: Card(
                 child: IssueTile(
+                  checkupObject: checkupObject,
+                  reportAnswer: widget.answer,
                   style: IssueTileStyle.preview,
                   solved: issue.solved,
                   value: true,

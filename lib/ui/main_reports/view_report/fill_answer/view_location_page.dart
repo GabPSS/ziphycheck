@@ -6,6 +6,8 @@ import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_locatio
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/preview_text_field.dart';
+
 class ViewLocationPage extends StatefulWidget {
   final Location location;
   final ReportAnswer reportAnswer;
@@ -48,7 +50,9 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
               label: const Text("View checks"),
               icon: const Icon(Icons.exit_to_app),
             ),
-          )
+          ),
+          PreviewTextField(
+              reportAnswer: widget.reportAnswer, location: widget.location)
         ],
       ),
     );
@@ -82,7 +86,10 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
           onChanged: (value) {
             setState(() {
               locationAnswer.status = !value;
-              // Provider.of<DataMaster>(context, listen: false).update();
+              if (value == false) {
+                locationAnswer.notes = null;
+              }
+              Provider.of<DataMaster>(context, listen: false).update();
             });
           },
         ),
@@ -94,8 +101,11 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                 controller: TextEditingController(text: locationAnswer.notes),
                 decoration:
                     const InputDecoration(labelText: 'Issue description'),
+                maxLines: null,
                 onChanged: (value) {
-                  locationAnswer.notes = value;
+                  locationAnswer.notes =
+                      value.trim() == "" ? null : value.trim();
+                  Provider.of<DataMaster>(context, listen: false).update();
                   //TODO: #22 Why issues and notes? Why not a single thing?
                 },
               );

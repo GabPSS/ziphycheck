@@ -1,5 +1,9 @@
+import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/checkup_object.dart';
+import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_notes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum IssueTileStyle { selection, preview }
 
@@ -13,6 +17,8 @@ class IssueTile extends StatelessWidget {
     this.solved,
     this.notes,
     this.onDelete,
+    this.reportAnswer,
+    this.checkupObject,
   });
 
   final bool value;
@@ -24,14 +30,22 @@ class IssueTile extends StatelessWidget {
       onUpdateIssue;
   final Function()? onDelete;
 
+  final ReportAnswer? reportAnswer;
+  final CheckupObject? checkupObject;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
           leading: getLeading(),
-          title: Text(issueName),
-          //TODO: #23 Change to formatted text once that's been implemented
+          title: Consumer<DataMaster>(
+            builder: (context, value, child) {
+              return Text(reportAnswer?.formatIssueBody(issueName, false,
+                      [checkupObject?.getFullName(value) ?? "Object"]) ??
+                  issueName);
+            },
+          ),
           onTap: style == IssueTileStyle.selection
               ? () {
                   onUpdateIssue?.call(!value, issueName, notes, solved);

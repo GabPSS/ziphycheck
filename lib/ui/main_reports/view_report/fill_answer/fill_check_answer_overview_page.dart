@@ -204,6 +204,8 @@ class _FillCheckAnswerOverviewPageState
                     : expandedChecks.add(check);
               });
             },
+            checkupObject: object,
+            reportAnswer: widget.reportAnswer,
             issues: widget.reportAnswer.getObjectIssues(object),
             onUpdateIssue: (value, name, notes, solved) {
               setState(() {
@@ -249,11 +251,20 @@ class _FillCheckAnswerOverviewPageState
           },
         ),
       if (status == null)
-        Text(dm
-                .getPreviousAnswer(widget.reportAnswer)
-                ?.getObjectIssues(object)
-                .join(", ") ??
-            "No previous issues") //TODO: Change this when #23's methods are written
+        Builder(builder: (context) {
+          String? issues = dm
+              .getPreviousAnswer(widget.reportAnswer)
+              ?.getObjectIssues(object)
+              .map((e) => widget.reportAnswer
+                  .formatIssueBody(e.name, false, [object.getFullName(dm)]))
+              .join("\n");
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text((issues != null && issues.trim() != ""
+                ? "Previous issues:\n\n$issues"
+                : "")),
+          );
+        })
     ]);
   }
 }

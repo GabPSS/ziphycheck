@@ -6,6 +6,7 @@ import 'package:date_field/date_field.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/report.dart';
+import 'widgets/preview_text_field.dart';
 
 class FillAnswerPage extends StatefulWidget {
   final ReportAnswer reportAnswer;
@@ -17,7 +18,6 @@ class FillAnswerPage extends StatefulWidget {
 }
 
 class _FillAnswerPageState extends State<FillAnswerPage> {
-  bool tasksView = false;
   late DataMaster dm;
   late Report baseReport;
 
@@ -54,6 +54,8 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
       ),
     );
 
+    //TODO: Restructure this
+
     // if (tasksView) {
     //   buildTasksView(widgets);
     // } else {
@@ -62,17 +64,12 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
 
     buildLocationWidgets(widgets);
 
+    widgets.add(PreviewTextField(reportAnswer: widget.reportAnswer));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("View answer"),
         actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  tasksView = !tasksView;
-                });
-              },
-              icon: Icon(tasksView ? Icons.view_in_ar : Icons.checklist)),
           IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -81,7 +78,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
               icon: const Icon(Icons.delete)),
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => widget.reportAnswer.share(),
+            onPressed: () => widget.reportAnswer.share(dm),
           ),
           TextButton(
               onPressed: () {
