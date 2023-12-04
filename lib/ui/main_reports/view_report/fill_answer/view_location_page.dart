@@ -106,7 +106,6 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                   locationAnswer.notes =
                       value.trim() == "" ? null : value.trim();
                   Provider.of<DataMaster>(context, listen: false).update();
-                  //TODO: #22 Why issues and notes? Why not a single thing?
                 },
               );
             }),

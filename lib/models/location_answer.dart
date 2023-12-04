@@ -6,11 +6,9 @@ part 'location_answer.g.dart';
 class LocationAnswer {
   int locationId;
   bool status;
-  String? issue;
   String? notes;
 
-  LocationAnswer(
-      {required this.locationId, required this.status, this.issue, this.notes});
+  LocationAnswer({required this.locationId, required this.status, this.notes});
 
   factory LocationAnswer.fromJson(Map<String, dynamic> json) =>
       _$LocationAnswerFromJson(json);
