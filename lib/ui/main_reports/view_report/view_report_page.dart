@@ -76,7 +76,6 @@ class _ViewReportPageState extends State<ViewReportPage> {
                           TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                Scaffold.of(context).setState(() {});
                               },
                               child: Text(AppLocalizations.of(context)!
                                   .cancelButtonLabel)),

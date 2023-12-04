@@ -29,6 +29,7 @@
     "locationInfoLabel": "{checked}/{total} vistos\n{issues} problema(s)",
     "objectInfoLabel": "%AW/%TT visto%|s|TT, %IS problema%|s|IS",
     "objectIndexLabel": "Objeto %ID/%OB",
+    "checkInfoLabel": "{answers}/{objects} visto{suffix}",
     "reportIssueFieldDescription": "Marque se encontrou impedimentos ou observações no local",
     "issueDescriptionFieldLabel": "Descrição do problema",
     "newReportWindowTitle": "Novo relatório",
@@ -45,7 +46,10 @@
     "detailsTabTitle": "Detalhes",
     "noFillingButtonLabel": "NÃO",
     "yesFillingButtonLabel": "SIM",
-    "yesToAllFillingButtonLabel": "SIM P/ TODOS",
+    "yesToAllFillingButtonLabel": "SIM P/ TUDO",
     "previousFillingButtonLabel": "ANTERIOR",
-    "nextFillingButtonLabel": "PRÓXIMO"
+    "nextFillingButtonLabel": "PRÓXIMO",
+    "noIssuesFoundReportText": "Nenhum problema encontrado",
+    "solvedReportText": "resolvido",
+    "notesReportText": "Observações"
 }

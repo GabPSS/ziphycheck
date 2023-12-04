@@ -100,8 +100,10 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
             title: Text(e.name),
             subtitle: Consumer<DataMaster>(builder: (context, dm, child) {
               Map<String, int> info = e.getInfo(widget.reportAnswer, dm);
-              return Text(
-                  "${info['checked']}/${info['total']} checked, ${info['issues']} issue${info['issues'] != 1 ? 's' : ''}");
+              return Text(AppLocalizations.of(context)!.locationInfoLabel(
+                  info['checked'] ?? 0,
+                  info['total'] ?? 0,
+                  info['issues'] ?? 0));
             }),
             onTap: () {
               Navigator.push(

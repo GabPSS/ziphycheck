@@ -138,8 +138,10 @@ class _FillLocationPageState extends State<FillLocationPage> {
         child: ListTile(
             leading: const Icon(Icons.check_box),
             title: Text(check.name),
-            subtitle: Text(
-                '${answers.length}/${objects.length} answer${objects.length != 1 ? 's' : ''}'),
+            subtitle: Text(AppLocalizations.of(context)!.checkInfoLabel(
+                answers.length,
+                objects.length,
+                objects.length != 1 ? 's' : '')),
             onTap: () {
               Navigator.push(
                   context,

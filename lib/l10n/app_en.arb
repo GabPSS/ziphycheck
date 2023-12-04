@@ -42,6 +42,20 @@
     },
     "objectInfoLabel": "%AW/%TT check%|s|TT, %IS issue%|s|IS",
     "objectIndexLabel": "Object %ID/%OB",
+    "checkInfoLabel": "{answers}/{objects} answer{suffix}",
+    "@checkInfoLabel": {
+        "placeholders": {
+            "answers": {
+                "type": "int"
+            },
+            "objects": {
+                "type": "int"
+            },
+            "suffix": {
+                "type": "String"
+            }
+        }
+    },
     "reportIssueFieldDescription": "Use this if you found location issues",
     "issueDescriptionFieldLabel": "Issue description",
     "newReportWindowTitle": "New report",
@@ -67,5 +81,8 @@
     "yesFillingButtonLabel": "YES",
     "yesToAllFillingButtonLabel": "YES TO ALL",
     "previousFillingButtonLabel": "PREVIOUS",
-    "nextFillingButtonLabel": "NEXT"
+    "nextFillingButtonLabel": "NEXT",
+    "noIssuesFoundReportText": "No issues found",
+    "solvedReportText": "solved",
+    "notesReportText": "Notes"
 }
