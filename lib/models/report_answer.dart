@@ -204,7 +204,7 @@ class ReportAnswer extends IdentifiableObject {
   }
 
   String formatIssueString(String source, Location location, DataMaster dm) {
-    List<CheckAnswer> matchingAnswers = checkAnswers
+    List<CheckAnswer> matchingAnswers = getAnswersByLocation(location, dm)
         .where((element) => element.issueNames.contains(source))
         .toList();
 
@@ -246,7 +246,7 @@ class ReportAnswer extends IdentifiableObject {
       suffix = issueMap.entries
           .map((e) => [
                 if (e.key.notes != null) e.key.notes,
-                (e.key.solved ? "solved" : "")
+                if (e.key.solved) "solved",
               ].join(", "))
           .join("; ");
     }
