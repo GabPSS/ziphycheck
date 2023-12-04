@@ -1,5 +1,4 @@
 import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/view_location_page.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:date_field/date_field.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/report.dart';
+import 'widgets/preview_text_field.dart';
 
 class FillAnswerPage extends StatefulWidget {
   final ReportAnswer reportAnswer;
@@ -113,39 +113,5 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
             },
           ),
         )));
-  }
-}
-
-class PreviewTextField extends StatelessWidget {
-  const PreviewTextField(
-      {super.key, required this.reportAnswer, this.location});
-
-  final ReportAnswer reportAnswer;
-  final Location? location;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Consumer<DataMaster>(builder: (context, dm, child) {
-            return TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Preview',
-                border: InputBorder.none,
-              ),
-              controller: TextEditingController(
-                  text: location == null
-                      ? reportAnswer.makeString(dm)
-                      : reportAnswer.makeLocationString(location!, dm)),
-              maxLines: null,
-            );
-          }),
-        ),
-      ],
-    );
   }
 }

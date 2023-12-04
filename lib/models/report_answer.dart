@@ -28,7 +28,7 @@ class ReportAnswer extends IdentifiableObject {
 
   void share(DataMaster dm) {
     //TODO: Implement sharing
-    Share.share(makeString(dm));
+    Share.share(buildString(dm));
   }
 
   void markObjectTasksTrue(CheckupObject co, DataMaster dm) {
@@ -106,35 +106,12 @@ class ReportAnswer extends IdentifiableObject {
   }
 
   List<CheckAnswer> getAnswersByLocation(Location location, DataMaster dm,
-      [bool falseOnly = true]) {
-    // List<CheckAnswer> locationAnswers = List.empty(growable: true);
-
-    // for (var objectIndex = 0;
-    //     objectIndex < location.checkupObjects.length;
-    //     objectIndex++) {
-    //   CheckupObject object = location.checkupObjects[objectIndex];
-    //   if (object.getObjectType(dm) == null) {
-    //     continue;
-    //   }
-    //   // var objectChecks = dm.getChecksForObjectType(object.getObjectType(dm));
-    //   // for (var checkIndex = 0; checkIndex < objectChecks.length; checkIndex++) {
-    //   //   var check = objectChecks[checkIndex];
-    //   //   CheckAnswer? objectCheckAnswer = getCheckAnswer(object.id, check.id);
-    //   //   if (objectCheckAnswer != null &&
-    //   //       !(objectCheckAnswer.status && falseOnly)) {
-    //   //     locationAnswers.add(objectCheckAnswer);
-    //   //   }
-    //   // }
-    // }
-
-    return checkAnswers
-        .where((element) =>
-            location.checkupObjectIds.contains(element.objectId) &&
-            !(element.status && falseOnly))
-        .toList();
-
-    // return locationAnswers;
-  }
+          [bool falseOnly = true]) =>
+      checkAnswers
+          .where((element) =>
+              location.checkupObjectIds.contains(element.objectId) &&
+              !(element.status && falseOnly))
+          .toList();
 
   CheckAnswer? getCheckAnswer(int objectId, int taskId) {
     for (var i = 0; i < checkAnswers.length; i++) {
@@ -181,7 +158,7 @@ class ReportAnswer extends IdentifiableObject {
         },
       );
 
-  String makeString(DataMaster dm) {
+  String buildString(DataMaster dm) {
     Report? report =
         dm.reports.where((element) => element.id == reportId).firstOrNull;
     if (report == null) return "";
@@ -190,16 +167,16 @@ class ReportAnswer extends IdentifiableObject {
         "${report.name} ${DateFormat("dd/MM").format(answerDate)}\n\n";
 
     for (Location location in report.locations) {
-      output += "${makeLocationString(location, dm)}\n\n";
+      output += "${buildLocationString(location, dm)}\n\n";
     }
 
     return output.trim();
   }
 
-  String makeLocationString(Location location, DataMaster dm) {
+  String buildLocationString(Location location, DataMaster dm) {
     String output = "${location.name}\n\n";
 
-    List<String> issues = getFormattedIssues(location, dm);
+    List<String> issues = formatIssuesAtLocation(location, dm);
 
     if (issues.isEmpty) {
       output += "No issues found";
@@ -212,21 +189,19 @@ class ReportAnswer extends IdentifiableObject {
     return output.trim();
   }
 
-  List<String> getFormattedIssues(Location location, DataMaster dm) {
-    List<Issue> issues = List.empty(growable: true);
+  List<String> formatIssuesAtLocation(Location location, DataMaster dm) {
+    List<Issue> allIssues = List.empty(growable: true);
     List<CheckAnswer> answers = getAnswersByLocation(location, dm).toList();
     for (CheckAnswer answer in answers) {
-      issues.addAll(answer.issues);
+      allIssues.addAll(answer.issues);
     }
 
-    return issues.map((e) => formatIssueString(e.name, location, dm)).toList();
+    return allIssues
+        .map((issue) => formatIssueString(issue.name, location, dm))
+        .toList();
   }
 
   String formatIssueString(String source, Location location, DataMaster dm) {
-    //Obtain all issues that match the name
-    //Obtain list of objects that have issues with that name matching
-    //format accordingly
-
     List<CheckAnswer> matchingAnswers = checkAnswers
         .where((element) => element.issueNames.contains(source))
         .toList();
@@ -242,6 +217,20 @@ class ReportAnswer extends IdentifiableObject {
 
     bool plural = issueMap.length > 1;
 
+    List<String> matchingObjectNames = matchingAnswers
+        .map((e) => location.getCheckupObjectById(e.objectId)?.getFullName(dm))
+        .where((element) => element != null)
+        .cast<String>()
+        .toList();
+
+    source = formatIssueBody(source, plural, matchingObjectNames);
+    String suffix = formatIssueSuffix(plural, issueMap, dm);
+
+    return "$source $suffix".trim();
+  }
+
+  String formatIssueSuffix(
+      bool plural, Map<Issue, CheckupObject?> issueMap, DataMaster dm) {
     String suffix = "";
     if (plural) {
       suffix = issueMap.entries
@@ -261,16 +250,7 @@ class ReportAnswer extends IdentifiableObject {
     }
 
     if (suffix.trim() != "") suffix = "($suffix)";
-
-    List<String> matchingObjectNames = matchingAnswers
-        .map((e) => location.getCheckupObjectById(e.objectId)?.getFullName(dm))
-        .where((element) => element != null)
-        .cast<String>()
-        .toList();
-
-    source = formatIssueBody(source, plural, matchingObjectNames);
-
-    return "$source $suffix".trim();
+    return suffix;
   }
 
   String formatIssueBody(
