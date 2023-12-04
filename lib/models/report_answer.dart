@@ -190,14 +190,16 @@ class ReportAnswer extends IdentifiableObject {
   }
 
   List<String> formatIssuesAtLocation(Location location, DataMaster dm) {
-    List<Issue> allIssues = List.empty(growable: true);
+    List<String> allIssueNames = List.empty(growable: true);
+
     List<CheckAnswer> answers = getAnswersByLocation(location, dm).toList();
     for (CheckAnswer answer in answers) {
-      allIssues.addAll(answer.issues);
+      allIssueNames.addAll(answer.issueNames
+          .where((element) => !allIssueNames.contains(element)));
     }
 
-    return allIssues
-        .map((issue) => formatIssueString(issue.name, location, dm))
+    return allIssueNames
+        .map((issue) => formatIssueString(issue, location, dm))
         .toList();
   }
 
