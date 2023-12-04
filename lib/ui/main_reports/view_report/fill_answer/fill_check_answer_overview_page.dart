@@ -6,6 +6,7 @@ import 'package:checkup_app/models/issue.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 import 'widgets/check_widget.dart';
 import 'widgets/custom_add_issue_tile.dart';
@@ -123,14 +124,15 @@ class _FillCheckAnswerOverviewPageState
         Row(
           children: [
             AnswerButton(
-              label: const Text('NO'),
+              label: Text(AppLocalizations.of(context)!.noFillingButtonLabel),
               icon: const Icon(Icons.close),
               onPressed: () => toggleStatus(false),
               backgroundColor: const Color.fromARGB(255, 242, 145, 145),
               checked: !(status ?? true),
             ),
             AnswerButton(
-                label: const Text('YES TO ALL'),
+                label: Text(
+                    AppLocalizations.of(context)!.yesToAllFillingButtonLabel),
                 icon: const Icon(Icons.done_all),
                 onPressed: () => toggleStatus(true),
                 backgroundColor: const Color.fromARGB(255, 169, 219, 151),
@@ -140,12 +142,13 @@ class _FillCheckAnswerOverviewPageState
         Row(
           children: [
             AnswerButton(
-              label: const Text('PREVIOUS'),
+              label: Text(
+                  AppLocalizations.of(context)!.previousFillingButtonLabel),
               icon: const Icon(Icons.navigate_before),
               onPressed: () {},
             ),
             AnswerButton(
-              label: const Text('NEXT'),
+              label: Text(AppLocalizations.of(context)!.nextFillingButtonLabel),
               icon: const Icon(Icons.navigate_next),
               onPressed: () {},
             ),
@@ -261,7 +264,7 @@ class _FillCheckAnswerOverviewPageState
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text((issues != null && issues.trim() != ""
-                ? "Previous issues:\n\n$issues"
+                ? "${AppLocalizations.of(context)!.previousIssues}:\n\n$issues"
                 : "")),
           );
         })

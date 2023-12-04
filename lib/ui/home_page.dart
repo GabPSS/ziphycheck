@@ -5,6 +5,7 @@ import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
 import 'main_reports/add_report_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,15 +30,15 @@ class _HomePageState extends State<HomePage> {
     switch (pageIndex) {
       case 0:
         page = const MainReportsPage();
-        title = "Reports";
+        title = mounted ? AppLocalizations.of(context)!.reports : "";
         break;
       case 1:
         page = const MainObjectTypesPage();
-        title = "Object Types";
+        title = mounted ? AppLocalizations.of(context)!.objectTypes : "";
         break;
       case 2:
         page = const MainChecksPage();
-        title = "Checks";
+        title = mounted ? AppLocalizations.of(context)!.checks : "";
       default:
         throw Error();
     }
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
               accountName: Text('CheckupApp'), accountEmail: null),
           ListTile(
             leading: const Icon(Icons.assignment),
-            title: const Text('Reports'),
+            title: Text(AppLocalizations.of(context)!.reports),
             onTap: () {
               setState(() {
                 Navigator.pop(context);
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.mode),
-            title: const Text('Object types'),
+            title: Text(AppLocalizations.of(context)!.objectTypes),
             onTap: () {
               setState(() {
                 Navigator.pop(context);
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ListTile(
             leading: const Icon(Icons.check_box),
-            title: const Text('Checks'),
+            title: Text(AppLocalizations.of(context)!.checks),
             onTap: () {
               setState(() {
                 Navigator.pop(context);
@@ -95,7 +96,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const Divider(),
           ListTile(
-            title: const Text('Import/Export data'),
+            title: Text(AppLocalizations.of(context)!.importExport),
             leading: const Icon(Icons.import_export),
             onTap: () {
               //TODO: #24 Implement importexport dialog
@@ -125,9 +126,9 @@ class _HomePageState extends State<HomePage> {
           const Spacer(),
           ListTile(
             leading: const Icon(Icons.help),
-            title: const Text('About'),
+            title: Text(AppLocalizations.of(context)!.aboutButtonLabel),
             onTap: () {
-              showAboutDialog(context: context, applicationName: 'Checkup app');
+              showAboutDialog(context: context, applicationName: 'CheckupApp');
             },
           )
         ],

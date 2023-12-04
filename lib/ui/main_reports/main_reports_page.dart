@@ -1,6 +1,7 @@
 import 'package:checkup_app/ui/main_reports/view_report/view_report_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 import '../../data/data_master.dart';
 import 'add_report_page.dart';
@@ -54,22 +55,25 @@ class _MainReportsPageState extends State<MainReportsPage> {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text(
-                                    'Delete \'${dm.reports[index].name}\'?'),
-                                content: const Text(
-                                    "You won't be able to recover this report once it's gone"),
+                                title: Text(AppLocalizations.of(context)!
+                                    .deleteReportDialogTitle(
+                                        dm.reports[index].name)),
+                                content: Text(AppLocalizations.of(context)!
+                                    .deleteReportDialogContents),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: const Text('Cancel')),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .cancelButtonLabel)),
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                         dm.removeObject(dm.reports[index]);
                                       },
-                                      child: const Text('Delete'))
+                                      child: Text(AppLocalizations.of(context)!
+                                          .deleteButtonLabel))
                                 ],
                               ),
                             );
@@ -77,17 +81,19 @@ class _MainReportsPageState extends State<MainReportsPage> {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                             value: 0,
                             child: ListTile(
                               leading: Icon(Icons.edit),
-                              title: Text('Edit'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .editButtonLabel),
                             )),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                             value: 1,
                             child: ListTile(
                               leading: Icon(Icons.delete),
-                              title: Text('Delete'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .deleteButtonLabel),
                             ))
                       ],
                     )),
@@ -98,8 +104,8 @@ class _MainReportsPageState extends State<MainReportsPage> {
         },
       );
     }
-    return const Center(
-      child: Text('There are no reports. Tap + to add a new report'),
+    return Center(
+      child: Text(AppLocalizations.of(context)!.noReportsLabel),
     );
   }
 }

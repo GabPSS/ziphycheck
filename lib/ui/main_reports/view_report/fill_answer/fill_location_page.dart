@@ -10,6 +10,7 @@ import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_check_a
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class FillLocationPage extends StatefulWidget {
   final ReportAnswer answer;
@@ -34,13 +35,13 @@ class _FillLocationPageState extends State<FillLocationPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${widget.location.name} checks"),
-          bottom: const TabBar(tabs: [
+          title: Text(widget.location.name),
+          bottom: TabBar(tabs: [
             Tab(
-              text: 'Overview',
+              text: AppLocalizations.of(context)!.overviewTabTitle,
             ),
             Tab(
-              text: 'Details',
+              text: AppLocalizations.of(context)!.detailsTabTitle,
             )
           ]),
         ),
@@ -112,8 +113,8 @@ class _FillLocationPageState extends State<FillLocationPage> {
       leading: Icon(
           checkupObject.getObjectType(dm)?.getIcon() ?? Icons.device_unknown),
       title: Text(checkupObject.getFullName(dm)),
-      subtitle: Text(widget.answer.formatCheckupObjectInfo(
-          checkupObject, dm, "%AW/%TT check%sTT, %IS issue%sIS")),
+      subtitle: Text(widget.answer.formatCheckupObjectInfo(checkupObject, dm,
+          "%AW/%TT check%sTT, %IS issue%sIS")), //TODO: Localize this
       onTap: () {
         Navigator.push(
             context,

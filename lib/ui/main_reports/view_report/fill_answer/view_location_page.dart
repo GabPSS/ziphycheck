@@ -5,6 +5,7 @@ import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 import 'widgets/preview_text_field.dart';
 
@@ -47,7 +48,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
                           location: widget.location),
                     ));
               },
-              label: const Text("View checks"),
+              label: Text(AppLocalizations.of(context)!.viewChecksButtonLabel),
               icon: const Icon(Icons.exit_to_app),
             ),
           ),
@@ -69,8 +70,8 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
         builder: (context, dm, child) {
           Map<String, int> info =
               widget.location.getInfo(widget.reportAnswer, dm);
-          return Text(
-              "${info['checked']}/${info['total']} checked\n${info['issues']} issue(s)");
+          return Text(AppLocalizations.of(context)!.locationInfoLabel(
+              info['checked'] ?? 0, info['total'] ?? 0, info['issues'] ?? 0));
         },
       ),
     );
@@ -81,8 +82,9 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
       children: [
         SwitchListTile(
           value: !locationAnswer.status,
-          title: const Text("Report issue"),
-          subtitle: const Text("Use this if you found location issues"),
+          title: Text(AppLocalizations.of(context)!.reportIssueFieldLabel),
+          subtitle:
+              Text(AppLocalizations.of(context)!.reportIssueFieldDescription),
           onChanged: (value) {
             setState(() {
               locationAnswer.status = !value;
@@ -99,8 +101,9 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
             child: Builder(builder: (context) {
               return TextField(
                 controller: TextEditingController(text: locationAnswer.notes),
-                decoration:
-                    const InputDecoration(labelText: 'Issue description'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!
+                        .issueDescriptionFieldLabel),
                 maxLines: null,
                 onChanged: (value) {
                   locationAnswer.notes =
