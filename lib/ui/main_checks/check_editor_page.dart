@@ -1,5 +1,6 @@
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/check.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,9 +36,9 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Name *',
+            labelText: '${AppLocalizations.of(context)!.nameFieldLabel} *',
           ),
           initialValue: check.name,
           onChanged: (value) {
@@ -47,7 +48,7 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
           },
           validator: (value) {
             if (value?.trim().isEmpty ?? true) {
-              return "* Required";
+              return "* ${AppLocalizations.of(context)!.requiredIndicatorLabel}";
             }
             return null;
           },
@@ -82,17 +83,17 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
       //     },
       //   ),
       // ),
-      const Padding(
+      Padding(
         padding: EdgeInsets.all(8.0),
-        child: Text('Fail options'),
+        child: Text(AppLocalizations.of(context)!.failOptionsSectionLabel),
       )
     ].toList(growable: true);
 
     for (var i = 0; i < check.failOptions.length; i++) {
       listWidgets.add(ListTile(
         title: TextFormField(
-          decoration: const InputDecoration(
-              hintText: '% {has|that have} some ghosting'),
+          decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.failOptionExampleHint),
           initialValue: check.failOptions[i],
           onChanged: (value) {
             check.failOptions[i] = value;
@@ -107,7 +108,7 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
 
     listWidgets.add(ListTile(
       leading: const Icon(Icons.add),
-      title: const Text('Add fail option'),
+      title: Text(AppLocalizations.of(context)!.addFailOptionButtonLabel),
       onTap: () {
         setState(() {
           check.failOptions.add('');
@@ -131,28 +132,33 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Discard changes?'),
-                    content: const Text(
-                        'Closing will discard changes to this task due to invalid inputs'),
+                    title: Text(
+                        AppLocalizations.of(context)!.discardTaskDialogTitle),
+                    content: Text(AppLocalizations.of(context)!
+                        .discardTaskDialogContents),
                     actions: [
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text('Cancel')),
+                          child: Text(
+                              AppLocalizations.of(context)!.cancelButtonLabel)),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: const Text('Discard'))
+                          child: Text(
+                              AppLocalizations.of(context)!.discardButtonLabel))
                     ],
                   ),
                 );
               }
             },
             icon: const Icon(Icons.arrow_back)),
-        title: Text(widget.isAdding ? 'Add check' : 'Edit check'),
+        title: Text(widget.isAdding
+            ? AppLocalizations.of(context)!.addCheckWindowTitle
+            : AppLocalizations.of(context)!.editCheckWindowTitle),
       ),
       body: Form(
         key: formKey,

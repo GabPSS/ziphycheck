@@ -8,6 +8,8 @@
     "newObject": "New object",
     "newReport": "New report",
     "noReportsLabel": "There are no reports. Tap + to add a new report",
+    "noObjectTypesLabel": "There are no object types. Tap + to add a new object type",
+    "noTasksToAddLabel": "There are no tasks to add right now. Add some, then come back later",
     "importExport": "Import/Export data",
     "previousIssues": "Previous issues",
     "aboutButtonLabel": "About",
@@ -17,6 +19,7 @@
     "cancelButtonLabel": "Cancel",
     "discardButtonLabel": "Discard",
     "saveButtonLabel": "Save",
+    "addFailOptionButtonLabel": "Add option",
     "newLocationButtonLabel": "Add location",
     "newObjectButtonLabel": "Add object",
     "viewChecksButtonLabel": "View checks",
@@ -58,13 +61,21 @@
     },
     "reportIssueFieldDescription": "Use this if you found location issues",
     "issueDescriptionFieldLabel": "Issue description",
+    "requiredIndicatorLabel": "Required",
+    "failOptionsSectionLabel": "Possible results",
+    "availableTasksSectionLabel": "Available tasks",
+    "failOptionExampleHint": "% '{has|that have}' some ghosting",
     "newReportWindowTitle": "New report",
     "editReportWindowTitle": "Edit report",
     "viewAnswerWindowTitle": "View answer",
+    "addCheckWindowTitle": "Add check",
+    "editCheckWindowTitle": "Edit check",
+    "addObjectTypeWindowTitle": "Add object type",
+    "editObjectTypeWindowTitle": "Edit object type",
     "noObjectTypeDropdownOption": "(No type)",
     "discardReportDialogTitle": "Discard report?",
     "discardReportDialogContents": "Closing will discard this report",
-    "deleteReportDialogTitle": "Delete '{report}'?",
+    "deleteReportDialogTitle": "Delete ''{report}''?",
     "@deleteReportDialogTitle": {
         "placeholders": {
             "report": {
@@ -72,9 +83,15 @@
             }
         }
     },
-    "deleteReportDialogContents": "You won't be able to recover this report once it's gone",
+    "deleteReportDialogContents": "You won''t be able to recover this report once it''s gone",
+    "deleteCheckDialogContents": "You won''t be able to recover this task once it''s gone",
+    "deleteObjectTypeDialogContents": "You won't be able to recover this object type once it's gone",
     "deleteReportAnswerDialogTitle": "Delete report answer?",
-    "deleteReportAnswerDialogContents": "You won't be able to recover this report answer once it's gone",
+    "deleteReportAnswerDialogContents": "You won''t be able to recover this report answer once it''s gone",
+    "discardTaskDialogTitle": "Discard task?",
+    "discardTaskDialogContents": "Closing will discard changes to this task",
+    "discardObjectTypeDialogTitle": "Discard changes?",
+    "discardObjectTypeDialogContents": "Closing will discard changes to this object type",
     "overviewTabTitle": "Overview",
     "detailsTabTitle": "Details",
     "noFillingButtonLabel": "NO",
@@ -84,5 +101,6 @@
     "nextFillingButtonLabel": "NEXT",
     "noIssuesFoundReportText": "No issues found",
     "solvedReportText": "solved",
-    "notesReportText": "Notes"
+    "notesReportText": "Notes",
+    "typeANameErrorText": "Enter a name"
 }

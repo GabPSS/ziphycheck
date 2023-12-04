@@ -2,6 +2,7 @@ import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/object_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class ObjectTypeEditorPage extends StatefulWidget {
   final ObjectType? objectType;
@@ -36,9 +37,9 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Name',
+            labelText: AppLocalizations.of(context)!.nameFieldLabel,
           ),
           initialValue: objectType.name,
           keyboardType: TextInputType.text,
@@ -49,7 +50,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
           },
           validator: (value) {
             if (value?.trim().isEmpty ?? true) {
-              return "Enter a name";
+              return AppLocalizations.of(context)!.typeANameErrorText;
             }
             return null;
           },
@@ -73,9 +74,9 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
 
     if (map.isNotEmpty) {
       var newMap = <Widget>[
-        const Padding(
+        Padding(
           padding: EdgeInsets.all(8.0),
-          child: Text('Available tasks'),
+          child: Text(AppLocalizations.of(context)!.availableTasksSectionLabel),
         )
       ];
       newMap.addAll(map);
@@ -85,10 +86,9 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
     mainWidgets.addAll(map.isNotEmpty
         ? map
         : [
-            const Expanded(
+            Expanded(
                 child: Center(
-              child: Text(
-                  'There are no tasks to add right now. Add some, then come back later'),
+              child: Text(AppLocalizations.of(context)!.noTasksToAddLabel),
             ))
           ].toList());
 
@@ -107,28 +107,33 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Discard changes?'),
-                    content: const Text(
-                        'Closing will discard changes to this object type due to invalid inputs'),
+                    title: Text(AppLocalizations.of(context)!
+                        .discardObjectTypeDialogTitle),
+                    content: Text(AppLocalizations.of(context)!
+                        .discardObjectTypeDialogContents),
                     actions: [
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text('Cancel')),
+                          child: Text(
+                              AppLocalizations.of(context)!.cancelButtonLabel)),
                       TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
-                          child: const Text('Discard'))
+                          child: Text(
+                              AppLocalizations.of(context)!.discardButtonLabel))
                     ],
                   ),
                 );
               }
             },
             icon: const Icon(Icons.arrow_back)),
-        title: Text(widget.isAdding ? 'Add object type' : 'Edit object type'),
+        title: Text(widget.isAdding
+            ? AppLocalizations.of(context)!.addObjectTypeWindowTitle
+            : AppLocalizations.of(context)!.editObjectTypeWindowTitle),
       ),
       body: Form(
         key: formKey,
