@@ -87,7 +87,7 @@ class ReportAnswer extends IdentifiableObject {
   ///- "%TT" = Total of object's checks
   ///- "%AW" = Number of answered checks
   ///- "%IS" = Number of reported issues
-  ///- "%s##" = Include an "s" if ## is plural (## can be any of the above, excluding % sign)
+  ///- "%abc|def|##" = "abc" if ## (one of the codes above, without the percent sign) is singular, "def" if plural
   String formatCheckupObjectInfo(
       CheckupObject co, DataMaster dm, String format) {
     Map<String, dynamic> map = getCheckupObjectInfo(co, dm);
@@ -97,12 +97,21 @@ class ReportAnswer extends IdentifiableObject {
     format = format.replaceAll('%AW', map['answers'].toString());
     format = format.replaceAll('%IS', map['issues'].toString());
 
-    format = format.replaceAll('%sID', map['index'] != 1 ? "s" : "");
-    format = format.replaceAll('%sOB', map['objs'] != 1 ? "s" : "");
-    format = format.replaceAll('%sTT', map['total'] != 1 ? "s" : "");
-    format = format.replaceAll('%sAW', map['answers'] != 1 ? "s" : "");
-    format = format.replaceAll('%sIS', map['issues'] != 1 ? "s" : "");
+    format = _formatInfoItem(format, "ID", map['index'] != 1);
+    format = _formatInfoItem(format, "OB", map['objs'] != 1);
+    format = _formatInfoItem(format, "TT", map['total'] != 1);
+    format = _formatInfoItem(format, "AW", map['answers'] != 1);
+    format = _formatInfoItem(format, "IS", map['issues'] != 1);
     return format;
+  }
+
+  String _formatInfoItem(String source, String code, bool plural) {
+    Iterable<RegExpMatch> allMatches =
+        RegExp(r'%([^%]*)\|([^%]*)\|' + code).allMatches(source);
+    for (var match in allMatches) {
+      source = source.replaceAll(match[0] ?? "", match[plural ? 2 : 1] ?? "");
+    }
+    return source;
   }
 
   List<CheckAnswer> getAnswersByLocation(Location location, DataMaster dm,
