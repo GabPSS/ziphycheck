@@ -4,6 +4,7 @@ import 'package:checkup_app/ui/main_reports/view_report/fill_answer/view_locatio
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 import '../../../../models/report.dart';
 import 'widgets/preview_text_field.dart';
@@ -39,10 +40,10 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
             padding: const EdgeInsets.all(8.0),
             child: DateTimeFormField(
               initialValue: widget.reportAnswer.answerDate,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 icon: Icon(Icons.today),
                 border: OutlineInputBorder(),
-                labelText: "Date and time",
+                labelText: AppLocalizations.of(context)!.dateTimeFieldLabel,
               ),
               onDateSelected: (value) {
                 widget.reportAnswer.answerDate = value;
@@ -68,7 +69,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("View answer"),
+        title: Text(AppLocalizations.of(context)!.viewAnswerWindowTitle),
         actions: [
           IconButton(
               onPressed: () {
@@ -85,7 +86,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
                 Navigator.pop(context);
                 dm.update();
               },
-              child: const Text('Save'))
+              child: Text(AppLocalizations.of(context)!.saveButtonLabel))
         ],
       ),
       body: ListView(children: widgets),

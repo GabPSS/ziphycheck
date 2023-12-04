@@ -138,7 +138,9 @@ class _FillCheckAnswerDetailsPageState
                 padding: const EdgeInsets.all(4.0),
                 child: Text(currentObject != null
                     ? widget.reportAnswer.formatCheckupObjectInfo(
-                        currentObject!, dm, "%AW/%TT check%sTT, %IS issue%sIS")
+                        currentObject!,
+                        dm,
+                        "%AW/%TT check%|s|TT, %IS issue%|s|IS")
                     : ""),
 
                 //TODO: Add option to see yesterday's answers right from here

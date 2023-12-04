@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class CustomAddIssueTile extends StatefulWidget {
   const CustomAddIssueTile({super.key, required this.onCreateIssue});
@@ -22,7 +23,8 @@ class _CustomAddIssueTileState extends State<CustomAddIssueTile> {
     return ListTile(
       title: TextField(
         controller: textEditingController,
-        decoration: const InputDecoration(hintText: 'Other issue'),
+        decoration: InputDecoration(
+            hintText: AppLocalizations.of(context)!.customIssueFieldLabel),
         onSubmitted: (value) {
           widget.onCreateIssue(value);
           textEditingController.text = "";

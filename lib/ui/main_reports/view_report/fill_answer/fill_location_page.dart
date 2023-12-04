@@ -114,7 +114,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
           checkupObject.getObjectType(dm)?.getIcon() ?? Icons.device_unknown),
       title: Text(checkupObject.getFullName(dm)),
       subtitle: Text(widget.answer.formatCheckupObjectInfo(checkupObject, dm,
-          "%AW/%TT check%sTT, %IS issue%sIS")), //TODO: Localize this
+          AppLocalizations.of(context)!.objectInfoLabel)), //TODO: Localize this
       onTap: () {
         Navigator.push(
             context,

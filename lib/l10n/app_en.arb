@@ -22,6 +22,10 @@
     "viewChecksButtonLabel": "View checks",
     "nameFieldLabel": "Name",
     "reportIssueFieldLabel": "Report issue",
+    "dateTimeFieldLabel": "Date and time",
+    "customIssueFieldLabel": "Other issue...",
+    "issueNotesFieldLabel": "Notes",
+    "previewFieldLabel": "Preview",
     "locationInfoLabel": "{checked}/{total} checked\n{issues} issue(s)",
     "@locationInfoLabel": {
         "placeholders": {
@@ -36,10 +40,13 @@
             }
         }
     },
+    "objectInfoLabel": "%AW/%TT check%|s|TT, %IS issue%|s|IS",
+    "objectIndexLabel": "Object %ID/%OB",
     "reportIssueFieldDescription": "Use this if you found location issues",
     "issueDescriptionFieldLabel": "Issue description",
     "newReportWindowTitle": "New report",
     "editReportWindowTitle": "Edit report",
+    "viewAnswerWindowTitle": "View answer",
     "noObjectTypeDropdownOption": "(No type)",
     "discardReportDialogTitle": "Discard report?",
     "discardReportDialogContents": "Closing will discard this report",

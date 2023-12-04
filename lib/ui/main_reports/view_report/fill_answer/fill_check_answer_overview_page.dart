@@ -167,9 +167,9 @@ class _FillCheckAnswerOverviewPageState
             children: [
               Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Text(widget.reportAnswer
-                    .formatCheckupObjectInfo(object, dm, "Object %ID/%OB")),
-              ), //TODO: Update this please
+                child: Text(widget.reportAnswer.formatCheckupObjectInfo(object,
+                    dm, AppLocalizations.of(context)!.objectIndexLabel)),
+              ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
@@ -180,7 +180,7 @@ class _FillCheckAnswerOverviewPageState
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(widget.reportAnswer.formatCheckupObjectInfo(
-                    object, dm, "%AW/%TT check%sTT, %IS issue%sIS")),
+                    object, dm, AppLocalizations.of(context)!.objectInfoLabel)),
               ),
             ],
           ),
