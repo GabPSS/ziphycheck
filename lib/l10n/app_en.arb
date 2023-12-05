@@ -12,6 +12,7 @@
     "noTasksToAddLabel": "There are no tasks to add right now. Add some, then come back later",
     "importExport": "Import/Export data",
     "previousIssues": "Previous issues",
+    "noPreviousIssues": "No previous issues found",
     "aboutButtonLabel": "About",
     "deleteButtonLabel": "Delete",
     "editButtonLabel": "Edit",
@@ -45,6 +46,17 @@
     },
     "objectInfoLabel": "%AW/%TT check%|s|TT, %IS issue%|s|IS",
     "objectIndexLabel": "Object %ID/%OB",
+    "objectCheckInfoSuffix": ", check {index}/{length}",
+    "@objectCheckInfoSuffix": {
+        "placeholders": {
+            "index": {
+                "type": "int"
+            },
+            "length": {
+                "type": "int"
+            }
+        }
+    },
     "checkInfoLabel": "{answers}/{objects} answer{suffix}",
     "@checkInfoLabel": {
         "placeholders": {

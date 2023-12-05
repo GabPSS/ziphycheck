@@ -107,7 +107,7 @@ class DataMaster extends ChangeNotifier {
     return checks;
   }
 
-  List<CheckupObject> filterObjectsByCheck(
+  List<CheckupObject> getObjectsByCheck(
       List<CheckupObject> objects, Check check) {
     List<CheckupObject> objects2 = List.empty(growable: true);
 

@@ -13,9 +13,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class DetailsController implements AnswerPageController {
+  late int objectIndex;
+
   @override
-  late CheckupObject object;
-  Check check;
+  CheckupObject get object => matchingObjects[objectIndex];
+
+  @override
+  set object(CheckupObject value) {
+    objectIndex = matchingObjects.indexOf(value);
+  }
+
+  late int checkIndex;
+
+  Check get check => checksForLocation[checkIndex];
+
+  set check(Check value) {
+    checkIndex = checksForLocation.indexOf(value);
+  }
+
+  List<Check> get checksForLocation => dm.getChecksForLocation(location);
 
   CheckAnswer? get currentCheckAnswer {
     return reportAnswer.getCheckAnswer(object.id, check.id);
@@ -46,8 +62,8 @@ class DetailsController implements AnswerPageController {
       {required this.dm,
       required this.location,
       required this.reportAnswer,
-      required Check initialCheck})
-      : check = initialCheck {
+      required Check initialCheck}) {
+    check = initialCheck;
     object = matchingObjects.first;
   }
 
@@ -68,7 +84,7 @@ class DetailsController implements AnswerPageController {
               padding: const EdgeInsets.all(16.0),
               child: Text((issues != null && issues.trim() != ""
                   ? "${AppLocalizations.of(context)!.previousIssues}:\n\n$issues"
-                  : "")),
+                  : AppLocalizations.of(context)!.noPreviousIssues)),
             );
           }),
         if (status == false)
@@ -115,14 +131,16 @@ class DetailsController implements AnswerPageController {
   }
 
   @override
-  String getLeadingHeaderText(BuildContext context) => //TODO: Fix these
+  String getLeadingHeaderText(BuildContext context) =>
       reportAnswer.formatCheckupObjectInfo(
-          object, dm, AppLocalizations.of(context)!.objectIndexLabel);
+          object, dm, AppLocalizations.of(context)!.objectIndexLabel, check) +
+      AppLocalizations.of(context)!
+          .objectCheckInfoSuffix(checkIndex + 1, checksForLocation.length);
 
   @override
   String getTrailingHeaderText(BuildContext context) =>
       reportAnswer.formatCheckupObjectInfo(
-          object, dm, AppLocalizations.of(context)!.objectInfoLabel);
+          object, dm, AppLocalizations.of(context)!.objectInfoLabel, check);
 
   @override
   String get objectName => object.getFullName(dm);
@@ -131,6 +149,7 @@ class DetailsController implements AnswerPageController {
   void toggleStatus(bool from) {
     if (status == null || status == !from) {
       status = from;
+      if (status == true) next();
       return;
     }
 
@@ -143,12 +162,26 @@ class DetailsController implements AnswerPageController {
 
   @override
   void next() {
-    // TODO: implement next
+    objectIndex++;
+    if (matchingObjects.length == objectIndex) {
+      checkIndex++;
+      if (checksForLocation.length == checkIndex) {
+        checkIndex = 0;
+      }
+      objectIndex = 0;
+    }
   }
 
   @override
   void previous() {
-    // TODO: implement previous
+    objectIndex--;
+    if (objectIndex < 0) {
+      checkIndex--;
+      if (checkIndex < 0) {
+        checkIndex = checksForLocation.length - 1;
+      }
+      objectIndex = matchingObjects.length - 1;
+    }
   }
 
   @override

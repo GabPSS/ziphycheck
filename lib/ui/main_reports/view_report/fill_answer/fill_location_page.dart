@@ -134,7 +134,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
     List<Widget> widgets = List.empty(growable: true);
     widgets.addAll(dm.getChecksForLocation(widget.location).map((check) {
       List<CheckupObject> objects =
-          dm.filterObjectsByCheck(widget.location.checkupObjects, check);
+          dm.getObjectsByCheck(widget.location.checkupObjects, check);
       Iterable<CheckAnswer> answers = widget.answer
           .getAnswersByLocation(widget.location, dm, false)
           .where((element) => element.checkId == check.id);

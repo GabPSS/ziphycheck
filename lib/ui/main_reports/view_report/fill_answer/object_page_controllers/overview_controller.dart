@@ -3,6 +3,7 @@ import 'package:checkup_app/models/check.dart';
 import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/issue.dart';
+import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/object_page_controllers/answer_page_controller.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/check_widget.dart';
@@ -12,8 +13,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class OverviewController implements AnswerPageController {
+  late int objectIndex;
+
   @override
-  CheckupObject object;
+  CheckupObject get object => allObjects[objectIndex];
+
+  @override
+  set object(CheckupObject value) {
+    objectIndex = allObjects.indexOf(value);
+  }
+
+  List<CheckupObject> get allObjects => location.checkupObjects;
+
   @override
   String get objectName => object.getFullName(dm);
   @override
@@ -27,6 +38,7 @@ class OverviewController implements AnswerPageController {
 
   final DataMaster dm;
   final ReportAnswer reportAnswer;
+  final Location location;
 
   List<Check> get checks => dm.getChecksForObject(object);
   List<CheckAnswer> get checkAnswers => reportAnswer.getAnswersByObject(object);
@@ -82,10 +94,12 @@ class OverviewController implements AnswerPageController {
   }
 
   OverviewController(
-      {required CheckupObject initialObject,
+      {required this.location,
+      required CheckupObject initialObject,
       required this.reportAnswer,
-      required this.dm})
-      : object = initialObject;
+      required this.dm}) {
+    object = initialObject;
+  }
 
   @override
   void update() => dm.update();
@@ -168,7 +182,7 @@ class OverviewController implements AnswerPageController {
             padding: const EdgeInsets.all(16.0),
             child: Text((issues != null && issues.trim() != ""
                 ? "${AppLocalizations.of(context)!.previousIssues}:\n\n$issues"
-                : "")),
+                : AppLocalizations.of(context)!.noPreviousIssues)),
           );
         })
     ]);
@@ -176,12 +190,20 @@ class OverviewController implements AnswerPageController {
 
   @override
   void next() {
-    // TODO: implement next
+    objectIndex++;
+    if (allObjects.length == objectIndex) {
+      objectIndex = 0;
+    }
+    forceFalse = false;
   }
 
   @override
   void previous() {
-    // TODO: implement previous
+    objectIndex--;
+    if (objectIndex < 0) {
+      objectIndex = allObjects.length - 1;
+    }
+    forceFalse = false;
   }
 
   @override

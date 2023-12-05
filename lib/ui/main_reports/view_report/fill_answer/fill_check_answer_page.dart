@@ -47,6 +47,7 @@ class _FillCheckAnswerPageState extends State<FillCheckAnswerPage> {
     } else {
       if (widget.initialObject != null) {
         controller = OverviewController(
+            location: widget.location,
             initialObject: widget.initialObject!,
             reportAnswer: widget.reportAnswer,
             dm: dm);
@@ -112,12 +113,12 @@ class _FillCheckAnswerPageState extends State<FillCheckAnswerPage> {
               label: Text(
                   AppLocalizations.of(context)!.previousFillingButtonLabel),
               icon: const Icon(Icons.navigate_before),
-              onPressed: () => setState(() => controller.next()),
+              onPressed: () => setState(() => controller.previous()),
             ),
             AnswerButton(
               label: Text(AppLocalizations.of(context)!.nextFillingButtonLabel),
               icon: const Icon(Icons.navigate_next),
-              onPressed: () => setState(() => controller.previous()),
+              onPressed: () => setState(() => controller.next()),
             ),
           ],
         ),
