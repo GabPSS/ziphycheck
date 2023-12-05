@@ -41,8 +41,8 @@ class CheckAnswer {
   List<Issue> filterIssues(String name) =>
       issues.where((element) => element.name == name).toList();
 
-  List<Issue> getIssuesForCheck(Check check) => issues
-      .where((element) => check.failOptions.contains(element.name))
+  List<Issue> getCustomIssues(Check check) => issues
+      .where((element) => !check.failOptions.contains(element.name))
       .toList();
 
   List<String> get issueNames => issues.map((e) => e.name).toList();

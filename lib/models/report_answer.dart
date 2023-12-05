@@ -1,4 +1,5 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/check.dart';
 import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/identifiable_object.dart';
@@ -149,6 +150,27 @@ class ReportAnswer extends IdentifiableObject {
     getAnswersByObject(object).forEach((element) {
       issues.addAll(element.issues);
     });
+    return issues;
+  }
+
+  List<Issue> getCustomIssuesByObject(CheckupObject object, DataMaster dm) {
+    List<CheckAnswer> answersByObject = getAnswersByObject(object);
+
+    List<Issue> issues = List.empty(growable: true);
+
+    for (var answer in answersByObject) {
+      if (answer.checkId == null) {
+        issues.addAll(answer.issues);
+        continue;
+      }
+
+      List<String> failOptions =
+          dm.getObjectById<Check>(answer.checkId!).failOptions;
+
+      issues.addAll(answer.issues
+          .where((element) => !failOptions.contains(element.name)));
+    }
+
     return issues;
   }
 
