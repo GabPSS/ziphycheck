@@ -4,6 +4,7 @@ import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class AddReportPage extends StatefulWidget {
   final Report? report;
@@ -24,7 +25,9 @@ class _AddReportPageState extends State<AddReportPage> {
 
   @override
   void initState() {
-    report = widget.isAdding ? Report(name: 'New report') : widget.report!;
+    report = widget.isAdding
+        ? Report(name: AppLocalizations.of(context)!.newReportWindowTitle)
+        : widget.report!;
     dm = Provider.of<DataMaster>(context, listen: false);
     super.initState();
   }
@@ -35,13 +38,13 @@ class _AddReportPageState extends State<AddReportPage> {
       appBar: AppBar(
         leading:
             IconButton(onPressed: closePage, icon: const Icon(Icons.close)),
-        title: Text(widget.isAdding ? 'New report' : 'Edit report'),
+        title: Text(widget.isAdding
+            ? AppLocalizations.of(context)!.newReportWindowTitle
+            : AppLocalizations.of(context)!.editReportWindowTitle),
         actions: [
           TextButton(
               onPressed: save,
-              child: const Text(
-                'Save',
-              ))
+              child: Text(AppLocalizations.of(context)!.saveButtonLabel))
         ],
       ),
       body: Column(
@@ -49,8 +52,9 @@ class _AddReportPageState extends State<AddReportPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Name'),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)!.nameFieldLabel),
               initialValue: report.name,
               onChanged: (value) {
                 report.name = value;
@@ -68,9 +72,9 @@ class _AddReportPageState extends State<AddReportPage> {
 
   List<Widget> buildWidgets() {
     List<DropdownMenuItem> objectTypes = List.empty(growable: true);
-    objectTypes.add(const DropdownMenuItem(
+    objectTypes.add(DropdownMenuItem(
       value: null,
-      child: Text('(No type)'),
+      child: Text(AppLocalizations.of(context)!.noObjectTypeDropdownOption),
     ));
     objectTypes.addAll(dm.objectTypes.map((e) => DropdownMenuItem(
           value: e,
@@ -86,7 +90,7 @@ class _AddReportPageState extends State<AddReportPage> {
       }
       objects.add(ListTile(
         leading: const Icon(Icons.add),
-        title: const Text("New object"),
+        title: Text(AppLocalizations.of(context)!.newObjectButtonLabel),
         onTap: () {
           setState(() {
             report.addObject(report.locations[i], CheckupObject());
@@ -97,7 +101,7 @@ class _AddReportPageState extends State<AddReportPage> {
     }
     locations.add(ListTile(
       leading: const Icon(Icons.add),
-      title: const Text("Add new location"),
+      title: Text(AppLocalizations.of(context)!.newLocationButtonLabel),
       onTap: () {
         setState(() {
           report.addLocation(Location());
@@ -115,7 +119,7 @@ class _AddReportPageState extends State<AddReportPage> {
           leading: const Icon(Icons.location_on),
           title: TextFormField(
             initialValue: report.locations[i].name == ""
-                ? "Unnamed location"
+                ? AppLocalizations.of(context)!.newLocation
                 : report.locations[i].name,
             onChanged: (value) {
               report.locations[i].name = value;
@@ -137,7 +141,9 @@ class _AddReportPageState extends State<AddReportPage> {
       leading: const Icon(Icons.desktop_windows),
       title: TextFormField(
         decoration: const InputDecoration(border: InputBorder.none),
-        initialValue: object.name == "" ? "Unnamed object" : object.name,
+        initialValue: object.name == ""
+            ? AppLocalizations.of(context)!.newObject
+            : object.name,
         onChanged: (value) {
           object.name = value;
         },
@@ -158,19 +164,20 @@ class _AddReportPageState extends State<AddReportPage> {
     bool? result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Discard report?'),
-        content: const Text('Closing will discard this report'),
+        title: Text(AppLocalizations.of(context)!.discardReportDialogTitle),
+        content:
+            Text(AppLocalizations.of(context)!.discardReportDialogContents),
         actions: [
           TextButton(
               onPressed: () {
                 Navigator.pop(context, false);
               },
-              child: const Text('Cancel')),
+              child: Text(AppLocalizations.of(context)!.cancelButtonLabel)),
           TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
               },
-              child: const Text('Discard')),
+              child: Text(AppLocalizations.of(context)!.discardButtonLabel)),
         ],
       ),
     );

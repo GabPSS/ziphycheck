@@ -1,0 +1,106 @@
+{
+    "reports": "Reports",
+    "objectTypes": "Object types",
+    "checks": "Checks",
+    "object": "Object",
+    "issue": "Issue",
+    "newLocation": "New location",
+    "newObject": "New object",
+    "newReport": "New report",
+    "noReportsLabel": "There are no reports. Tap + to add a new report",
+    "noObjectTypesLabel": "There are no object types. Tap + to add a new object type",
+    "noTasksToAddLabel": "There are no tasks to add right now. Add some, then come back later",
+    "importExport": "Import/Export data",
+    "previousIssues": "Previous issues",
+    "aboutButtonLabel": "About",
+    "deleteButtonLabel": "Delete",
+    "editButtonLabel": "Edit",
+    "shareButtonLabel": "Share",
+    "cancelButtonLabel": "Cancel",
+    "discardButtonLabel": "Discard",
+    "saveButtonLabel": "Save",
+    "addFailOptionButtonLabel": "Add option",
+    "newLocationButtonLabel": "Add location",
+    "newObjectButtonLabel": "Add object",
+    "viewChecksButtonLabel": "View checks",
+    "nameFieldLabel": "Name",
+    "reportIssueFieldLabel": "Report issue",
+    "dateTimeFieldLabel": "Date and time",
+    "customIssueFieldLabel": "Other issue...",
+    "issueNotesFieldLabel": "Notes",
+    "previewFieldLabel": "Preview",
+    "locationInfoLabel": "{checked}/{total} checked\n{issues} issue(s)",
+    "@locationInfoLabel": {
+        "placeholders": {
+            "checked": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            },
+            "issues": {
+                "type": "int"
+            }
+        }
+    },
+    "objectInfoLabel": "%AW/%TT check%|s|TT, %IS issue%|s|IS",
+    "objectIndexLabel": "Object %ID/%OB",
+    "checkInfoLabel": "{answers}/{objects} answer{suffix}",
+    "@checkInfoLabel": {
+        "placeholders": {
+            "answers": {
+                "type": "int"
+            },
+            "objects": {
+                "type": "int"
+            },
+            "suffix": {
+                "type": "String"
+            }
+        }
+    },
+    "reportIssueFieldDescription": "Use this if you found location issues",
+    "issueDescriptionFieldLabel": "Issue description",
+    "requiredIndicatorLabel": "Required",
+    "failOptionsSectionLabel": "Possible results",
+    "availableTasksSectionLabel": "Available tasks",
+    "failOptionExampleHint": "% '{has|that have}' some ghosting",
+    "newReportWindowTitle": "New report",
+    "editReportWindowTitle": "Edit report",
+    "viewAnswerWindowTitle": "View answer",
+    "addCheckWindowTitle": "Add check",
+    "editCheckWindowTitle": "Edit check",
+    "addObjectTypeWindowTitle": "Add object type",
+    "editObjectTypeWindowTitle": "Edit object type",
+    "noObjectTypeDropdownOption": "(No type)",
+    "discardReportDialogTitle": "Discard report?",
+    "discardReportDialogContents": "Closing will discard this report",
+    "deleteReportDialogTitle": "Delete ''{report}''?",
+    "@deleteReportDialogTitle": {
+        "placeholders": {
+            "report": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteReportDialogContents": "You won''t be able to recover this report once it''s gone",
+    "deleteCheckDialogContents": "You won''t be able to recover this task once it''s gone",
+    "deleteObjectTypeDialogContents": "You won't be able to recover this object type once it's gone",
+    "deleteReportAnswerDialogTitle": "Delete report answer?",
+    "deleteReportAnswerDialogContents": "You won''t be able to recover this report answer once it''s gone",
+    "discardTaskDialogTitle": "Discard task?",
+    "discardTaskDialogContents": "Closing will discard changes to this task",
+    "discardObjectTypeDialogTitle": "Discard changes?",
+    "discardObjectTypeDialogContents": "Closing will discard changes to this object type",
+    "overviewTabTitle": "Overview",
+    "detailsTabTitle": "Details",
+    "noFillingButtonLabel": "NO",
+    "yesFillingButtonLabel": "YES",
+    "yesToAllFillingButtonLabel": "YES TO ALL",
+    "previousFillingButtonLabel": "PREVIOUS",
+    "nextFillingButtonLabel": "NEXT",
+    "noIssuesFoundReportText": "No issues found",
+    "solvedReportText": "solved",
+    "notesReportText": "Notes",
+    "typeANameErrorText": "Enter a name"
+}

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class CustomIssueTile extends StatefulWidget {
   final String? name;
   final bool solved;
-  // final Function(Issue issue)? onCreateIssue;
   final Function(String value, bool solved)? onUpdateIssue;
   final Function()? onDeleteIssue;
 
   const CustomIssueTile(
       {super.key,
-      // this.onCreateIssue,
       this.onDeleteIssue,
       required this.name,
       this.solved = false,
@@ -22,14 +21,12 @@ class CustomIssueTile extends StatefulWidget {
 class _CustomIssueTileState extends State<CustomIssueTile> {
   late String name;
   late bool solved;
-  // late bool created = false;
   late TextEditingController textEditingController;
 
   @override
   void initState() {
     name = widget.name ?? '';
     solved = widget.solved;
-    // created = widget.name != null;
     textEditingController = TextEditingController(text: name);
     super.initState();
   }
@@ -40,12 +37,12 @@ class _CustomIssueTileState extends State<CustomIssueTile> {
     textEditingController.text = name;
     return ListTile(
         title: TextFormField(
-          decoration: const InputDecoration(hintText: 'Other issue'),
+          decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.customIssueFieldLabel),
           controller: textEditingController,
           onChanged: (value) {
             if (value.trim() == "") {
               widget.onDeleteIssue?.call();
-              // created = false;
               setState(() {});
               return;
             }
@@ -53,8 +50,7 @@ class _CustomIssueTileState extends State<CustomIssueTile> {
             widget.onUpdateIssue?.call(name, solved);
           },
         ),
-        trailing: //created
-            Checkbox(
+        trailing: Checkbox(
           value: solved,
           onChanged: (value) {
             solved = value ?? false;

@@ -7,9 +7,11 @@ import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/location_answer.dart';
 import 'package:checkup_app/models/object_type.dart';
 import 'package:checkup_app/models/report.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 part 'report_answer.g.dart';
 
@@ -27,7 +29,8 @@ class ReportAnswer extends IdentifiableObject {
   Map<String, dynamic> toJson() => _$ReportAnswerToJson(this);
 
   void share(DataMaster dm) {
-    //TODO: Implement sharing
+    //TODO: Implement sharing && locale overriding
+    //TODO: #31 Implement a settings panel
     Share.share(buildString(dm));
   }
 
@@ -87,7 +90,7 @@ class ReportAnswer extends IdentifiableObject {
   ///- "%TT" = Total of object's checks
   ///- "%AW" = Number of answered checks
   ///- "%IS" = Number of reported issues
-  ///- "%s##" = Include an "s" if ## is plural (## can be any of the above, excluding % sign)
+  ///- "%abc|def|##" = "abc" if ## (one of the codes above, without the percent sign) is singular, "def" if plural
   String formatCheckupObjectInfo(
       CheckupObject co, DataMaster dm, String format) {
     Map<String, dynamic> map = getCheckupObjectInfo(co, dm);
@@ -97,12 +100,21 @@ class ReportAnswer extends IdentifiableObject {
     format = format.replaceAll('%AW', map['answers'].toString());
     format = format.replaceAll('%IS', map['issues'].toString());
 
-    format = format.replaceAll('%sID', map['index'] != 1 ? "s" : "");
-    format = format.replaceAll('%sOB', map['objs'] != 1 ? "s" : "");
-    format = format.replaceAll('%sTT', map['total'] != 1 ? "s" : "");
-    format = format.replaceAll('%sAW', map['answers'] != 1 ? "s" : "");
-    format = format.replaceAll('%sIS', map['issues'] != 1 ? "s" : "");
+    format = _formatInfoItem(format, "ID", map['index'] != 1);
+    format = _formatInfoItem(format, "OB", map['objs'] != 1);
+    format = _formatInfoItem(format, "TT", map['total'] != 1);
+    format = _formatInfoItem(format, "AW", map['answers'] != 1);
+    format = _formatInfoItem(format, "IS", map['issues'] != 1);
     return format;
+  }
+
+  String _formatInfoItem(String source, String code, bool plural) {
+    Iterable<RegExpMatch> allMatches =
+        RegExp(r'%([^%]*)\|([^%]*)\|' + code).allMatches(source);
+    for (var match in allMatches) {
+      source = source.replaceAll(match[0] ?? "", match[plural ? 2 : 1] ?? "");
+    }
+    return source;
   }
 
   List<CheckAnswer> getAnswersByLocation(Location location, DataMaster dm,
@@ -158,7 +170,8 @@ class ReportAnswer extends IdentifiableObject {
         },
       );
 
-  String buildString(DataMaster dm) {
+  String buildString(DataMaster dm,
+      [Locale locale = const Locale('en', 'US')]) {
     Report? report =
         dm.reports.where((element) => element.id == reportId).firstOrNull;
     if (report == null) return "";
@@ -167,29 +180,33 @@ class ReportAnswer extends IdentifiableObject {
         "${report.name} ${DateFormat("dd/MM").format(answerDate)}\n\n";
 
     for (Location location in report.locations) {
-      output += "${buildLocationString(location, dm)}\n\n";
+      output += "${buildLocationString(location, dm, locale)}\n\n";
     }
 
     return output.trim();
   }
 
-  String buildLocationString(Location location, DataMaster dm) {
+  String buildLocationString(Location location, DataMaster dm,
+      [Locale locale = const Locale('en', 'US')]) {
+    AppLocalizations localizations = lookupAppLocalizations(locale);
+
     String output = "${location.name}\n\n";
 
     List<String> issues = formatIssuesAtLocation(location, dm);
 
     if (issues.isEmpty) {
-      output += "No issues found";
+      output += localizations.noIssuesFoundReportText;
     } else {
       output += "${issues.join("\n")}\n\n";
     }
 
-    output += formatLocationAnswer(location);
+    output += formatLocationAnswer(location, locale);
 
     return output.trim();
   }
 
-  List<String> formatIssuesAtLocation(Location location, DataMaster dm) {
+  List<String> formatIssuesAtLocation(Location location, DataMaster dm,
+      [Locale locale = const Locale('en', 'US')]) {
     List<String> allIssueNames = List.empty(growable: true);
 
     List<CheckAnswer> answers = getAnswersByLocation(location, dm).toList();
@@ -199,11 +216,12 @@ class ReportAnswer extends IdentifiableObject {
     }
 
     return allIssueNames
-        .map((issue) => formatIssueString(issue, location, dm))
+        .map((issue) => formatIssueString(issue, location, dm, locale))
         .toList();
   }
 
-  String formatIssueString(String source, Location location, DataMaster dm) {
+  String formatIssueString(String source, Location location, DataMaster dm,
+      [Locale locale = const Locale('en', 'US')]) {
     List<CheckAnswer> matchingAnswers = getAnswersByLocation(location, dm)
         .where((element) => element.issueNames.contains(source))
         .toList();
@@ -226,18 +244,20 @@ class ReportAnswer extends IdentifiableObject {
         .toList();
 
     source = formatIssueBody(source, plural, matchingObjectNames);
-    String suffix = formatIssueSuffix(plural, issueMap, dm);
+    String suffix = formatIssueSuffix(plural, issueMap, dm, locale);
 
     return "$source $suffix".trim();
   }
 
   String formatIssueSuffix(
-      bool plural, Map<Issue, CheckupObject?> issueMap, DataMaster dm) {
+      bool plural, Map<Issue, CheckupObject?> issueMap, DataMaster dm,
+      [Locale locale = const Locale('en', 'US')]) {
+    AppLocalizations localizations = lookupAppLocalizations(locale);
     String suffix = "";
     if (plural) {
       suffix = issueMap.entries
           .map((e) => e.key.notes != null
-              ? "${e.value?.getFullName(dm)}: ${e.key.notes}${e.key.solved ? ", solved" : ""}" //TODO: Localize this
+              ? "${e.value?.getFullName(dm)}: ${e.key.notes}${e.key.solved ? ", ${localizations.solvedReportText}" : ""}" //TODO: Localize this
               : null)
           .where((element) => element != null)
           .cast<String>()
@@ -246,7 +266,7 @@ class ReportAnswer extends IdentifiableObject {
       suffix = issueMap.entries
           .map((e) => [
                 if (e.key.notes != null) e.key.notes,
-                if (e.key.solved) "solved",
+                if (e.key.solved) localizations.solvedReportText,
               ].join(", "))
           .join("; ");
     }
@@ -268,14 +288,16 @@ class ReportAnswer extends IdentifiableObject {
     return source;
   }
 
-  String formatLocationAnswer(Location location) {
+  String formatLocationAnswer(Location location,
+      [Locale locale = const Locale('en', 'US')]) {
+    AppLocalizations localizations = lookupAppLocalizations(locale);
     String output = "";
     LocationAnswer? answer = locationAnswers
         .where((element) =>
             element.locationId == location.id && element.notes != null)
         .singleOrNull;
     if (answer != null) {
-      output = "Notes: "; //TODO: Localize this too
+      output = "${localizations.notesReportText}: ";
       List<String> notes = answer.notes!.split("\n");
       if (notes.length > 1) {
         output += "\n${notes.map((e) => "- ${e.trim()}").join("\n")}";

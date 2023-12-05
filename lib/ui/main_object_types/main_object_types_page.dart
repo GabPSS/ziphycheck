@@ -2,6 +2,7 @@ import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class MainObjectTypesPage extends StatefulWidget {
   const MainObjectTypesPage({super.key});
@@ -50,16 +51,18 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text('Delete \'${objectType.name}\'?'),
-                                content: const Text(
-                                    "You won't be able to recover this object type once it's gone"),
+                                title: Text(AppLocalizations.of(context)!
+                                    .deleteReportDialogTitle(objectType.name)),
+                                content: Text(AppLocalizations.of(context)!
+                                    .deleteObjectTypeDialogContents),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                         Navigator.pop(context);
                                       },
-                                      child: const Text('Cancel')),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .cancelButtonLabel)),
                                   TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -67,7 +70,8 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
                                           dm.removeObject(objectType);
                                         });
                                       },
-                                      child: const Text('Delete'))
+                                      child: Text(AppLocalizations.of(context)!
+                                          .deleteButtonLabel))
                                 ],
                               ),
                             );
@@ -76,17 +80,19 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                             value: 0,
                             child: ListTile(
                               leading: Icon(Icons.edit),
-                              title: Text('Edit'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .editButtonLabel),
                             )),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                             value: 1,
                             child: ListTile(
                               leading: Icon(Icons.delete),
-                              title: Text('Delete'),
+                              title: Text(AppLocalizations.of(context)!
+                                  .deleteButtonLabel),
                             ))
                       ],
                     ),
@@ -98,9 +104,8 @@ class _MainObjectTypesPageState extends State<MainObjectTypesPage> {
           );
         }
 
-        return const Center(
-          child:
-              Text('There are no object types. Tap + to add a new object type'),
+        return Center(
+          child: Text(AppLocalizations.of(context)!.noObjectTypesLabel),
         );
       },
     );

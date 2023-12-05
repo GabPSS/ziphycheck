@@ -4,6 +4,7 @@ import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_notes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 enum IssueTileStyle { selection, preview }
 
@@ -41,8 +42,10 @@ class IssueTile extends StatelessWidget {
           leading: getLeading(),
           title: Consumer<DataMaster>(
             builder: (context, value, child) {
-              return Text(reportAnswer?.formatIssueBody(issueName, false,
-                      [checkupObject?.getFullName(value) ?? "Object"]) ??
+              return Text(reportAnswer?.formatIssueBody(issueName, false, [
+                    checkupObject?.getFullName(value) ??
+                        AppLocalizations.of(context)!.object
+                  ]) ??
                   issueName);
             },
           ),

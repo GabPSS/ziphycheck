@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 class IssueNotes extends StatelessWidget {
   const IssueNotes({
@@ -22,7 +23,8 @@ class IssueNotes extends StatelessWidget {
     return ListTile(
       title: TextFormField(
         initialValue: notes,
-        decoration: const InputDecoration(labelText: 'Notes'),
+        decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.issueNotesFieldLabel),
         onChanged: (newNotes) {
           String? trim = newNotes.trim();
           trim = trim.isEmpty ? null : trim;

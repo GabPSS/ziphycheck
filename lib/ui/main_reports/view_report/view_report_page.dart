@@ -5,6 +5,7 @@ import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_answer_
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
 import '../../../models/report.dart';
 
@@ -57,7 +58,8 @@ class _ViewReportPageState extends State<ViewReportPage> {
                         },
                       ));
                     },
-                    child: const Text("Edit report")),
+                    child: Text(
+                        AppLocalizations.of(context)!.editReportWindowTitle)),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -66,16 +68,17 @@ class _ViewReportPageState extends State<ViewReportPage> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Delete \'${widget.report.name}\'?'),
-                        content: const Text(
-                            "You won't be able to recover this report once it's gone"),
+                        title: Text(AppLocalizations.of(context)!
+                            .deleteReportDialogTitle(widget.report.name)),
+                        content: Text(AppLocalizations.of(context)!
+                            .deleteReportDialogContents),
                         actions: [
                           TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                Scaffold.of(context).setState(() {});
                               },
-                              child: const Text('Cancel')),
+                              child: Text(AppLocalizations.of(context)!
+                                  .cancelButtonLabel)),
                           TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -84,7 +87,8 @@ class _ViewReportPageState extends State<ViewReportPage> {
                                   dm.reports.remove(widget.report);
                                 });
                               },
-                              child: const Text('Delete'))
+                              child: Text(AppLocalizations.of(context)!
+                                  .deleteButtonLabel))
                         ],
                       ),
                     );
@@ -145,15 +149,17 @@ class _ViewReportPageState extends State<ViewReportPage> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Delete report answer?'),
-                  content: const Text(
-                      "You won't be able to recover this report answer once it's gone"),
+                  title: Text(AppLocalizations.of(context)!
+                      .deleteReportAnswerDialogTitle),
+                  content: Text(AppLocalizations.of(context)!
+                      .deleteReportAnswerDialogContents),
                   actions: [
                     TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text('Cancel')),
+                        child: Text(
+                            AppLocalizations.of(context)!.cancelButtonLabel)),
                     TextButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -161,7 +167,8 @@ class _ViewReportPageState extends State<ViewReportPage> {
                             dm.reportAnswers.remove(reportAnswer);
                           });
                         },
-                        child: const Text('Delete'))
+                        child: Text(
+                            AppLocalizations.of(context)!.deleteButtonLabel))
                   ],
                 ),
               );
@@ -169,23 +176,23 @@ class _ViewReportPageState extends State<ViewReportPage> {
           }
         },
         itemBuilder: (context) => [
-          const PopupMenuItem(
+          PopupMenuItem(
               value: 0,
               child: ListTile(
                 leading: Icon(Icons.edit),
-                title: Text('Edit'),
+                title: Text(AppLocalizations.of(context)!.editButtonLabel),
               )),
-          const PopupMenuItem(
+          PopupMenuItem(
               value: 1,
               child: ListTile(
                 leading: Icon(Icons.share),
-                title: Text('Share'),
+                title: Text(AppLocalizations.of(context)!.shareButtonLabel),
               )),
-          const PopupMenuItem(
+          PopupMenuItem(
               value: 2,
               child: ListTile(
                 leading: Icon(Icons.delete),
-                title: Text('Delete'),
+                title: Text(AppLocalizations.of(context)!.deleteButtonLabel),
               ))
         ],
       ),
