@@ -5,7 +5,6 @@ import 'package:checkup_app/models/issue.dart';
 import 'package:checkup_app/models/location.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
-// import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_check_answer_details_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/fill_check_answer_page.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_tile.dart';
 import 'package:flutter/material.dart';
