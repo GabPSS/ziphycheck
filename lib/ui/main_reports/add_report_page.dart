@@ -53,7 +53,7 @@ class _AddReportPageState extends State<AddReportPage> {
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   labelText: AppLocalizations.of(context)!.nameFieldLabel),
               initialValue: report.name,
               onChanged: (value) {

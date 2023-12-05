@@ -84,14 +84,14 @@ class _MainReportsPageState extends State<MainReportsPage> {
                         PopupMenuItem(
                             value: 0,
                             child: ListTile(
-                              leading: Icon(Icons.edit),
+                              leading: const Icon(Icons.edit),
                               title: Text(AppLocalizations.of(context)!
                                   .editButtonLabel),
                             )),
                         PopupMenuItem(
                             value: 1,
                             child: ListTile(
-                              leading: Icon(Icons.delete),
+                              leading: const Icon(Icons.delete),
                               title: Text(AppLocalizations.of(context)!
                                   .deleteButtonLabel),
                             ))

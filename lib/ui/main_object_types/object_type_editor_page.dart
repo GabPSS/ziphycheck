@@ -38,7 +38,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: AppLocalizations.of(context)!.nameFieldLabel,
           ),
           initialValue: objectType.name,
@@ -75,7 +75,7 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
     if (map.isNotEmpty) {
       var newMap = <Widget>[
         Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(AppLocalizations.of(context)!.availableTasksSectionLabel),
         )
       ];

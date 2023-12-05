@@ -37,7 +37,7 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
         padding: const EdgeInsets.all(8.0),
         child: TextFormField(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: '${AppLocalizations.of(context)!.nameFieldLabel} *',
           ),
           initialValue: check.name,
@@ -84,7 +84,7 @@ class _CheckEditorPageState extends State<CheckEditorPage> {
       //   ),
       // ),
       Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Text(AppLocalizations.of(context)!.failOptionsSectionLabel),
       )
     ].toList(growable: true);

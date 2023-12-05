@@ -41,8 +41,8 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
             child: DateTimeFormField(
               initialValue: widget.reportAnswer.answerDate,
               decoration: InputDecoration(
-                icon: Icon(Icons.today),
-                border: OutlineInputBorder(),
+                icon: const Icon(Icons.today),
+                border: const OutlineInputBorder(),
                 labelText: AppLocalizations.of(context)!.dateTimeFieldLabel,
               ),
               onDateSelected: (value) {

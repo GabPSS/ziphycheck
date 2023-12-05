@@ -257,7 +257,7 @@ class ReportAnswer extends IdentifiableObject {
     if (plural) {
       suffix = issueMap.entries
           .map((e) => e.key.notes != null
-              ? "${e.value?.getFullName(dm)}: ${e.key.notes}${e.key.solved ? ", ${localizations.solvedReportText}" : ""}" //TODO: Localize this
+              ? "${e.value?.getFullName(dm)}: ${e.key.notes}${e.key.solved ? ", ${localizations.solvedReportText}" : ""}"
               : null)
           .where((element) => element != null)
           .cast<String>()

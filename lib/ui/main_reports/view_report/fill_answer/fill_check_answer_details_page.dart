@@ -126,7 +126,7 @@ class _FillCheckAnswerDetailsPageState
                     ? widget.reportAnswer.formatCheckupObjectInfo(
                         currentObject!, dm, "Object %ID/%OB")
                     : ""),
-              ), //TODO: Update this please
+              ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
