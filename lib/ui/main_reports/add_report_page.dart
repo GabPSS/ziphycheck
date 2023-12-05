@@ -25,9 +25,7 @@ class _AddReportPageState extends State<AddReportPage> {
 
   @override
   void initState() {
-    report = widget.isAdding
-        ? Report(name: AppLocalizations.of(context)!.newReportWindowTitle)
-        : widget.report!;
+    report = widget.isAdding ? Report(name: "") : widget.report!;
     dm = Provider.of<DataMaster>(context, listen: false);
     super.initState();
   }

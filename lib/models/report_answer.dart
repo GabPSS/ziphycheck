@@ -1,4 +1,5 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/check.dart';
 import 'package:checkup_app/models/check_answer.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/identifiable_object.dart';
@@ -49,7 +50,8 @@ class ReportAnswer extends IdentifiableObject {
   void removeObjectAnswers(CheckupObject co) =>
       checkAnswers.removeWhere((element) => element.objectId == co.id);
 
-  Map<String, dynamic> getCheckupObjectInfo(CheckupObject co, DataMaster dm) {
+  Map<String, dynamic> getCheckupObjectInfo(CheckupObject co, DataMaster dm,
+      [Check? check]) {
     if (co.objectTypeId != null) {
       List<int> checkIdsForCheckupObject = dm
           .getChecksForObjectType(
@@ -64,12 +66,19 @@ class ReportAnswer extends IdentifiableObject {
               0,
               (previousValue, element) =>
                   previousValue + element.issues.length);
-      List<CheckupObject>? allObjects =
+      List<CheckupObject>? locationObjects =
           dm.getObjectById<Report>(reportId).getLocationOf(co)?.checkupObjects;
 
+      List<CheckupObject>? objects = check == null
+          ? locationObjects
+          : dm.getObjectsByCheck(locationObjects ?? [], check);
+
+      int index = (objects?.indexOf(co) ?? -2) + 1;
+      int totalObjects = objects?.length ?? -1;
+
       return {
-        'index': (allObjects?.indexOf(co) ?? -2) + 1,
-        'objs': allObjects?.length ?? -1,
+        'index': index,
+        'objs': totalObjects,
         'total': checkIdsForCheckupObject.length,
         'answers': answersForCheckupObject
             .where((element) => element.checkId != null)
@@ -85,15 +94,15 @@ class ReportAnswer extends IdentifiableObject {
   ///Gets checkupobject info and formats it onto a string using the specified [format]
   ///
   ///Format options:
-  ///- "%ID" = Index of the object in its location
-  ///- "%OB" = Total objects in object's location  ///
+  ///- "%ID" = Index of the object in its location (or in relation to [check])
+  ///- "%OB" = Total objects in object's location  (or in relation to [check])
   ///- "%TT" = Total of object's checks
   ///- "%AW" = Number of answered checks
   ///- "%IS" = Number of reported issues
   ///- "%abc|def|##" = "abc" if ## (one of the codes above, without the percent sign) is singular, "def" if plural
-  String formatCheckupObjectInfo(
-      CheckupObject co, DataMaster dm, String format) {
-    Map<String, dynamic> map = getCheckupObjectInfo(co, dm);
+  String formatCheckupObjectInfo(CheckupObject co, DataMaster dm, String format,
+      [Check? check]) {
+    Map<String, dynamic> map = getCheckupObjectInfo(co, dm, check);
     format = format.replaceAll('%ID', map['index'].toString());
     format = format.replaceAll('%OB', map['objs'].toString());
     format = format.replaceAll('%TT', map['total'].toString());
@@ -149,6 +158,27 @@ class ReportAnswer extends IdentifiableObject {
     getAnswersByObject(object).forEach((element) {
       issues.addAll(element.issues);
     });
+    return issues;
+  }
+
+  List<Issue> getCustomIssuesByObject(CheckupObject object, DataMaster dm) {
+    List<CheckAnswer> answersByObject = getAnswersByObject(object);
+
+    List<Issue> issues = List.empty(growable: true);
+
+    for (var answer in answersByObject) {
+      if (answer.checkId == null) {
+        issues.addAll(answer.issues);
+        continue;
+      }
+
+      List<String> failOptions =
+          dm.getObjectById<Check>(answer.checkId!).failOptions;
+
+      issues.addAll(answer.issues
+          .where((element) => !failOptions.contains(element.name)));
+    }
+
     return issues;
   }
 

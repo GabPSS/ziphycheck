@@ -1,4 +1,5 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/models/check.dart';
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -38,4 +39,13 @@ class Location {
 
   CheckupObject? getCheckupObjectById(int id) =>
       checkupObjects.where((element) => element.id == id).singleOrNull;
+
+  List<CheckupObject> getObjectsByCheck(Check? check, DataMaster dm) {
+    return checkupObjects.where((object) {
+      var objectType = object.getObjectType(dm);
+      if (objectType == null && check == null) return true;
+      if (objectType?.checkIds.contains(check?.id) ?? false) return true;
+      return false;
+    }).toList();
+  }
 }
