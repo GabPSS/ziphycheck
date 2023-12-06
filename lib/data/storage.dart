@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:checkup_app/models/data_set.dart';
 import 'package:file_picker/file_picker.dart';
@@ -59,5 +60,9 @@ class Storage {
     if (!isStarted) if (!await init()) return;
     log('Saving data');
     _db?.update('datasets', {'dataset': jsonEncode(dataset.toJson())});
+  }
+
+  Future<void> saveToPath(String path, String json) async {
+    await File(path).writeAsString(json, flush: true);
   }
 }
