@@ -33,20 +33,41 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) => MaterialApp(
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
-        ],
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('pt', 'BR'),
-        ],
-        theme: ThemeData(colorScheme: lightDynamic, useMaterial3: true),
-        darkTheme: ThemeData(colorScheme: darkDynamic, useMaterial3: true),
-        home: const HomePage(),
+      builder: (lightDynamic, darkDynamic) => Consumer<Settings>(
+        builder: (context, settings, child) {
+          if (lightDynamic == darkDynamic || !settings.useDynamicColor) {
+            lightDynamic = ColorScheme.light(primary: Colors.orange);
+            darkDynamic = ColorScheme.dark(primary: Colors.orange);
+          }
+
+          return MaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
+            ],
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('pt', 'BR'),
+            ],
+            theme: ThemeData(
+                colorScheme: settings.darkTheme != null
+                    ? settings.darkTheme!
+                        ? darkDynamic
+                        : lightDynamic
+                    : lightDynamic,
+                useMaterial3: true),
+            darkTheme: ThemeData(
+                colorScheme: settings.darkTheme != null
+                    ? settings.darkTheme!
+                        ? darkDynamic
+                        : lightDynamic
+                    : darkDynamic,
+                useMaterial3: true),
+            home: const HomePage(),
+          );
+        },
       ),
     );
   }
