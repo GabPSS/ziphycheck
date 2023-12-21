@@ -23,6 +23,7 @@ dependencies:
   path: ^1.8.3
   provider: ^6.1.1
   share_plus: ^7.0.2
+  shared_preferences: ^2.2.2
   sqflite: ^2.3.0
 
 dev_dependencies:

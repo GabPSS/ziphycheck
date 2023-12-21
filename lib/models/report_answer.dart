@@ -29,9 +29,8 @@ class ReportAnswer extends IdentifiableObject {
       _$ReportAnswerFromJson(json);
   Map<String, dynamic> toJson() => _$ReportAnswerToJson(this);
 
-  void share(DataMaster dm) {
-    //TODO: #31 Implement a settings panel && locale overriding
-    Share.share(buildString(dm));
+  void share(DataMaster dm, Locale locale) {
+    Share.share(buildString(dm, locale));
   }
 
   void markObjectTasksTrue(CheckupObject co, DataMaster dm) {
@@ -199,8 +198,7 @@ class ReportAnswer extends IdentifiableObject {
         },
       );
 
-  String buildString(DataMaster dm,
-      [Locale locale = const Locale('en', 'US')]) {
+  String buildString(DataMaster dm, Locale locale) {
     Report? report =
         dm.reports.where((element) => element.id == reportId).firstOrNull;
     if (report == null) return "";
@@ -215,8 +213,7 @@ class ReportAnswer extends IdentifiableObject {
     return output.trim();
   }
 
-  String buildLocationString(Location location, DataMaster dm,
-      [Locale locale = const Locale('en', 'US')]) {
+  String buildLocationString(Location location, DataMaster dm, Locale locale) {
     AppLocalizations localizations = lookupAppLocalizations(locale);
 
     String output = "${location.name}\n\n";
@@ -224,7 +221,7 @@ class ReportAnswer extends IdentifiableObject {
     List<String> issues = formatIssuesAtLocation(location, dm);
 
     if (issues.isEmpty) {
-      output += localizations.noIssuesFoundReportText;
+      output += "${localizations.noIssuesFoundReportText}\n\n";
     } else {
       output += "${issues.join("\n")}\n\n";
     }
