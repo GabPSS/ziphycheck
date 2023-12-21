@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:checkup_app/models/checkup_object.dart';
 import 'package:checkup_app/models/data_set.dart';
 import 'package:checkup_app/models/check.dart';
@@ -7,7 +10,9 @@ import 'package:checkup_app/models/object_type.dart';
 import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/data/storage.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DataMaster extends ChangeNotifier {
   Storage storage = Storage();
@@ -43,9 +48,18 @@ class DataMaster extends ChangeNotifier {
 
   void save() => storage.save(_dataSet);
 
-  void export() {
-    //TODO: Write function to export datasets without answers
-    throw UnimplementedError();
+  Future<void> export() async {
+    await storage.save(_dataSet);
+    String data = jsonEncode(_dataSet.toJson());
+    if (Platform.isAndroid || Platform.isIOS) {
+      Share.share(data);
+    } else {
+      String? saveFile =
+          await FilePicker.platform.saveFile(dialogTitle: "Export to....");
+      if (saveFile != null) {
+        await storage.saveToPath(saveFile, data);
+      }
+    }
   }
 
   void removeReport(Report report) {

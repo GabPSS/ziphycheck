@@ -34,7 +34,6 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
       body: ListView(
         children: [
           buildLocationHeader(),
-          //TODO: #21 Add new redesign widgets
           buildIssueReporter(),
           Padding(
             padding: const EdgeInsets.all(16.0),

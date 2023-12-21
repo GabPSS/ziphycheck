@@ -1,9 +1,11 @@
+import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/ui/main_checks/check_editor_page.dart';
 import 'package:checkup_app/ui/main_checks/main_checks_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
 import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
 import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'main_reports/add_report_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 
@@ -99,28 +101,39 @@ class _HomePageState extends State<HomePage> {
             title: Text(AppLocalizations.of(context)!.importExport),
             leading: const Icon(Icons.import_export),
             onTap: () {
-              //TODO: #24 Implement importexport dialog
-              throw UnimplementedError();
-              // showDialog(
-              //   context: context,
-              //   builder: (context) {
-              //     return SimpleDialog(
-              //       title: const Text('Pick an option'),
-              //       children: [
-              //         ListTile(
-              //           leading: const Icon(Icons.download),
-              //           title: const Text('Import from file...'),
-              //           onTap: () => importFromFile(),
-              //         ),
-              //         ListTile(
-              //           leading: const Icon(Icons.upload),
-              //           title: const Text('Share data export...'),
-              //           onTap: () => shareData(),
-              //         )
-              //       ],
-              //     );
-              //   },
-              // );
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    title: Text(
+                        AppLocalizations.of(context)!.importExportDialogTitle),
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.download),
+                        title: Text(AppLocalizations.of(context)!
+                            .importExportDialogImportOption),
+                        onTap: () async {
+                          await Provider.of<DataMaster>(context, listen: false)
+                              .import();
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.upload),
+                        title: Text(AppLocalizations.of(context)!
+                            .importExportDialogExportOption),
+                        onTap: () async {
+                          await Provider.of<DataMaster>(context, listen: false)
+                              .export();
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
             },
           ),
           const Spacer(),
