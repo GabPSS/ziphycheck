@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:checkup_app/models/data_set.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Storage {
@@ -49,8 +48,8 @@ class Storage {
   Future<DataSet?> open() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.length == 1) {
-      XFile file = XFile(result.files.single.path!);
-      String jsonString = await file.readAsString();
+      String jsonString;
+      jsonString = utf8.decode(result.files.single.bytes ?? []);
       return DataSet.fromJson(jsonDecode(jsonString));
     }
     return null;
