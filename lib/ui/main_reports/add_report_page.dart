@@ -159,6 +159,12 @@ class _AddReportPageState extends State<AddReportPage> {
   }
 
   Future<void> closePage() async {
+    if (!widget.isAdding) {
+      Navigator.pop(context);
+      dm.update();
+      return;
+    }
+
     bool? result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
