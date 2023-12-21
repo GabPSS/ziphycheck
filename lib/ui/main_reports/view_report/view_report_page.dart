@@ -87,6 +87,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                                 setState(() {
                                   dm.reports.remove(widget.report);
                                 });
+                                dm.update();
                               },
                               child: Text(AppLocalizations.of(context)!
                                   .deleteButtonLabel))
@@ -146,7 +147,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
             case 1:
               reportAnswer.share(
                   dm,
-                  Provider.of<Settings>(context)
+                  Provider.of<Settings>(context, listen: false)
                       .getReportOutputLocale(Localizations.localeOf(context)));
               break;
             case 2:

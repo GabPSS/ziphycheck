@@ -54,15 +54,10 @@ class _AddReportPageState extends State<AddReportPage> {
                   border: const OutlineInputBorder(),
                   labelText: AppLocalizations.of(context)!.nameFieldLabel),
               initialValue: report.name,
-              onChanged: (value) {
-                report.name = value;
-              },
+              onChanged: (value) => report.name = value,
             ),
           ),
-          Expanded(
-              child: ListView(
-            children: buildWidgets(),
-          ))
+          Expanded(child: ListView(children: buildWidgets()))
         ],
       ),
     );
@@ -89,22 +84,15 @@ class _AddReportPageState extends State<AddReportPage> {
       objects.add(ListTile(
         leading: const Icon(Icons.add),
         title: Text(AppLocalizations.of(context)!.newObjectButtonLabel),
-        onTap: () {
-          setState(() {
-            report.addObject(report.locations[i], CheckupObject());
-          });
-        },
+        onTap: () => setState(
+            () => report.addObject(report.locations[i], CheckupObject())),
       ));
       locations.add(buildLocationWidget(i, objects));
     }
     locations.add(ListTile(
       leading: const Icon(Icons.add),
       title: Text(AppLocalizations.of(context)!.newLocationButtonLabel),
-      onTap: () {
-        setState(() {
-          report.addLocation(Location());
-        });
-      },
+      onTap: () => setState(() => report.addLocation(Location())),
     ));
 
     return locations;
@@ -119,16 +107,12 @@ class _AddReportPageState extends State<AddReportPage> {
             initialValue: report.locations[i].name == ""
                 ? AppLocalizations.of(context)!.newLocation
                 : report.locations[i].name,
-            onChanged: (value) {
-              report.locations[i].name = value;
-            },
+            onChanged: (value) => report.locations[i].name = value,
           ),
         ),
         Padding(
             padding: const EdgeInsets.fromLTRB(32, 0, 0, 0),
-            child: Column(
-              children: objects,
-            ))
+            child: Column(children: objects))
       ],
     );
   }
@@ -142,18 +126,12 @@ class _AddReportPageState extends State<AddReportPage> {
         initialValue: object.name == ""
             ? AppLocalizations.of(context)!.newObject
             : object.name,
-        onChanged: (value) {
-          object.name = value;
-        },
+        onChanged: (value) => object.name = value,
       ),
       trailing: DropdownButton(
         items: objectTypes,
         value: object.getObjectType(dm),
-        onChanged: (value) {
-          setState(() {
-            object.objectType = value;
-          });
-        },
+        onChanged: (value) => setState(() => object.objectType = value),
       ),
     );
   }
@@ -173,14 +151,10 @@ class _AddReportPageState extends State<AddReportPage> {
             Text(AppLocalizations.of(context)!.discardReportDialogContents),
         actions: [
           TextButton(
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
+              onPressed: () => Navigator.pop(context, false),
               child: Text(AppLocalizations.of(context)!.cancelButtonLabel)),
           TextButton(
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
+              onPressed: () => Navigator.pop(context, true),
               child: Text(AppLocalizations.of(context)!.discardButtonLabel)),
         ],
       ),

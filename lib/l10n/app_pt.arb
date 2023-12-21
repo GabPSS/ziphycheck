@@ -38,7 +38,7 @@
     "objectIndexLabel": "Objeto %ID/%OB",
     "objectCheckInfoSuffix": ", verificação {index}/{length}",
     "checkInfoLabel": "{answers}/{objects} visto{suffix}",
-    "reportIssueFieldDescription": "Marque se encontrou impedimentos ou observações no local",
+    "reportIssueFieldDescription": "Marque se encontrou problemas ou observações relacionadas ao local",
     "issueDescriptionFieldLabel": "Descrição do problema",
     "requiredIndicatorLabel": "Obrigatório",
     "failOptionsSectionLabel": "Resultados possíveis",

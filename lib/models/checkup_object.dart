@@ -18,7 +18,7 @@ class CheckupObject {
   Map<String, dynamic> toJson() => _$CheckupObjectToJson(this);
 
   ObjectType? getObjectType(DataMaster dm) =>
-      objectTypeId != null ? dm.getObjectById<ObjectType>(objectTypeId!) : null;
+      dm.tryGetObjectById<ObjectType>(objectTypeId);
   set objectType(ObjectType? value) => objectTypeId = value?.id;
 
   String getFullName(DataMaster dm) =>

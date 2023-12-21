@@ -36,6 +36,16 @@ class DataMaster extends ChangeNotifier {
         as IdentifiableObject) as T;
   }
 
+  T? tryGetObjectById<T>(int? id) {
+    if (id == null) return null;
+
+    try {
+      return getObjectById<T>(id);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> init() async {
     _dataSet = await storage.getData();
   }

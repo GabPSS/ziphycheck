@@ -31,13 +31,15 @@ class PreviewTextField extends StatelessWidget {
                   text: location == null
                       ? reportAnswer.buildString(
                           dm,
-                          Provider.of<Settings>(context).getReportOutputLocale(
-                              Localizations.localeOf(context)))
+                          Provider.of<Settings>(context, listen: false)
+                              .getReportOutputLocale(
+                                  Localizations.localeOf(context)))
                       : reportAnswer.buildLocationString(
                           location!,
                           dm,
-                          Provider.of<Settings>(context).getReportOutputLocale(
-                              Localizations.localeOf(context)))),
+                          Provider.of<Settings>(context, listen: false)
+                              .getReportOutputLocale(
+                                  Localizations.localeOf(context)))),
               maxLines: null,
             );
           }),

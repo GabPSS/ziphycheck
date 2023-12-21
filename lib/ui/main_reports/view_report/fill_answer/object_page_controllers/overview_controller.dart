@@ -108,7 +108,6 @@ class OverviewController implements AnswerPageController {
 
   @override
   Widget getBody(BuildContext context, Function(Function()) setState) {
-    //TODO: #19 Finish implementing content (photos)
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (status == false)
         for (Check check in checks)
