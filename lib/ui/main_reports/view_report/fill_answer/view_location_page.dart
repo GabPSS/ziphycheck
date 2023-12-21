@@ -38,7 +38,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -63,7 +63,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
       leading: const Icon(Icons.place, size: 64),
       title: Text(
         widget.location.name,
-        textScaleFactor: 1.5,
+        textScaler: const TextScaler.linear(1.5),
       ),
       subtitle: Consumer<DataMaster>(
         builder: (context, dm, child) {

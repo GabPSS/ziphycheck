@@ -38,8 +38,7 @@ class DetailsController implements AnswerPageController {
   }
 
   @override
-  bool? get status =>
-      currentCheckAnswer == null ? null : currentCheckAnswer!.status;
+  bool? get status => currentCheckAnswer?.status;
 
   @override
   set status(bool? value) {

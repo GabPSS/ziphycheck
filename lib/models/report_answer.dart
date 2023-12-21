@@ -53,7 +53,7 @@ class ReportAnswer extends IdentifiableObject {
     if (co.objectTypeId != null) {
       List<int> checkIdsForCheckupObject = dm
           .getChecksForObjectType(
-              dm.getObjectById<ObjectType>(co.objectTypeId!))
+              dm.tryGetObjectById<ObjectType>(co.objectTypeId))
           .map((e) => e.id)
           .toList();
       Iterable<CheckAnswer> answersForCheckupObject = checkAnswers.where(
@@ -81,12 +81,20 @@ class ReportAnswer extends IdentifiableObject {
         'answers': answersForCheckupObject
             .where((element) => element.checkId != null)
             .length,
-        'checked':
-            checkIdsForCheckupObject.length == answersForCheckupObject.length,
+        'checked': _hasEachCheckBeenAnsweredAtLeastOnce(
+            answersForCheckupObject.toList(), checkIdsForCheckupObject),
         'issues': answersWithIssues
       };
     }
     return {};
+  }
+
+  bool _hasEachCheckBeenAnsweredAtLeastOnce(
+      List<CheckAnswer> checkAnswers, List<int> checkIds) {
+    List<int?> checkAnswerCheckIds =
+        checkAnswers.map((e) => e.checkId).toList();
+
+    return checkIds.every((checkId) => checkAnswerCheckIds.contains(checkId));
   }
 
   ///Gets checkupobject info and formats it onto a string using the specified [format]

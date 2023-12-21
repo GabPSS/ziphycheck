@@ -141,7 +141,7 @@ class _FillCheckAnswerPageState extends State<FillCheckAnswerPage> {
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
                   controller.objectName,
-                  textScaleFactor: 2,
+                  textScaler: const TextScaler.linear(2),
                 ),
               ),
               Padding(

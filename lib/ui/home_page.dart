@@ -53,110 +53,112 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           onPressed: fabTapped, child: const Icon(Icons.add)),
-      appBar: AppBar(
-        title: Text(title),
+      appBar: AppBar(title: Text(title)),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            const UserAccountsDrawerHeader(
+                accountName: Text('CheckupApp'), accountEmail: null),
+            ListTile(
+              leading: const Icon(Icons.assignment),
+              title: Text(AppLocalizations.of(context)!.reports),
+              onTap: () {
+                setState(() {
+                  Navigator.pop(context);
+                  setPage(index: 0);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.mode),
+              title: Text(AppLocalizations.of(context)!.objectTypes),
+              onTap: () {
+                setState(() {
+                  Navigator.pop(context);
+                  setPage(index: 1);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.check_box),
+              title: Text(AppLocalizations.of(context)!.checks),
+              onTap: () {
+                setState(() {
+                  Navigator.pop(context);
+                  setPage(index: 2);
+                });
+              },
+            ),
+            const Divider(),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.importExport),
+              leading: const Icon(Icons.import_export),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      title: Text(AppLocalizations.of(context)!
+                          .importExportDialogTitle),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.download),
+                          title: Text(AppLocalizations.of(context)!
+                              .importExportDialogImportOption),
+                          onTap: () async {
+                            await Provider.of<DataMaster>(context,
+                                    listen: false)
+                                .import();
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.upload),
+                          title: Text(AppLocalizations.of(context)!
+                              .importExportDialogExportOption),
+                          onTap: () async {
+                            await Provider.of<DataMaster>(context,
+                                    listen: false)
+                                .export();
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(AppLocalizations.of(context)!.settingsButtonLabel),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SettingsPage())),
+            ),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: Text(AppLocalizations.of(context)!.aboutButtonLabel),
+              onTap: () {
+                showAboutDialog(
+                    context: context,
+                    applicationName: 'CheckupApp',
+                    applicationLegalese: "Gabriel Pilotto, 2023",
+                    applicationVersion: "1.0.0");
+              },
+            )
+          ],
+        ),
       ),
       body: page,
-      drawer: buildDrawer(context),
     );
   }
 
-  Drawer buildDrawer(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: [
-          const UserAccountsDrawerHeader(
-              accountName: Text('CheckupApp'), accountEmail: null),
-          ListTile(
-            leading: const Icon(Icons.assignment),
-            title: Text(AppLocalizations.of(context)!.reports),
-            onTap: () {
-              setState(() {
-                Navigator.pop(context);
-                setPage(index: 0);
-              });
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.mode),
-            title: Text(AppLocalizations.of(context)!.objectTypes),
-            onTap: () {
-              setState(() {
-                Navigator.pop(context);
-                setPage(index: 1);
-              });
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.check_box),
-            title: Text(AppLocalizations.of(context)!.checks),
-            onTap: () {
-              setState(() {
-                Navigator.pop(context);
-                setPage(index: 2);
-              });
-            },
-          ),
-          const Divider(),
-          ListTile(
-            title: Text(AppLocalizations.of(context)!.importExport),
-            leading: const Icon(Icons.import_export),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return SimpleDialog(
-                    title: Text(
-                        AppLocalizations.of(context)!.importExportDialogTitle),
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.download),
-                        title: Text(AppLocalizations.of(context)!
-                            .importExportDialogImportOption),
-                        onTap: () async {
-                          await Provider.of<DataMaster>(context, listen: false)
-                              .import();
-                          if (!mounted) return;
-                          Navigator.pop(context);
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.upload),
-                        title: Text(AppLocalizations.of(context)!
-                            .importExportDialogExportOption),
-                        onTap: () async {
-                          await Provider.of<DataMaster>(context, listen: false)
-                              .export();
-                          if (!mounted) return;
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-          const Spacer(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: Text(AppLocalizations.of(context)!.settingsButtonLabel),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const SettingsPage())),
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: Text(AppLocalizations.of(context)!.aboutButtonLabel),
-            onTap: () {
-              showAboutDialog(context: context, applicationName: 'CheckupApp');
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  fabTapped() {
+  void fabTapped() {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -168,12 +170,4 @@ class _HomePageState extends State<HomePage> {
           },
         ));
   }
-
-  // shareData() async {
-  //   String? path = await FilePicker.platform.saveFile();
-  //   if (path != null) {
-  //     var file = File(path);
-  //     await file.writeAsString(jsonEncode(dm.toJson()));
-  //   }
-  // }
 }

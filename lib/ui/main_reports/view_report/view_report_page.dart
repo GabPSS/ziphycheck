@@ -50,14 +50,15 @@ class _ViewReportPageState extends State<ViewReportPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(
+                    onPressed: () async {
+                      await Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return AddReportPage(
                             report: widget.report,
                           );
                         },
                       ));
+                      dm.save();
                     },
                     child: Text(
                         AppLocalizations.of(context)!.editReportWindowTitle)),
@@ -87,6 +88,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                                 setState(() {
                                   dm.reports.remove(widget.report);
                                 });
+                                dm.update();
                               },
                               child: Text(AppLocalizations.of(context)!
                                   .deleteButtonLabel))
@@ -108,16 +110,17 @@ class _ViewReportPageState extends State<ViewReportPage> {
         return Scaffold(
           appBar: AppBar(),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               var newAnswer = ReportAnswer(reportId: widget.report.id);
               dm.addObject(newAnswer);
-              Navigator.push(context, MaterialPageRoute(
+              await Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
                   return FillAnswerPage(
                     reportAnswer: newAnswer,
                   );
                 },
               ));
+              dm.save();
             },
             child: const Icon(Icons.note_add),
           ),
@@ -146,7 +149,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
             case 1:
               reportAnswer.share(
                   dm,
-                  Provider.of<Settings>(context)
+                  Provider.of<Settings>(context, listen: false)
                       .getReportOutputLocale(Localizations.localeOf(context)));
               break;
             case 2:
@@ -200,11 +203,14 @@ class _ViewReportPageState extends State<ViewReportPage> {
               ))
         ],
       ),
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  FillAnswerPage(reportAnswer: reportAnswer))),
+      onTap: () async {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    FillAnswerPage(reportAnswer: reportAnswer)));
+        dm.save();
+      },
     );
   }
 }

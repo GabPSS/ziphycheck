@@ -32,36 +32,6 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = List.empty(growable: true);
-    widgets.add(
-      Row(
-        children: [
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DateTimeFormField(
-              initialValue: widget.reportAnswer.answerDate,
-              decoration: InputDecoration(
-                icon: const Icon(Icons.today),
-                border: const OutlineInputBorder(),
-                labelText: AppLocalizations.of(context)!.dateTimeFieldLabel,
-              ),
-              onDateSelected: (value) {
-                widget.reportAnswer.answerDate = value;
-              },
-              mode: DateTimeFieldPickerMode.dateAndTime,
-            ),
-          )),
-        ],
-      ),
-    );
-
-    //TODO: Restructure this
-
-    buildLocationWidgets(widgets);
-
-    widgets.add(PreviewTextField(reportAnswer: widget.reportAnswer));
-
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.viewAnswerWindowTitle),
@@ -76,7 +46,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
             icon: const Icon(Icons.share),
             onPressed: () => widget.reportAnswer.share(
                 dm,
-                Provider.of<Settings>(context)
+                Provider.of<Settings>(context, listen: false)
                     .getReportOutputLocale(Localizations.localeOf(context))),
           ),
           TextButton(
@@ -87,32 +57,54 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
               child: Text(AppLocalizations.of(context)!.saveButtonLabel))
         ],
       ),
-      body: ListView(children: widgets),
-    );
-  }
-
-  void buildLocationWidgets(List<Widget> widgets) {
-    widgets.addAll(baseReport.locations.map((e) => Card(
-          child: ListTile(
-            leading: const Icon(Icons.place),
-            title: Text(e.name),
-            subtitle: Consumer<DataMaster>(builder: (context, dm, child) {
-              Map<String, int> info = e.getInfo(widget.reportAnswer, dm);
-              return Text(AppLocalizations.of(context)!.locationInfoLabel(
-                  info['checked'] ?? 0,
-                  info['total'] ?? 0,
-                  info['issues'] ?? 0));
-            }),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ViewLocationPage(
-                            location: e,
-                            reportAnswer: widget.reportAnswer,
-                          )));
-            },
+      body: ListView(children: [
+        Row(
+          children: [
+            Expanded(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DateTimeFormField(
+                initialValue: widget.reportAnswer.answerDate,
+                decoration: InputDecoration(
+                  icon: const Icon(Icons.today),
+                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)!.dateTimeFieldLabel,
+                ),
+                onDateSelected: (value) {
+                  widget.reportAnswer.answerDate = value;
+                },
+                mode: DateTimeFieldPickerMode.dateAndTime,
+              ),
+            )),
+          ],
+        ),
+        for (var location in baseReport.locations)
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.place),
+              title: Text(location.name),
+              subtitle: Consumer<DataMaster>(builder: (context, dm, child) {
+                Map<String, int> info =
+                    location.getInfo(widget.reportAnswer, dm);
+                return Text(AppLocalizations.of(context)!.locationInfoLabel(
+                    info['checked'] ?? 0,
+                    info['total'] ?? 0,
+                    info['issues'] ?? 0));
+              }),
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ViewLocationPage(
+                              location: location,
+                              reportAnswer: widget.reportAnswer,
+                            )));
+                dm.save();
+              },
+            ),
           ),
-        )));
+        PreviewTextField(reportAnswer: widget.reportAnswer),
+      ]),
+    );
   }
 }

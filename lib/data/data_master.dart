@@ -11,7 +11,7 @@ import 'package:checkup_app/models/report.dart';
 import 'package:checkup_app/models/report_answer.dart';
 import 'package:checkup_app/data/storage.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
 class DataMaster extends ChangeNotifier {
@@ -36,6 +36,16 @@ class DataMaster extends ChangeNotifier {
         as IdentifiableObject) as T;
   }
 
+  T? tryGetObjectById<T>(int? id) {
+    if (id == null) return null;
+
+    try {
+      return getObjectById<T>(id);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> init() async {
     _dataSet = await storage.getData();
   }
@@ -51,7 +61,7 @@ class DataMaster extends ChangeNotifier {
   Future<void> export() async {
     await storage.save(_dataSet);
     String data = jsonEncode(_dataSet.toJson());
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (kIsWeb || Platform.isAndroid || Platform.isIOS) {
       Share.share(data);
     } else {
       String? saveFile =
