@@ -7,6 +7,7 @@
     "newLocation": "New location",
     "newObject": "New object",
     "newReport": "New report",
+    "systemDefaultLanguage": "System default",
     "noReportsLabel": "There are no reports. Tap + to add a new report",
     "noObjectTypesLabel": "There are no object types. Tap + to add a new object type",
     "noTasksToAddLabel": "There are no tasks to add right now. Add some, then come back later",
@@ -14,6 +15,7 @@
     "previousIssues": "Previous issues",
     "noPreviousIssues": "No previous issues found",
     "aboutButtonLabel": "About",
+    "settingsButtonLabel": "Settings",
     "deleteButtonLabel": "Delete",
     "editButtonLabel": "Edit",
     "shareButtonLabel": "Share",
@@ -30,6 +32,7 @@
     "customIssueFieldLabel": "Other issue...",
     "issueNotesFieldLabel": "Notes",
     "previewFieldLabel": "Preview",
+    "reportLanguageSettingLabel": "Report output language",
     "locationInfoLabel": "{checked}/{total} checked\n{issues} issue(s)",
     "@locationInfoLabel": {
         "placeholders": {
@@ -107,6 +110,7 @@
     "importExportDialogTitle": "Pick an option",
     "importExportDialogImportOption": "Import from file...",
     "importExportDialogExportOption": "Export data...",
+    "selectLanguageDialogTitle": "Select a language",
     "overviewTabTitle": "Overview",
     "detailsTabTitle": "Details",
     "noFillingButtonLabel": "NO",

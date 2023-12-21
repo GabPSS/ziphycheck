@@ -1,4 +1,5 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/settings/settings_page.dart';
 import 'package:checkup_app/ui/main_checks/check_editor_page.dart';
 import 'package:checkup_app/ui/main_checks/main_checks_page.dart';
 import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
@@ -137,6 +138,12 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           const Spacer(),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: Text(AppLocalizations.of(context)!.settingsButtonLabel),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const SettingsPage())),
+          ),
           ListTile(
             leading: const Icon(Icons.help),
             title: Text(AppLocalizations.of(context)!.aboutButtonLabel),

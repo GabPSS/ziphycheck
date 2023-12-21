@@ -1,4 +1,5 @@
 import 'package:checkup_app/data/data_master.dart';
+import 'package:checkup_app/settings/settings.dart';
 import 'package:checkup_app/ui/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,18 @@ Future<void> main() async {
   DataMaster dm = DataMaster();
   await dm.init();
 
-  runApp(ChangeNotifierProvider<DataMaster>(
-      create: (BuildContext context) => dm, child: const MainApp()));
+  Settings settings = Settings();
+  await settings.load();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<DataMaster>(create: (context) => dm),
+        ChangeNotifierProvider<Settings>(create: (context) => settings)
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

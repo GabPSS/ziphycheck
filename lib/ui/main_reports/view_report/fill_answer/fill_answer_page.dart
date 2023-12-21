@@ -1,5 +1,6 @@
 import 'package:checkup_app/data/data_master.dart';
 import 'package:checkup_app/models/report_answer.dart';
+import 'package:checkup_app/settings/settings.dart';
 import 'package:checkup_app/ui/main_reports/view_report/fill_answer/view_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
@@ -57,12 +58,6 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
 
     //TODO: Restructure this
 
-    // if (tasksView) {
-    //   buildTasksView(widgets);
-    // } else {
-    //   buildDefaultView(widgets, context);
-    // }
-
     buildLocationWidgets(widgets);
 
     widgets.add(PreviewTextField(reportAnswer: widget.reportAnswer));
@@ -79,7 +74,10 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
               icon: const Icon(Icons.delete)),
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => widget.reportAnswer.share(dm),
+            onPressed: () => widget.reportAnswer.share(
+                dm,
+                Provider.of<Settings>(context)
+                    .getReportOutputLocale(Localizations.localeOf(context))),
           ),
           TextButton(
               onPressed: () {
