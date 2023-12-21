@@ -30,8 +30,7 @@ class ReportAnswer extends IdentifiableObject {
   Map<String, dynamic> toJson() => _$ReportAnswerToJson(this);
 
   void share(DataMaster dm) {
-    //TODO: Implement sharing && locale overriding
-    //TODO: #31 Implement a settings panel
+    //TODO: #31 Implement a settings panel && locale overriding
     Share.share(buildString(dm));
   }
 
