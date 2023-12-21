@@ -38,7 +38,7 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -91,14 +91,15 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
                     info['total'] ?? 0,
                     info['issues'] ?? 0));
               }),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ViewLocationPage(
                               location: location,
                               reportAnswer: widget.reportAnswer,
                             )));
+                dm.save();
               },
             ),
           ),

@@ -114,8 +114,8 @@ class _FillLocationPageState extends State<FillLocationPage> {
       title: Text(checkupObject.getFullName(dm)),
       subtitle: Text(widget.answer.formatCheckupObjectInfo(
           checkupObject, dm, AppLocalizations.of(context)!.objectInfoLabel)),
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => FillCheckAnswerPage(
@@ -125,6 +125,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
                 initialCheck: null,
               ),
             ));
+        dm.save();
       },
     );
   }
@@ -145,8 +146,8 @@ class _FillLocationPageState extends State<FillLocationPage> {
                 answers.length,
                 objects.length,
                 objects.length != 1 ? 's' : '')),
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => FillCheckAnswerPage(
@@ -156,6 +157,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
                       initialObject: null,
                     ),
                   ));
+              dm.save();
             }),
       );
     }));
