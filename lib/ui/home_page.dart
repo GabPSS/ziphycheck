@@ -145,7 +145,10 @@ class _HomePageState extends State<HomePage> {
               title: Text(AppLocalizations.of(context)!.aboutButtonLabel),
               onTap: () {
                 showAboutDialog(
-                    context: context, applicationName: 'CheckupApp');
+                    context: context,
+                    applicationName: 'CheckupApp',
+                    applicationLegalese: "Gabriel Pilotto, 2023",
+                    applicationVersion: "1.0.0");
               },
             )
           ],
