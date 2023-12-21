@@ -36,8 +36,8 @@ class MainApp extends StatelessWidget {
       builder: (lightDynamic, darkDynamic) => Consumer<Settings>(
         builder: (context, settings, child) {
           if (lightDynamic == darkDynamic || !settings.useDynamicColor) {
-            lightDynamic = ColorScheme.light(primary: Colors.orange);
-            darkDynamic = ColorScheme.dark(primary: Colors.orange);
+            lightDynamic = const ColorScheme.light(primary: Colors.orange);
+            darkDynamic = const ColorScheme.dark(primary: Colors.orange);
           }
 
           return MaterialApp(

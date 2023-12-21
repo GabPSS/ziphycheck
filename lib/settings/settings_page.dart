@@ -49,7 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onClose: (value) => settings.setReportOutputLocale(value),
             ),
             SettingsDialogListTile<bool?>(
-              leading: Icon(Icons.light_mode),
+              leading: const Icon(Icons.light_mode),
               title: Text(AppLocalizations.of(context)!.appThemeSettingLabel),
               subtitle: Text(switch (settings.darkTheme) {
                 null => AppLocalizations.of(context)!.systemDefaultLanguage,
