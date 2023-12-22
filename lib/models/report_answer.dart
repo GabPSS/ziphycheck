@@ -226,7 +226,7 @@ class ReportAnswer extends IdentifiableObject {
 
     String output = "${location.name}\n\n";
 
-    List<String> issues = formatIssuesAtLocation(location, dm);
+    List<String> issues = formatIssuesAtLocation(location, dm, locale);
 
     if (issues.isEmpty) {
       output += "${localizations.noIssuesFoundReportText}\n\n";
