@@ -290,10 +290,17 @@ class ReportAnswer extends IdentifiableObject {
     String suffix = "";
     if (plural) {
       suffix = issueMap.entries
-          .map((e) => e.key.notes != null
-              ? "${e.value?.getFullName(dm)}: ${e.key.notes}${e.key.solved ? ", ${localizations.solvedReportText}" : ""}"
-              : null)
-          .where((element) => element != null)
+          .map((e) {
+            String suffixStr = [
+              if (e.key.notes != null) e.key.notes,
+              if (e.key.solved) localizations.solvedReportText,
+            ].join(", ").trim();
+            if (suffixStr != "") {
+              suffixStr = "${e.value?.getFullName(dm)}: $suffixStr";
+            }
+            return suffixStr;
+          })
+          .where((element) => element != "")
           .cast<String>()
           .join("; ");
     } else {
