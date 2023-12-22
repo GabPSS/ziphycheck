@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                     context: context,
                     applicationName: 'CheckupApp',
                     applicationLegalese: "Gabriel Pilotto, 2023",
-                    applicationVersion: "1.0.0");
+                    applicationVersion: "1.0.1");
               },
             )
           ],

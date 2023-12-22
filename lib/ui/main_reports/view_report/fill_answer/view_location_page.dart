@@ -39,13 +39,15 @@ class _ViewLocationPageState extends State<ViewLocationPage> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton.icon(
               onPressed: () async {
-                Navigator.push(
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => FillLocationPage(
                           answer: widget.reportAnswer,
                           location: widget.location),
                     ));
+                if (!mounted) return;
+                Provider.of<DataMaster>(context, listen: false).update();
               },
               label: Text(AppLocalizations.of(context)!.viewChecksButtonLabel),
               icon: const Icon(Icons.exit_to_app),

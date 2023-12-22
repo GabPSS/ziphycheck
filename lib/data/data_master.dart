@@ -53,6 +53,7 @@ class DataMaster extends ChangeNotifier {
   Future<void> import() async {
     DataSet? dataSet = await storage.open();
     if (dataSet != null) _dataSet = dataSet;
+    await storage.save(_dataSet);
     notifyListeners();
   }
 
