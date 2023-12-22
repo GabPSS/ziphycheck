@@ -99,7 +99,7 @@ class _FillAnswerPageState extends State<FillAnswerPage> {
                               location: location,
                               reportAnswer: widget.reportAnswer,
                             )));
-                dm.save();
+                dm.update();
               },
             ),
           ),

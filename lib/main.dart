@@ -35,9 +35,12 @@ class MainApp extends StatelessWidget {
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) => Consumer<Settings>(
         builder: (context, settings, child) {
+          ColorScheme? light = lightDynamic;
+          ColorScheme? dark = darkDynamic;
+
           if (lightDynamic == darkDynamic || !settings.useDynamicColor) {
-            lightDynamic = const ColorScheme.light(primary: Colors.orange);
-            darkDynamic = const ColorScheme.dark(primary: Colors.orange);
+            light = const ColorScheme.light(primary: Colors.orange);
+            dark = const ColorScheme.dark(primary: Colors.orange);
           }
 
           return MaterialApp(
@@ -54,16 +57,16 @@ class MainApp extends StatelessWidget {
             theme: ThemeData(
                 colorScheme: settings.darkTheme != null
                     ? settings.darkTheme!
-                        ? darkDynamic
-                        : lightDynamic
-                    : lightDynamic,
+                        ? dark
+                        : light
+                    : light,
                 useMaterial3: true),
             darkTheme: ThemeData(
                 colorScheme: settings.darkTheme != null
                     ? settings.darkTheme!
-                        ? darkDynamic
-                        : lightDynamic
-                    : darkDynamic,
+                        ? dark
+                        : light
+                    : dark,
                 useMaterial3: true),
             home: const HomePage(),
           );

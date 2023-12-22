@@ -125,7 +125,7 @@ class _FillLocationPageState extends State<FillLocationPage> {
                 initialCheck: null,
               ),
             ));
-        dm.save();
+        dm.update();
       },
     );
   }
@@ -157,7 +157,8 @@ class _FillLocationPageState extends State<FillLocationPage> {
                       initialObject: null,
                     ),
                   ));
-              dm.save();
+              dm.update();
+              setState(() {});
             }),
       );
     }));

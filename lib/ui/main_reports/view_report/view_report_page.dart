@@ -58,7 +58,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                           );
                         },
                       ));
-                      dm.save();
+                      dm.update();
                     },
                     child: Text(
                         AppLocalizations.of(context)!.editReportWindowTitle)),
@@ -120,7 +120,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
                   );
                 },
               ));
-              dm.save();
+              dm.update();
             },
             child: const Icon(Icons.note_add),
           ),
@@ -209,7 +209,7 @@ class _ViewReportPageState extends State<ViewReportPage> {
             MaterialPageRoute(
                 builder: (context) =>
                     FillAnswerPage(reportAnswer: reportAnswer)));
-        dm.save();
+        dm.update();
       },
     );
   }
