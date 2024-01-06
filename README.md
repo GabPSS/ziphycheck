@@ -37,7 +37,7 @@ Installing is simple:
 
 ## Android
 
-Simply (visit the latest release page from this link)[https://github.com/GabPSS/ziphycheck/releases/latest] or the Releases panel on the right side of this description, then download the appropriate `.apk` file. 
+Simply [visit the latest release page from this link](https://github.com/GabPSS/ziphycheck/releases/latest) or the Releases panel on the right side of this description, then download the appropriate `.apk` file. 
 
 Once downloaded, open it up and follow through the dialog to allow it to be installed, and follow the remaining instructions to install it onto your device
 
@@ -47,7 +47,7 @@ Alternatively, if you wish to try it out on any other devices and have skills in
 
 # Building the program yourself
 
-This project is Flutter-based, so if you want to build it yourself, you will need to download and install the (Flutter SDK from their website)[https://docs.flutter.dev/get-started/install]. Once downloaded and with everything set up, simply clone this repository via git and run `flutter build apk --release` (replace `apk` with whatever platform you're building for)
+This project is Flutter-based, so if you want to build it yourself, you will need to download and install the [Flutter SDK from their website](https://docs.flutter.dev/get-started/install). Once downloaded and with everything set up, simply clone this repository via git and run `flutter build apk --release` (replace `apk` with whatever platform you're building for)
 
 # Open source
 
