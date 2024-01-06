@@ -1,14 +1,14 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/check.dart';
-import 'package:checkup_app/models/check_answer.dart';
-import 'package:checkup_app/models/checkup_object.dart';
-import 'package:checkup_app/models/issue.dart';
-import 'package:checkup_app/models/location.dart';
-import 'package:checkup_app/models/report_answer.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/object_page_controllers/answer_page_controller.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/check_widget.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/custom_add_issue_tile.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/custom_issue_tile.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/models/check.dart';
+import 'package:ziphycheck/models/check_answer.dart';
+import 'package:ziphycheck/models/checkup_object.dart';
+import 'package:ziphycheck/models/issue.dart';
+import 'package:ziphycheck/models/location.dart';
+import 'package:ziphycheck/models/report_answer.dart';
+import 'package:ziphycheck/ui/main_reports/view_report/fill_answer/object_page_controllers/answer_page_controller.dart';
+import 'package:ziphycheck/ui/main_reports/view_report/fill_answer/widgets/check_widget.dart';
+import 'package:ziphycheck/ui/main_reports/view_report/fill_answer/widgets/custom_add_issue_tile.dart';
+import 'package:ziphycheck/ui/main_reports/view_report/fill_answer/widgets/custom_issue_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';
 

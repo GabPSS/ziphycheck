@@ -1,7 +1,7 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/check.dart';
-import 'package:checkup_app/models/checkup_object.dart';
-import 'package:checkup_app/models/report_answer.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/models/check.dart';
+import 'package:ziphycheck/models/checkup_object.dart';
+import 'package:ziphycheck/models/report_answer.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'location.g.dart';

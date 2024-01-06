@@ -1,7 +1,7 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/checkup_object.dart';
-import 'package:checkup_app/models/location.dart';
-import 'package:checkup_app/models/report.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/models/checkup_object.dart';
+import 'package:ziphycheck/models/location.dart';
+import 'package:ziphycheck/models/report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';

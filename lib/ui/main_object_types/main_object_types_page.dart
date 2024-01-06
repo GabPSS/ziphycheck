@@ -1,5 +1,5 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/ui/main_object_types/object_type_editor_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localization.dart';

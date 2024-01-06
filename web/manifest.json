@@ -1,6 +1,6 @@
 {
-    "name": "CheckupApp",
-    "short_name": "CheckupApp",
+    "name": "ZiphyCheck",
+    "short_name": "ZiphyCheck",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#fcba03",

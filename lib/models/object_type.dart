@@ -1,5 +1,5 @@
-import 'package:checkup_app/models/check.dart';
-import 'package:checkup_app/models/identifiable_object.dart';
+import 'package:ziphycheck/models/check.dart';
+import 'package:ziphycheck/models/identifiable_object.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 

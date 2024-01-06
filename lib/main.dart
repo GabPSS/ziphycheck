@@ -1,6 +1,6 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/settings/settings.dart';
-import 'package:checkup_app/ui/home_page.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/settings/settings.dart';
+import 'package:ziphycheck/ui/home_page.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

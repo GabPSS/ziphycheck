@@ -1,5 +1,5 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/object_type.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/models/object_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'checkup_object.g.dart';

@@ -1,5 +1,5 @@
-import 'package:checkup_app/models/check.dart';
-import 'package:checkup_app/models/issue.dart';
+import 'package:ziphycheck/models/check.dart';
+import 'package:ziphycheck/models/issue.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'check_answer.g.dart';

@@ -1,4 +1,4 @@
-import 'package:checkup_app/models/identifiable_object.dart';
+import 'package:ziphycheck/models/identifiable_object.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'check.g.dart';

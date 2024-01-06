@@ -1,4 +1,4 @@
-package com.gabpss.checkup_app
+package com.gabpss.ziphycheck
 
 import io.flutter.embedding.android.FlutterActivity
 

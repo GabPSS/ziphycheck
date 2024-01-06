@@ -1,8 +1,8 @@
-import 'package:checkup_app/models/check.dart';
-import 'package:checkup_app/models/checkup_object.dart';
-import 'package:checkup_app/models/issue.dart';
-import 'package:checkup_app/models/report_answer.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/widgets/issue_tile.dart';
+import 'package:ziphycheck/models/check.dart';
+import 'package:ziphycheck/models/checkup_object.dart';
+import 'package:ziphycheck/models/issue.dart';
+import 'package:ziphycheck/models/report_answer.dart';
+import 'package:ziphycheck/ui/main_reports/view_report/fill_answer/widgets/issue_tile.dart';
 import 'package:flutter/material.dart';
 
 class CheckWidget extends StatelessWidget {
