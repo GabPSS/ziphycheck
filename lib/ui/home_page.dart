@@ -1,10 +1,10 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/settings/settings_page.dart';
-import 'package:checkup_app/ui/main_checks/check_editor_page.dart';
-import 'package:checkup_app/ui/main_checks/main_checks_page.dart';
-import 'package:checkup_app/ui/main_object_types/main_object_types_page.dart';
-import 'package:checkup_app/ui/main_object_types/object_type_editor_page.dart';
-import 'package:checkup_app/ui/main_reports/main_reports_page.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/settings/settings_page.dart';
+import 'package:ziphycheck/ui/main_checks/check_editor_page.dart';
+import 'package:ziphycheck/ui/main_checks/main_checks_page.dart';
+import 'package:ziphycheck/ui/main_object_types/main_object_types_page.dart';
+import 'package:ziphycheck/ui/main_object_types/object_type_editor_page.dart';
+import 'package:ziphycheck/ui/main_reports/main_reports_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'main_reports/add_report_page.dart';
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             const UserAccountsDrawerHeader(
-                accountName: Text('CheckupApp'), accountEmail: null),
+                accountName: Text('ZiphyCheck'), accountEmail: null),
             ListTile(
               leading: const Icon(Icons.assignment),
               title: Text(AppLocalizations.of(context)!.reports),
@@ -146,9 +146,9 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 showAboutDialog(
                     context: context,
-                    applicationName: 'CheckupApp',
+                    applicationName: 'ZiphyCheck',
                     applicationLegalese: "Gabriel Pilotto, 2023",
-                    applicationVersion: "1.0.1");
+                    applicationVersion: "1.0.2");
               },
             )
           ],

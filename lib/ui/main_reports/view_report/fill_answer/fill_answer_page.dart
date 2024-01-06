@@ -1,7 +1,7 @@
-import 'package:checkup_app/data/data_master.dart';
-import 'package:checkup_app/models/report_answer.dart';
-import 'package:checkup_app/settings/settings.dart';
-import 'package:checkup_app/ui/main_reports/view_report/fill_answer/view_location_page.dart';
+import 'package:ziphycheck/data/data_master.dart';
+import 'package:ziphycheck/models/report_answer.dart';
+import 'package:ziphycheck/settings/settings.dart';
+import 'package:ziphycheck/ui/main_reports/view_report/fill_answer/view_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
 import 'package:provider/provider.dart';

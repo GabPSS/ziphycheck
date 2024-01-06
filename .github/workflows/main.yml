@@ -3,8 +3,6 @@ name: flutter-web-deploy
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -34,7 +32,7 @@ jobs:
         run: flutter analyze
 
       - name: Build for web
-        run: flutter build web --base-href "/checkup_app/"
+        run: flutter build web --base-href "/ziphycheck/"
 
       - name: Upload build results
         uses: actions/upload-pages-artifact@v2.0.0

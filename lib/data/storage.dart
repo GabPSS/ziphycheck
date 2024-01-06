@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:checkup_app/models/data_set.dart';
+import 'package:ziphycheck/models/data_set.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
@@ -15,7 +15,7 @@ class Storage {
   Future<bool> init() async {
     try {
       _db = await openDatabase(
-        'checkup_app.db',
+        'ziphycheck.db',
         version: 1,
         onCreate: (db, version) {
           db.execute('CREATE TABLE datasets (dataset TEXT)');

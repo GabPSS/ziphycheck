@@ -1,4 +1,4 @@
-import 'package:checkup_app/models/checkup_object.dart';
+import 'package:ziphycheck/models/checkup_object.dart';
 import 'package:flutter/material.dart';
 
 abstract class AnswerPageController {

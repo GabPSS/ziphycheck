@@ -1,8 +1,8 @@
-import 'package:checkup_app/models/check.dart';
-import 'package:checkup_app/models/identifiable_object.dart';
-import 'package:checkup_app/models/object_type.dart';
-import 'package:checkup_app/models/report.dart';
-import 'package:checkup_app/models/report_answer.dart';
+import 'package:ziphycheck/models/check.dart';
+import 'package:ziphycheck/models/identifiable_object.dart';
+import 'package:ziphycheck/models/object_type.dart';
+import 'package:ziphycheck/models/report.dart';
+import 'package:ziphycheck/models/report_answer.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'data_set.g.dart';
