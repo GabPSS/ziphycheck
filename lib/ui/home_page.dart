@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                     context: context,
                     applicationName: 'ZiphyCheck',
                     applicationLegalese: "Gabriel Pilotto, 2023",
-                    applicationVersion: "1.0.1");
+                    applicationVersion: "1.0.2");
               },
             )
           ],
