@@ -86,10 +86,9 @@ class _ObjectTypeEditorPageState extends State<ObjectTypeEditorPage> {
     mainWidgets.addAll(map.isNotEmpty
         ? map
         : [
-            Expanded(
-                child: Center(
+            Center(
               child: Text(AppLocalizations.of(context)!.noTasksToAddLabel),
-            ))
+            )
           ].toList());
 
     return Scaffold(
